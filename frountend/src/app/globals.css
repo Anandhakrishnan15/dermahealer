@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/* Light mode variables */
+:root {
+  --navbar-bg: #f3f4f6; /* gray-100 */
+  --navbar-text: #1f2937; /* gray-900 */
+  --navbar-link: #1f2937; /* gray-900 */
+  --navbar-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --toggle-bg: #d1d5db; /* gray-300 */
+  --toggle-text: #1f2937;
+  --bg: #ffffff; /* white */
+  --text: #111827; /* gray-900 */
+  --link: #2563eb; /* blue-600 */
+  --link-hover: #1d4ed8; /* blue-700 */
+  --button-bg: #2563eb; /* blue-600 */
+  --button-text: #ffffff; /* white */
+  --button-hover-bg: #1d4ed8; /* blue-700 */
+  --button-hover-text: #ffffff; /* white */
+  --card-bg: #f9fafb; /* gray-50 */
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --card-border: #e5e7eb; /* gray-200 */
+}
+
+/* Dark mode variables */
+.dark {
+  --navbar-bg: #1f2937; /* gray-800 */
+  --navbar-text: #f9fafb; /* gray-50 */
+  --navbar-link: #f9fafb;
+  --navbar-shadow: 0 4px 6px -1px rgba(96, 165, 250, 0.4); /* blue-400 shadow */
+  --toggle-bg: #374151; /* gray-700 */
+  --toggle-text: #ffffff;
+  --bg: #111827; /* gray-900 */
+  --text: #f9fafb; /* gray-50 */
+  --link: #60a5fa; /* blue-400 */
+  --link-hover: #3b82f6; /* blue-500 */
+  --button-bg: #3b82f6; /* blue-500 */
+  --button-text: #ffffff;
+  --button-hover-bg: #2563eb; /* blue-600 */
+  --button-hover-text: #ffffff;
+  --card-bg: #1f2937; /* gray-800 */
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --card-border: #374151; /* gray-700 */
+}
+
+/* Apply background & text from variables */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  
+}
+ .imagehight{
+    height:90%;
+  }
+@media (max-width: 572px ) {
+  .subherorespons {
+    font-size:15px;
+    
+    }
+  .heroHeadingres{
+    font-size:36px;
+    width:40%;
+  }
+}
+@media (max-width:485px ) {
+  
+  .subherorespons {
+    font-size:12px;
+    
+    }
+  .heroHeadingres{
+   font-size:25px;
+  }
+}
+@media (max-width:320px ) {
+  
+ 
+  .subherorespons {
+    font-size:8px;
+    
+    }
+  .heroHeadingres{
+    font-size:20px;
+    margin-top :10px;
+  }
+}
+
+
