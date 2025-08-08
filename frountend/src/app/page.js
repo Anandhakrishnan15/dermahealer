@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div>
       {/* <Hero /> */}
-      <Demo/>
+      <Demo />
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-6">Welcome to DermaHealer</h1>
 
@@ -15,7 +15,7 @@ export default function Home() {
         </p>
 
         <p className="text-lg text-gray-700 mt-4">
-          Whether you're looking for skincare advice, treatment options, or the latest in dermatological research, we have you covered. Our team of experts is dedicated to providing you with the best care and information to help you on your skincare journey.
+          Whether you&apos;re looking for skincare advice, treatment options, or the latest in dermatological research, we have you covered. Our team of experts is dedicated to providing you with the best care and information to help you on your skincare journey.
         </p>
 
         <p className="text-lg text-gray-700 mt-4">
@@ -35,7 +35,7 @@ export default function Home() {
           <Link href="/contact-us" className="text-blue-500 hover:underline">
             contact us
           </Link>
-          . We're here to help you achieve your skincare goals!
+          . We&apos;re here to help you achieve your skincare goals!
         </p>
 
         <p className="text-lg text-gray-700 mt-4">
@@ -47,7 +47,7 @@ export default function Home() {
         </p>
 
         <p className="text-lg text-gray-700 mt-4">
-          If you're an administrator, you can access the{" "}
+          If you&apos;re an administrator, you can access the{" "}
           <Link href="/admin" className="text-blue-500 hover:underline">
             Admin Dashboard
           </Link>{" "}
