@@ -9,6 +9,7 @@
   --toggle-bg: #d1d5db; /* gray-300 */
   --toggle-text: #1f2937;
   --bg: #ffffff; /* white */
+  --sbg:#111827;
   --text: #111827; /* gray-900 */
   --link: #2563eb; /* blue-600 */
   --link-hover: #1d4ed8; /* blue-700 */
@@ -30,6 +31,7 @@
   --toggle-bg: #374151; /* gray-700 */
   --toggle-text: #ffffff;
   --bg: #111827; /* gray-900 */
+  --sbg:#1e2939;
   --text: #f9fafb; /* gray-50 */
   --link: #60a5fa; /* blue-400 */
   --link-hover: #3b82f6; /* blue-500 */
