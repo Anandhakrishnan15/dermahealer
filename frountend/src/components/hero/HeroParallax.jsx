@@ -131,7 +131,7 @@ ${inView && isDesktop ? "-mt-25" : ""} select-none resinfinte`}
 
 
 
-                <div className={`w-400 overflow-visible ${inView && isDesktop ? " h-150" :" h-105"}`}>
+                <div className={`w-400 overflow-visible ${inView && isDesktop ? " h-130" :" h-100"}`}>
                     <InfiniteRow speed={35}>
                         {doubled.map((product, index) => (
                             <ProductCard product={product} key={`${product.title}-${index}`} />
