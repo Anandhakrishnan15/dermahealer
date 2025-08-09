@@ -1,59 +1,54 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { ChevronRight } from "lucide-react"; // or any other icon
 
 export const ProductCard = ({ product }) => {
+    const [showIcon, setShowIcon] = useState(false);
+
     return (
         <a
             href={product.link}
-            className="group block relative shrink-0 w-full max-w-sm sm:max-w-md md:max-w-lg rounded-lg overflow-hidden shadow-lg cursor-pointer h-full "
+            className="group block relative shrink-0 w-[480px] h-[300px] rounded-xl overflow-hidden shadow-lg cursor-pointer infinterscrool"
+            onClick={(e) => {
+                if (window.innerWidth < 768) { // mobile
+                    e.preventDefault();
+                    window.location.href = product.link; // navigate immediately
+                }
+            }}
         >
             <motion.div
-               
-                className="relative h-full w-full flex flex-col justify-between p-4 bg-cover bg-center"
+                className="relative h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                 style={{ backgroundImage: `url(${product.thumbnail})` }}
+                whileHover={{ y: -5 }}
             >
                 {/* Dark overlay */}
-                <div className="absolute inset-0 bg-opacity-30 group-hover:bg-opacity-60 transition duration-300" />
+                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition duration-300"></div>
 
-                {/* Content container with backdrop blur */}
-                <div
-                    className="relative z-10 flex flex-col justify-end h-full text-white overflow-hidden rounded-md"
-                    style={{
-                        backgroundColor: "rgba(0, 0, 0, 0.3)",
-                        backdropFilter: "blur(8px)",
-                        WebkitBackdropFilter: "blur(8px)",
-                        padding: "1rem",
-                    }}
-                >
-                    {/* Small background image inside the content box */}
-                    <img
-                        src={product.smallImage || product.thumbnail}
-                        alt={`${product.title} background`}
-                        className="absolute top-0 left-0 w-full h-full object-cover opacity-20 pointer-events-none rounded-md"
-                        style={{ zIndex: 0 }}
-                    />
+                {/* Content container */}
+                <div className="absolute bottom-0 w-full p-6 bg-black/30 text-white">
+                    <div className="relative z-10 flex justify-between items-end">
+                        <div>
+                            <h2 className="text-xl font-semibold">{product.title}</h2>
+                            {product.description && (
+                                <p className="mt-2 text-sm text-gray-200 line-clamp-2">
+                                    {product.description}
+                                </p>
+                            )}
+                        </div>
 
-                    {/* Text content with higher z-index */}
-                    <div className="relative z-10">
-                        <h2 className="text-xl sm:text-2xl font-semibold drop-shadow-md">
-                            {product.title}
-                        </h2>
-                        {product.description && (
-                            <p className="mt-2 text-sm sm:text-base text-gray-200 drop-shadow-md">
-                                {product.description}
-                            </p>
-                        )}
-                        <button
-                            type="button"
-                            className="mt-4 inline-block self-start rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        {/* Icon instead of button */}
+                        <motion.div
+                            initial={{ opacity: 0, x: 30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.4 }}
+                            className="rounded-full bg-indigo-600 p-2 text-white hover:bg-indigo-700 transition-colors duration-300"
                         >
-                            View More
-                        </button>
+                            <ChevronRight size={20} />
+                        </motion.div>
                     </div>
                 </div>
             </motion.div>
-
         </a>
     );
 };
