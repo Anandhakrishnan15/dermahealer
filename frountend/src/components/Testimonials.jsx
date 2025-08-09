@@ -39,8 +39,8 @@ export const Testimonials = () => {
     const loopTestimonials = [...demoTestimonials, ...demoTestimonials];
 
     return (
-        <section className="py-16 bg-gray-50 dark:bg-gray-800 overflow-hidden">
-            <h2 className="text-center text-3xl font-bold mb-10 text-gray-900 dark:text-white">
+        <section className="py-16 bg-[var(--sbg)] overflow-hidden">
+            <h2 className="text-center text-3xl font-bold mb-10 text-white">
                 What Our Clients Say
             </h2>
 
