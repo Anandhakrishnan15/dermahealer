@@ -53,6 +53,12 @@ body {
     height:90%;
   }
 
+  @media (max-width: 768px ) {
+  
+  .infinterscrool{
+    width:350px
+  }
+}
 @media (max-width: 572px ) {
   .subherorespons {
     font-size:15px;
@@ -61,6 +67,9 @@ body {
   .heroHeadingres{
     font-size:36px;
     width:40%;
+  }
+   .infinterscrool{
+    width:300px
   }
   
 }

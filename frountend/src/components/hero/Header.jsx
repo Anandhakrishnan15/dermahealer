@@ -29,7 +29,7 @@ export const Header = () => {
     };
 
     return (
-        <div className="max-w-7xl mx-auto py-12 md:py-24 px-4">
+        <div className="max-w-7xl mx-auto py-12 md:py-10 px-4">
             {/* Desktop */}
             <div className="hidden md:flex">
                 <motion.div

@@ -84,12 +84,12 @@ export const HeroParallax = ({ products }) => {
     const dotOpacity = inView && isDesktop ? baseDotOpacity : 1;
     const dotScale = inView && isDesktop ? baseDotScale : 1;
 
-    const headingClass = isDesktop ? "text-6xl md:text-8xl" : "text-4xl";
+    const headingClass = isDesktop ? "text-6xl md:text-5xl" : "text-4xl";
 
     return (
         <div
             ref={combinedRef}
-            className="overflow-hidden antialiased relative flex flex-col [perspective:1000px] [transform-style:preserve-3d]"
+            className="overflow-hidden antialiased relative flex flex-col [perspective:1000px] [transform-style:preserve-3d] h-full"
         >
             <Header />
             <motion.div
@@ -102,38 +102,36 @@ export const HeroParallax = ({ products }) => {
                         scale: subheadingScale,
                         translateY: subheadingTranslateY,
                     }}
-                    className={`relative text-center font-extrabold ${headingClass} text-[var(--text)] mb-20 ${inView && isDesktop ? "-mt-36":""} select-none resinfinte`}
+                    className={`relative inline-block text-center font-extrabold tracking-wide drop-shadow-md 
+bg-clip-text text-transparent bg-gradient-to-r from-[#3ed0ca] via-cyan-400 to-sky-500
+leading-[1.3] pb-1
+${headingClass} mb-4
+${inView && isDesktop ? "-mt-25" : ""} select-none resinfinte`}
+
                 >
-                    Our aesthetic treatments
-                    <motion.span
-                        style={{ scaleX: underlineScaleX }}
-                        className="origin-left absolute left-1/2 -bottom-4 rounded"
-                        css={{
-                            width: "60%",
-                            transformOrigin: "left",
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                            height: 3,
-                            background:
-                                "linear-gradient(90deg, #6366f1 0%, #a78bfa 50%, #f472b6 100%)",
-                            boxShadow:
-                                "0 0 8px rgba(129, 140, 248, 0.6), 0 0 16px rgba(129, 140, 248, 0.3)",
-                        }}
-                    />
-                    <motion.span
-                        style={{ opacity: dotOpacity, scale: dotScale }}
-                        className="absolute -bottom-8 rounded-full bg-indigo-600 dark:bg-indigo-400"
-                        css={{
-                            width: 12,
-                            height: 12,
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                            boxShadow: "0 0 8px rgba(99, 102, 241, 0.7)",
-                        }}
-                    />
+                    Our Signature Aesthetic Treatments
                 </motion.h3>
 
-                <div className="w-400 overflow-hidden h-100">
+                {/* Animated Underline */}
+                <motion.div
+                    style={{ scaleX: underlineScaleX }}
+                    className="origin-center h-[3px] w-60 bg-gradient-to-r from-[#3ed0ca] via-cyan-400 to-sky-500 rounded-full mb-4"
+                />
+
+                {/* Tagline */}
+                <motion.p
+                    style={{
+                        opacity: subheadingOpacity,
+                        scale: subheadingScale, }}
+                    className="text-center text-[var(--text)] max-w-xl mx-auto mb-10 text-lg"
+                >
+                    Transform your skin with expert care, modern techniques, and a touch of elegance.
+                </motion.p>
+
+
+
+
+                <div className={`w-400 overflow-visible ${inView && isDesktop ? " h-150" :" h-105"}`}>
                     <InfiniteRow speed={35}>
                         {doubled.map((product, index) => (
                             <ProductCard product={product} key={`${product.title}-${index}`} />
