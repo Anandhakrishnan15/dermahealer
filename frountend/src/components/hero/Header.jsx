@@ -27,6 +27,7 @@ export const Header = () => {
             transition: { ease: "easeOut", duration: 0.8 },
         },
     };
+    
 
     return (
         <div className="max-w-7xl mx-auto py-12 md:py-10 px-4">
@@ -38,10 +39,43 @@ export const Header = () => {
                     animate="visible"
                     variants={containerVariants}
                 >
+                   
+
                     <motion.h1 className="text-6xl font-bold" variants={textVariants}>
                         Glow <span className="text-[#3ed0ca]">Confidently</span> with <br />
-                        Derma Healer
+                        
+                        <span className="text-7xl font-bold text-[#5563ff]"> Derma Healer</span>
                     </motion.h1>
+                    
+                    <motion.span
+                        className="absolute text-5xl z-20"
+                        style={{ top: "280px", left: "350px" }}
+                        initial={{ y: -10, rotate: 0, opacity: 0 }}
+                        animate={{
+                            y: [-10, 0, -10],
+                            rotate: [0, 15, -15, 0],
+                            opacity: 1,
+                        }}
+                        transition={{
+                            y: {
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                            },
+                            rotate: {
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                            },
+                            opacity: {
+                                delay: 1,    // wait 2 seconds before starting fade-in
+                                duration: 1, // fade in duration 1 second
+                            },
+                        }}
+                    >
+                        ✨
+                    </motion.span>
+
                     <motion.p
                         className="mt-4 text-xl text-gray-600 dark:text-gray-400"
                         variants={textVariants}
@@ -83,8 +117,8 @@ export const Header = () => {
                     className="absolute flex flex-col justify-center inset-0 px-6 z-30"
                 >
                     <motion.h1 className="text-5xl font-extrabold border px-2 text-white mb-4 drop-shadow-lg w-60 heroHeadingres">
-                        Glow <span className="text-[#242c2c]">Confidently</span> with Derma
-                        Healer
+                        Glow <span className="text-[#242c2c]">Confidently</span> with <span className="text-[#5563ff]"> Derma
+                            Healer</span>
                     </motion.h1>
                     <motion.p className="text-sm text-white max-w-md drop-shadow-md subherorespons">
                         Leading Skin & Laser Clinic in Bihar <br />
