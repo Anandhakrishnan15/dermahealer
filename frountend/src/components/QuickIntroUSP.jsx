@@ -22,10 +22,10 @@ export const QuickIntroUSP = () => {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
-                        className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight leading-snug"
+                        className="text-3xl md:text-4xl font-bold tracking-tight leading-snug"
                         style={{ letterSpacing: "-0.5px" }}
                     >
-                        <span className="block">Derma Healer</span>
+                        <span className="block text-2xl text-[var(--text)]">Derma Healer</span>
                         <span className="block text-indigo-600 dark:text-indigo-400">
                             Skin & Laser Experts in Siwan
                         </span>
@@ -35,7 +35,7 @@ export const QuickIntroUSP = () => {
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         transition={{ delay: 0.3, duration: 0.6 }}
-                        className="mt-4 text-base text-gray-600 dark:text-gray-300 leading-relaxed"
+                        className="mt-4 text-base text-gray-300 leading-relaxed"
                     >
                         Led by <strong>Dr. Neha Rani</strong> and <strong>Dr. B.K. Sharma</strong>, we offer
                         advanced, USFDA-approved treatments for <strong>acne</strong>, <strong>pigmentation</strong>,
