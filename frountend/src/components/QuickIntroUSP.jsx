@@ -25,7 +25,7 @@ export const QuickIntroUSP = () => {
                         className="text-3xl md:text-4xl font-bold tracking-tight leading-snug"
                         style={{ letterSpacing: "-0.5px" }}
                     >
-                        <span className="block text-2xl text-[var(--text)]">Derma Healer</span>
+                        <span className="block text-6xl text-gray-100">Derma Healer</span>
                         <span className="block text-indigo-600 dark:text-indigo-400">
                             Skin & Laser Experts in Siwan
                         </span>
