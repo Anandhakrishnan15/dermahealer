@@ -1,3 +1,23 @@
-export default function AboutUsPage() {
-    return <h1 className="text-3xl font-bold">About Us</h1>;
+"use client";
+import AboutHero from "@/components/AboutUs/AboutHero";
+import Doctors from "@/components/AboutUs/Doctors";
+import FAQs from "@/components/AboutUs/FAQs";
+import FinalCTA from "@/components/AboutUs/FinalCTA";
+import MissionVision from "@/components/AboutUs/MissionVision";
+import Treatments from "@/components/AboutUs/Treatments";
+import WhyChooseUs from "@/components/AboutUs/WhyChooseUs";
+import React from "react";
+
+export default function AboutUs() {
+    return (
+       <>
+            <AboutHero />
+            <MissionVision />
+            <WhyChooseUs />
+            <Doctors />
+            <Treatments />
+            <FAQs />
+            <FinalCTA />
+       </>
+    );
 }
