@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
 
 /* Light mode variables */
 :root {
@@ -17,11 +18,13 @@
   --button-text: #ffffff; /* white */
   --button-hover-bg: #1d4ed8; /* blue-700 */
   --button-hover-text: #ffffff; /* white */
-  --card-bg: #f9fafb; /* gray-50 */
+  --card-bg: #0f4187 /* gray-50 */
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   --card-border: #e5e7eb; /* gray-200 */
 }
-
+.font-playfair {
+  font-family: var(--font-playfair);
+}
 /* Dark mode variables */
 .dark {
   --navbar-bg: #1f2937; /* gray-800 */
@@ -39,7 +42,7 @@
   --button-text: #ffffff;
   --button-hover-bg: #2563eb; /* blue-600 */
   --button-hover-text: #ffffff;
-  --card-bg: #1f2937; /* gray-800 */
+  --card-bg:#111827 /* gray-800 */
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   --card-border: #374151; /* gray-700 */
 }
@@ -60,6 +63,9 @@ body {
   .infinterscrool{
     width:350px
   }
+   .font-playfair{
+    font-size:56px;
+  }
 }
 @media (max-width: 572px ) {
   .subherorespons {
@@ -73,6 +79,7 @@ body {
    .infinterscrool{
     width:300px
   }
+ 
   
 }
 @media (max-width:485px ) {
@@ -96,6 +103,12 @@ body {
   .heroHeadingres{
     font-size:20px;
     margin-top :10px;
+  }
+    .font-playfair{
+    font-size:46px;
+  }
+  .mandv{
+    padding:5px;
   }
   
 }
