@@ -3,71 +3,50 @@
 import React from "react";
 
 const certificates = [
-    {
-        id: 1,
-        title: "Advanced Dermatology Course",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s",
-    },
-    {
-        id: 2,
-        title: "Clinical Dermatology Certificate",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s",
-    },
-    {
-        id: 3,
-        title: "Cosmetic Dermatology Training",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s",
-    },
-    {
-        id: 4,
-        title: "Skin Cancer Diagnosis Workshop",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s",
-    },
-    {
-        id: 5,
-        title: "Pediatric Dermatology Specialization",
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s",
-    },
+    { id: 1, title: "Advanced Dermatology Course", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s" },
+    { id: 2, title: "Clinical Dermatology Certificate", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s" },
+    { id: 3, title: "Cosmetic Dermatology Training", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s" },
+    { id: 4, title: "Skin Cancer Diagnosis Workshop", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s" },
+    { id: 5, title: "Pediatric Dermatology Specialization", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s" },
 ];
 
-// We'll repeat the certificates twice for seamless loop effect
+// Duplicate list for seamless looping
 const duplicatedCertificates = [...certificates, ...certificates];
 
 export default function AutoScrollingCertificates() {
     return (
         <>
             <style>{`
-        @keyframes scroll-left {
+        @keyframes scroll-right {
           0% {
-            transform: translateX(-50%);
+            transform: translateX(0);
           }
           100% {
-            transform: translateX(0);
+            transform: translateX(-50%);
           }
         }
 
         .scrolling-wrapper {
           display: flex;
-          width: calc(200%); /* twice the width for two sets */
-          animation: scroll-left 20s linear infinite;
+          width: calc(200%);
+          animation: scroll-right 20s linear infinite reverse; /* reverse makes it go left→right */
         }
 
         .scrolling-wrapper:hover {
           animation-play-state: paused;
         }
 
-        /* Hide scrollbar for all browsers */
         .no-scrollbar::-webkit-scrollbar {
           display: none;
         }
         .no-scrollbar {
-          -ms-overflow-style: none; /* IE and Edge */
-          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
 
-            <div className="max-w-6xl mx-auto p-6 overflow-hidden">
-                <h2 className="text-5xl font-bold  text-center ">
+            <div className="max-w-full  py-6 overflow-hidden">
+                <h2 className="text-5xl font-bold text-center">
                     Dermatology Certificates
                 </h2>
 
@@ -84,7 +63,6 @@ export default function AutoScrollingCertificates() {
                                     className="w-full h-full object-contain rounded-t-lg"
                                     loading="lazy"
                                 />
-                               
                             </div>
                         ))}
                     </div>
