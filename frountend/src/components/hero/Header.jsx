@@ -2,7 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-export const Header = () => {
+export const Header = ({ onAnimationComplete }) => {
     const containerVariants = {
         hidden: { opacity: 0, y: 40 },
         visible: {
@@ -38,43 +38,39 @@ export const Header = () => {
                     initial="hidden"
                     animate="visible"
                     variants={containerVariants}
+                    onAnimationComplete={onAnimationComplete}
                 >
                    
 
                     <motion.h1 className="text-6xl font-bold" variants={textVariants}>
-                        Glow <span className="text-[#3ed0ca]">Confidently</span> with <br />
-                        
-                        <span className="text-7xl font-bold text-[#5563ff]"> Derma Healer</span>
+                        Glow <span className="text-[#3ed0ca]">Confidently</span>{" "}
+
+                        {/* with + sparkle */}
+                        <span className="inline-flex items-center gap-1 ">
+                            with
+                            <motion.span
+                                className="text-4xl"
+                                initial={{ y: -5, rotate: 0, opacity: 0 }}
+                                animate={{
+                                    y: [-5, 0, -5],
+                                    rotate: [0, 15, -15, 0],
+                                    opacity: 1,
+                                }}
+                                transition={{
+                                    y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                                    rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                                    opacity: { delay: 0.5, duration: 0.5 },
+                                }}
+                            >
+                                ✨
+                            </motion.span>
+                        </span>
+
+                        <br />
+                        <span className="text-7xl font-bold text-[#5563ff]">Derma Healer</span>
                     </motion.h1>
                     
-                    <motion.span
-                        className="absolute text-5xl z-20"
-                        style={{ top: "280px", left: "350px" }}
-                        initial={{ y: -10, rotate: 0, opacity: 0 }}
-                        animate={{
-                            y: [-10, 0, -10],
-                            rotate: [0, 15, -15, 0],
-                            opacity: 1,
-                        }}
-                        transition={{
-                            y: {
-                                duration: 2,
-                                repeat: Infinity,
-                                ease: "easeInOut",
-                            },
-                            rotate: {
-                                duration: 2,
-                                repeat: Infinity,
-                                ease: "easeInOut",
-                            },
-                            opacity: {
-                                delay: 1,    // wait 2 seconds before starting fade-in
-                                duration: 1, // fade in duration 1 second
-                            },
-                        }}
-                    >
-                        ✨
-                    </motion.span>
+             
 
                     <motion.p
                         className="mt-4 text-xl text-gray-600 dark:text-gray-400"
