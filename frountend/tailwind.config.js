@@ -10,6 +10,9 @@ module.exports = {
             screens: {
                 custommd: "814px", // new breakpoint
             },
+            fontFamily: {
+                elegant: ['"Playfair Display"', 'serif'],
+            },
         },
     },
     plugins: [],
