@@ -18,15 +18,15 @@ export const TopServicesPreview = () => {
     ];
 
     return (
-        <section className="py-16 bg-gray-50 dark:bg-gray-800">
-            <h2 className="text-center text-3xl font-bold mb-10 text-gray-900 dark:text-white">
+        <section className="py-16 bg-[var(--bg)]">
+            <h2 className="text-center text-3xl font-bold mb-10 text-[var(--text)]">
                 Our Signature Services
             </h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
                 {demoServices.map((service, idx) => (
                     <div
                         key={idx}
-                        className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition"
+                        className="bg-[var(--sbg)] rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition"
                     >
                         <img
                             src={service.image}
