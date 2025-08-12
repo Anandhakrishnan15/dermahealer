@@ -13,14 +13,19 @@
   --sbg:#111827;
   --text: #111827; /* gray-900 */
   --link: #2563eb; /* blue-600 */
-  --link-hover: #1d4ed8; /* blue-700 */
+  --link-hover:rgba(137, 240, 253, 0.41); /* blue-700 */
   --button-bg: #2563eb; /* blue-600 */
   --button-text: #ffffff; /* white */
   --button-hover-bg: #1d4ed8; /* blue-700 */
   --button-hover-text: #ffffff; /* white */
-  --card-bg: #0f4187 /* gray-50 */
+ --card-bg: linear-gradient(135deg, #eff6ff, #dbeafe); /* teal-dark blue gradient */
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   --card-border: #e5e7eb; /* gray-200 */
+   --form-bg: linear-gradient(
+    to bottom,
+    #eff6ff, #dbeafe
+  );
+  --tabelhover:rgba(167, 167, 167, 0.26);
 }
 .font-playfair {
   font-family: var(--font-playfair);
@@ -37,14 +42,19 @@
   --sbg:#1e2939;
   --text: #f9fafb; /* gray-50 */
   --link: #60a5fa; /* blue-400 */
-  --link-hover: #3b82f6; /* blue-500 */
+  --link-hover: #aaf7ff95; /* blue-500 */
   --button-bg: #3b82f6; /* blue-500 */
   --button-text: #ffffff;
   --button-hover-bg: #2563eb; /* blue-600 */
   --button-hover-text: #ffffff;
-  --card-bg:#111827 /* gray-800 */
+  --card-bg:linear-gradient(to right, #1e2939, #0f172a);  /* very dark navy-blue */
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   --card-border: #374151; /* gray-700 */
+  --form-bg: linear-gradient(
+    to bottom,
+    #1e2939, #0f172a
+  );
+   --tabelhover:rgba(167, 167, 167, 0.26);
 }
 
 /* Apply background & text from variables */

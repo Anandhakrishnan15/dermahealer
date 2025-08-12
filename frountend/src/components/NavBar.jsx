@@ -186,7 +186,7 @@ function NavLinks({
                         className={`absolute left-full top-0 mt-0 rounded shadow-lg ${mobile ? "static w-full" : "w-56"
                             }`}
                         style={{
-                            backgroundColor: "var(--card-bg)",
+                            backgroundColor: "var(--navbar-bg)",
                             boxShadow: "var(--card-shadow)",
                             border: `1px solid var(--card-border)`,
                         }}
@@ -214,6 +214,7 @@ function NavLinks({
         <div
             className={`${mobile ? "flex flex-col space-y-4" : "flex space-x-3"
                 } items-center`}
+           
         >
             {links.map((link, idx) =>
                 link.dropdown ? (
@@ -223,7 +224,7 @@ function NavLinks({
                                 setDropdownOpen(dropdownOpen === link.label ? null : link.label)
                             }
                             className="hover:underline flex items-center gap-1"
-                            style={{ color: "var(--navbar-link)" }}
+                            style={{ backgroundColor: "var(--navbar-bg)", color: "var(--navbar-text)" }}
                         >
                             {link.label} <ChevronDown size={14} />
                         </button>
@@ -233,7 +234,7 @@ function NavLinks({
                                 className={`absolute py-2 rounded shadow-lg z-20 ${mobile ? "static w-full" : "w-66"
                                     }`}
                                 style={{
-                                    backgroundColor: "var(--card-bg)",
+                                    backgroundColor: "var(--navbar-bg)",
                                     boxShadow: "var(--card-shadow)",
                                     border: `1px solid var(--card-border)`,
                                 }}
@@ -276,8 +277,10 @@ function LinkItem({ href, label, onClick, active }) {
     return (
         <Link
             href={href}
-            className={`block px-4 py-2 hover:underline rounded-md transition-colors ${active ? "text-[#4fdaea]" : "text-[var(--navbar-link)]"}`}
+            className={`block px-4 py-2  hover:underline rounded-md transition-colors ${active ? "text-[#4fdaea]" : "text-[var(--navbar-link)]"}`}
             onClick={onClick}
+           
+
         >
             {label}
         </Link>

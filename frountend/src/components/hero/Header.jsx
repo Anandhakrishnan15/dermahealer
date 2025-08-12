@@ -38,7 +38,7 @@ export const Header = ({ onAnimationComplete }) => {
                     initial="hidden"
                     animate="visible"
                     variants={containerVariants}
-                    onAnimationComplete={onAnimationComplete}
+                     onAnimationComplete={onAnimationComplete}
                 >
                    
 
