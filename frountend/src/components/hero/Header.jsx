@@ -1,8 +1,22 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 export const Header = ({ onAnimationComplete }) => {
+    const [heroImg, setHeroImg] = useState(0);
+
+    const images = [
+        {
+            index: 1,
+            imgurl: "https://dermahealerindia.com/wp-content/uploads/2025/06/6e7a8a-2.png",
+        },
+        {
+            index: 2,
+            imgurl: "https://dermahealerindia.com/wp-content/uploads/2025/06/6e7a8a-3.png",
+        },
+    ];
+
+    // Animation variants
     const containerVariants = {
         hidden: { opacity: 0, y: 40 },
         visible: {
@@ -11,6 +25,7 @@ export const Header = ({ onAnimationComplete }) => {
             transition: { staggerChildren: 0.3, ease: "easeOut", duration: 0.8 },
         },
     };
+
     const textVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: {
@@ -19,6 +34,7 @@ export const Header = ({ onAnimationComplete }) => {
             transition: { ease: "easeOut", duration: 0.8 },
         },
     };
+
     const imageVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: {
@@ -27,26 +43,29 @@ export const Header = ({ onAnimationComplete }) => {
             transition: { ease: "easeOut", duration: 0.8 },
         },
     };
-    
+
+    // Auto-change hero image every 5 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setHeroImg((prev) => (prev + 1) % images.length);
+        }, 10000);
+        return () => clearInterval(interval);
+    }, [images.length]);
 
     return (
-        <div className="max-w-7xl mx-auto py-12 md:py-10 px-4">
+        <div className="relative top-8 z-50 max-w-7xl mb-10 mx-auto py-12 md:py-10 px-4">
             {/* Desktop */}
-            <div className="hidden md:flex">
+            <div className="hidden md:flex items-center">
                 <motion.div
                     className="md:flex-1 pr-8"
                     initial="hidden"
                     animate="visible"
                     variants={containerVariants}
-                     onAnimationComplete={onAnimationComplete}
+                    onAnimationComplete={onAnimationComplete}
                 >
-                   
-
                     <motion.h1 className="text-6xl font-bold" variants={textVariants}>
                         Glow <span className="text-[#3ed0ca]">Confidently</span>{" "}
-
-                        {/* with + sparkle */}
-                        <span className="inline-flex items-center gap-1 ">
+                        <span className="inline-flex items-center gap-1">
                             with
                             <motion.span
                                 className="text-4xl"
@@ -65,12 +84,11 @@ export const Header = ({ onAnimationComplete }) => {
                                 ✨
                             </motion.span>
                         </span>
-
                         <br />
-                        <span className="text-7xl font-bold text-[#5563ff]">Derma Healer</span>
+                        <span className="text-7xl font-bold text-[#5563ff]">
+                            Derma Healer
+                        </span>
                     </motion.h1>
-                    
-             
 
                     <motion.p
                         className="mt-4 text-xl text-gray-600 dark:text-gray-400"
@@ -82,11 +100,12 @@ export const Header = ({ onAnimationComplete }) => {
                         </span>
                     </motion.p>
                 </motion.div>
+
                 <motion.img
-                    src="https://dermahealerindia.com//wp-content/uploads/2025/06/6e7a8a-2.png"
+                    src={images[heroImg].imgurl}
                     alt="Hero Image Large"
-                    className="w-1/2 h-96 object-cover rounded-lg shadow-lg"
-                    loading="lazy"
+                    className="w-1/2 h-100 object-cover rounded-lg shadow-lg"
+                    loading="eager"
                     draggable={false}
                     initial="hidden"
                     animate="visible"
@@ -95,12 +114,12 @@ export const Header = ({ onAnimationComplete }) => {
             </div>
 
             {/* Mobile */}
-            <div className="relative md:hidden w-full h-full rounded-lg shadow-lg overflow-hidden z-19 flex flex-wrap flex-1/2 bg-[#3ed0ca] mobileStackReverse">
+            <div className="relative md:hidden w-full h-full rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
                 <motion.img
                     src="https://ik.imagekit.io/e8fzvhk22/Untitled%20design.jpg?updatedAt=1754665508921"
                     alt="Hero Image Small"
-                    className="relative z-10 object-right object-cover h-80 imagehight"
-                    loading="lazy"
+                    className="relative z-10 object-right object-cover h-80"
+                    loading="eager"
                     draggable={false}
                     initial="hidden"
                     animate="visible"
@@ -112,11 +131,11 @@ export const Header = ({ onAnimationComplete }) => {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="absolute flex flex-col justify-center inset-0 px-6 z-30"
                 >
-                    <motion.h1 className="text-5xl font-extrabold border px-2 text-white mb-4 drop-shadow-lg w-60 heroHeadingres">
-                        Glow <span className="text-[#242c2c]">Confidently</span> with <span className="text-[#5563ff]"> Derma
-                            Healer</span>
+                    <motion.h1 className="text-5xl font-extrabold px-2 text-white mb-4 drop-shadow-lg w-60">
+                        Glow <span className="text-[#242c2c]">Confidently</span> with{" "}
+                        <span className="text-[#5563ff]"> Derma Healer</span>
                     </motion.h1>
-                    <motion.p className="text-sm text-white max-w-md drop-shadow-md subherorespons">
+                    <motion.p className="text-sm text-white max-w-md drop-shadow-md">
                         Leading Skin & Laser Clinic in Bihar <br />
                         Using USFDA-Approved Technologies
                     </motion.p>

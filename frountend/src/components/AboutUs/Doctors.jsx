@@ -1,20 +1,41 @@
 "use client";
-import React from "react";
+import { useEffect, useRef } from "react";
+import { annotate } from "rough-notation";
 
-export default function Doctors() {
+export default function Founders() {
+    const headingRef = useRef(null);
+
+    useEffect(() => {
+        if (headingRef.current) {
+            const annotation = annotate(headingRef.current, {
+                type: "highlight",
+                color: " #46ecd5", // cyan highlight
+                iterations: 5,
+                multiline: true,
+            });
+            annotation.show();
+        }
+    }, []);
+
     return (
         <section className="max-w-6xl mx-auto py-16 px-6">
-            <h2 className="text-4xl font-extrabold text-center mb-12 text-[var(--text)]">
-                Meet Our Experts
+            {/* Heading with rough-notation highlight */}
+            <h2
+                
+                className="text-6xl font-extrabold text-center mb-12 text-[var(--text)]"
+            >
+                Meet Our <span
+                    ref={headingRef}>Founders</span> 
             </h2>
+
+            {/* Doctors Grid */}
             <div className="grid md:grid-cols-2 gap-10 text-center">
-                {[ // Doctors data
+                {[
                     {
                         name: "Dr. Neha Rani",
                         role: "Founder & Dermatologist",
                         img: "https://dermahealerindia.com//wp-content/uploads/2025/06/6e7a8a-2.png",
                     },
-                    
                     {
                         name: "Dr. B.K. Sharma",
                         role: "Senior Dermatologist",
@@ -23,7 +44,7 @@ export default function Doctors() {
                 ].map((doc, i) => (
                     <div
                         key={i}
-                        className="bg-[var(--sbg)] rounded-xl shadow-lg p-8 cursor-pointer transform transition duration-500 hover:scale-105 hover:shadow-2xl"
+                        className="relative bg-[var(--sbg)] rounded-xl shadow-lg p-8 cursor-pointer transform transition duration-500 hover:scale-105 hover:shadow-2xl overflow-hidden"
                     >
                         <img
                             src={doc.img}

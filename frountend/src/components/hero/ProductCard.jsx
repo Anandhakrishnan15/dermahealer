@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react"; // or any other icon
 
 export const ProductCard = ({ product }) => {
-    const [showIcon, setShowIcon] = useState(false);
+    // const [showIcon, setShowIcon] = useState(false);
 
     return (
         <a
