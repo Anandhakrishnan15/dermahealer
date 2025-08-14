@@ -1,19 +1,43 @@
+"use client";
+import React from "react";
+
 export const TopServicesPreview = () => {
-    const demoServices = [
+    const treatments = [
         {
-            title: "Facial Rejuvenation",
-            description: "Revitalize your skin with our advanced facial treatments for a youthful glow.",
-            image: "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg",
+            title: "HIFU (Non-Surgical Facelift)",
+            description:
+                "Achieve skin tightening and facial contouring without surgery. HIFU boosts collagen production, lifts sagging skin, and smoothens wrinkles with visible results in just one session.",
+            image: "https://picsum.photos/400/250?random=1",
+        },
+        {
+            title: "Laser Scar Removal",
+            description:
+                "Our advanced laser technology helps reduce acne scars, injury marks, and post-surgical scars by stimulating new skin regeneration with minimal downtime.",
+            image: "https://picsum.photos/400/250?random=2",
         },
         {
             title: "Laser Hair Removal",
-            description: "Smooth, hair-free skin with our painless and effective laser treatments.",
-            image: "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg",
+            description:
+                "Get freedom from waxing and shaving with USFDA-approved laser hair removal. Suitable for all skin types and both men and women.",
+            image: "https://picsum.photos/400/250?random=3",
         },
         {
-            title: "Body Contouring",
-            description: "Shape and sculpt your body with our cutting-edge contouring solutions.",
-            image: "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg",
+            title: "HydraFacial – Instant Glow",
+            description:
+                "A globally loved facial that detoxifies, exfoliates, hydrates, and nourishes your skin—all in one session. Ideal for dull, dry, and sensitive skin types.",
+            image: "https://picsum.photos/400/250?random=4",
+        },
+        {
+            title: "Hyperpigmentation Treatment",
+            description:
+                "We treat melasma, sun spots, freckles, and uneven skin tone with customized peels, lasers, and serums that target the pigmentation.",
+            image: "https://picsum.photos/400/250?random=5",
+        },
+        {
+            title: "Hair Loss Treatment",
+            description:
+                "Get fuller, healthier hair with our PRP, mesotherapy, and growth factor treatments tailored to your scalp’s needs.",
+            image: "https://picsum.photos/400/250?random=6",
         },
     ];
 
@@ -22,24 +46,33 @@ export const TopServicesPreview = () => {
             <h2 className="text-center text-3xl font-bold mb-10 text-[var(--text)]">
                 Our Signature Services
             </h2>
+
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
-                {demoServices.map((service, idx) => (
+                {treatments.map((service, idx) => (
                     <div
                         key={idx}
-                        className="bg-[var(--sbg)] rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition"
+                        className="bg-[var(--sbg)] rounded-xl shadow-md p-6 flex flex-col justify-around 
+                       hover:shadow-xl transition duration-300 group
+                       h-[400px] w-full"
                     >
-                        <img
-                            src={service.image}
-                            alt={service.title}
-                            className="w-full h-48 object-cover rounded-lg"
-                        />
-                        <h3 className="mt-4 text-xl font-semibold text-gray-800 dark:text-white">
-                            {service.title}
-                        </h3>
-                        <p className="mt-2 text-gray-600 dark:text-gray-300">
-                            {service.description}
-                        </p>
-                        <button className="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-500">
+                        <div>
+                            <img
+                                src={service.image}
+                                alt={service.title}
+                                className="w-full h-40 object-cover rounded-lg"
+                            />
+                            <h3 className="mt-4 text-lg font-semibold text-gray-200 line-clamp-2">
+                                {service.title}
+                            </h3>
+                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
+                                {service.description}
+                            </p>
+                        </div>
+
+                        <button
+                            className="mt-4 px-5 py-2 bg-teal-600 text-white rounded-full text-sm 
+                         hover:bg-teal-500 transition-all group-hover:scale-105"
+                        >
                             Learn More
                         </button>
                     </div>

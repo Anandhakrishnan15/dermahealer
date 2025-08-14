@@ -4,43 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; // ✅ For active link highlighting
 import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
+import { treatmentsData } from "../data/treatmentsData" //satic dtat
 
-/* ------------------------------
-   STATIC DATA FOR TREATMENTS
------------------------------- */
-const treatmentsData = [
-    {
-        label: "Face Treatment",
-        items: [
-            { href: "/treatments/face/acne-scar", label: "Acne & Acne Scar" },
-            { href: "/treatments/face/pigmentation", label: "Pigmentation Treatment" },
-            { href: "/treatments/face/anti-ageing", label: "Anti-ageing & Skin Rejuvenation" },
-        ],
-    },
-    {
-        label: "Hair",
-        items: [
-            { href: "/treatments/hair/laser-hair-removal", label: "Laser Hair Removal" },
-            { href: "/treatments/hair/hair-loss", label: "Hair Loss Treatment" },
-        ],
-    },
-    {
-        label: "Skin",
-        items: [
-            { href: "/treatments/skin/lesion-removal", label: "Skin & Lesion Removal" },
-            { href: "/treatments/skin/vitiligo", label: "Vitiligo Treatment" },
-        ],
-    },
-    {
-        label: "Body",
-        items: [
-            { href: "/treatments/body/body-treatment", label: "Body Treatment" },
-            { href: "/treatments/body/beauty-services", label: "Beauty Services" },
-        ],
-    },
-    { href: "/treatments/wellness-health", label: "Wellness & Health" },
-    { href: "/treatments/sexual-health", label: "Sexual Health" },
-];
+
 
 export default function NavBar() {
     const [isOpen, setIsOpen] = useState(false);

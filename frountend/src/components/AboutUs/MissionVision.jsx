@@ -51,8 +51,7 @@ export default function MissionVision() {
                 </h2>
                 <div className="w-24 h-1 mb-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500" />
                 <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
-                    To be the most trusted skin, hair, and laser clinic in Bihar, setting
-                    new standards in patient safety, innovation, and treatment results.
+                    To be the most trusted skin and laser clinic in Bihar by delivering safe, result-oriented treatments for all skin and hair concerns.
                 </p>
             </motion.div>
 

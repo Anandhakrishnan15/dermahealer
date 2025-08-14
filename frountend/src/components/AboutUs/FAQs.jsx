@@ -4,12 +4,28 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function FAQs() {
     const faqs = [
-        { q: "Are your aesthetic treatments safe?", a: "Yes, all are USFDA-approved and performed by qualified experts." },
-        { q: "Can anyone receive aesthetic or laser treatments?", a: "We customize treatments based on skin type and medical history." },
-        { q: "Where is your clinic located?", a: "We are in Siwan, Bihar. Google Map link available in Contact page." },
-        { q: "Do you offer treatments for hair fall and baldness?", a: "Yes, PRP and other advanced therapies are available." },
-        { q: "Is laser tattoo removal painful?", a: "Minimal discomfort; scars are rare when performed by experts." },
+        {
+            q: "Are your aesthetic treatments safe?",
+            a: "Yes, all our procedures are dermatologist-supervised, USFDA-approved, and follow strict safety and hygiene protocols to ensure minimal risk and maximum results."
+        },
+        {
+            q: "Can anyone receive aesthetic or laser treatments?",
+            a: "Most of our treatments are suitable for both men and women across all age groups, depending on skin type and medical history. A consultation is essential to assess your eligibility and customize the treatment."
+        },
+        {
+            q: "Where is your clinic located?",
+            a: "Derma Healer – Advanced Skin & Laser Clinic is located North of Gandhi Maidan, Siwan, Bihar."
+        },
+        {
+            q: "Do you offer treatments for hair fall and baldness?",
+            a: "Yes. We provide PRP therapy, mesotherapy, and growth factor treatments tailored to individual hair loss patterns. These are non-surgical and medically backed solutions."
+        },
+        {
+            q: "Is laser tattoo removal painful or does it leave a scar?",
+            a: "Our Q-switched laser breaks down tattoo ink safely with minimal pain and no scarring when done in recommended sessions. Mild discomfort may be felt, similar to a rubber band snap."
+        },
     ];
+
 
     const [openIndex, setOpenIndex] = useState(null);
 

@@ -44,7 +44,7 @@ export default function Home() {
       <SectionWrapper delay={0.2}><BeforeAfter /></SectionWrapper>
       <SectionWrapper delay={0.2}><Testimonials /></SectionWrapper>
       <SectionWrapper delay={0.2}><CertificateCarousel /></SectionWrapper>
-      <SectionWrapper delay={0.2}><PromoOffer /></SectionWrapper>
+      {/* <SectionWrapper delay={0.2}><PromoOffer /></SectionWrapper> */}
       <SectionWrapper delay={0.2}><TopServicesPreview /></SectionWrapper>
       <SectionWrapper delay={0.2}><BlogTips /></SectionWrapper>
       <SectionWrapper delay={0.2}><CTASection /></SectionWrapper>

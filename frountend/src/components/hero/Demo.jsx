@@ -5,42 +5,77 @@ import { HeroParallax } from "./HeroParallax";
 
 const products = [
     {
-        title: "Laser Hair Removal",
+        title: "HIFU (High-Intensity Focused Ultrasound) – Non-Surgical Facelift",
         link: "#",
-        thumbnail: "https://t3.ftcdn.net/jpg/03/25/76/36/360_F_325763670_7HDQhp4ZLh530EzsAM0iUfPJpIW2by1Z.jpg",
-        description: "We use the latest pain-free technology. Book now a free patch test."
+        thumbnail: "https://media.post.rvohealth.io/wp-content/uploads/2018/12/Can-High-Intensity-Focused-Ultrasound-Treatment-Replace-Face-Lifts-_1200x628-facebook.jpg",
+        description:
+            "Achieve skin tightening and facial contouring without surgery. HIFU boosts collagen production, lifts sagging skin, and smoothens wrinkles with visible results in just one session.",
     },
     {
-        title: "HydraFacial",
+        title: "Laser Scar Removal",
         link: "#",
-        thumbnail: "https://dermavue.com/wp-content/uploads/2023/12/Procedures-DermaVue-skin-clinic-best-dermatologist-in-kerala-expert-care-lasers-cosmetology-hair-transplant-_35-scaled.webp",
-        description: "Get the results you would expect from a medical facial treatment, but without the pain and downtime."
+        thumbnail: "https://www.theclinicoregon.com/content/uploads/2023/05/bna1-scar-revision-1024x545.jpg",
+        description:
+            "Our advanced laser technology helps reduce acne scars, injury marks, and post-surgical scars by stimulating new skin regeneration with minimal downtime.",
     },
     {
-        title: "Cosmelan - Hyperpigmentation Treatment",
+        title: "Laser Hair Removal – Safe & Permanent",
         link: "#",
-        thumbnail: "https://www.northtexasplasticsurgery.com/wp-content/uploads/2022/04/cosmelan-chemical-peel-treatment.jpg",
-        description: "Remove stubborn pigmentation such as melasma and age spots without surgery."
+        thumbnail: "https://www.kolorshealthcare.com/blog/wp-content/uploads/2023/07/Laser-Hair-Removal-Face.jpg",
+        description:
+            "Get freedom from waxing and shaving with USFDA-approved laser hair removal. Suitable for all skin types and both men and women.",
+    },
+    {
+        title: "HydraFacial – Instant Glow & Deep Cleansing",
+        link: "#",
+        thumbnail: "https://zazzlesalon.com/wp-content/uploads/2023/04/Hydra-Facial.jpg",
+        description:
+            "A globally loved facial that detoxifies, exfoliates, hydrates, and nourishes your skin—all in one session. Ideal for dull, dry, and sensitive skin types.",
+    },
+    {
+        title: "Hyperpigmentation Treatment",
+        link: "#",
+        thumbnail: "https://drnerinawilkinson.co.za/wp-content/uploads/2024/03/Newsletter-images-5-scaled.jpg",
+        description:
+            "We treat melasma, sun spots, freckles and uneven skin tone with customized peels, lasers, and serums that target the pigmentation.",
     },
     {
         title: "Hair Loss Treatment",
         link: "#",
-        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnBjjQ72tsTMTI04NY4HOAhPl7-_8HShwPVg&s",
-        description: "Enhance hair growth with this clinically proven treatment."
+        thumbnail: "https://skin111.com/uploads/image/1723537137Hair_Loss_Treatment_for_Men.webp",
+        description:
+            "Get fuller, healthier hair with our PRP, mesotherapy, and growth factor treatments tailored to your scalp’s needs. Ideal for men and women with thinning hair.",
     },
     {
-        title: "Body Contouring",
+        title: "Fat Loss Treatment – Non-Surgical Body Shaping",
         link: "#",
         thumbnail: "https://perfectskincenter.com/wp-content/uploads/2023/06/638e1ccf5d.jpg",
-        description: "With Lipofirm Pro, you can start noticing visible results after just a few sessions."
+        description:
+            "Target stubborn fat in belly, thighs, arms, or love handles with our non-invasive fat reduction treatments with HDPEM technology.",
     },
     {
-        title: "Skin Tag Removal",
+        title: "Urinary Incontinence Treatment (Kegel Chair Therapy)",
         link: "#",
-        thumbnail: "https://www.dermatologydiaries.com/wp-content/uploads/2024/05/skin-tags-skin-tag-removal-mumbai-best-dermatologist-in-Mumbai-Dr-Niketa-Sonavane.jpeg",
-        description: "Advanced electrolysis techniques that safely and effectively remove tags."
+        thumbnail: "https://www.kaya.in/media/mageplaza/blog/post/s/a/safe-effective-body-sculpting-fat-reduction.jpg",
+        description:
+            "A revolutionary non-invasive treatment for post-pregnancy and age-related urinary leakage using the latest electromagnetic chair technology.",
+    },
+    {
+        title: "Vitiligo Surgery (Punch Grafting & Suction Blister Grafting)",
+        link: "#",
+        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQFJQAeYvEPNzpvDGugXIeSrHhsv-eN_1ylA&s",
+        description:
+            "We offer effective surgical options for stable vitiligo patches using advanced techniques to restore pigmentation safely and successfully.",
+    },
+    {
+        title: "Laser Tattoo Removal – Safe & Effective",
+        link: "#",
+        thumbnail: "https://www.kaya.in/media/mageplaza/blog/post/l/a/laser-tattoo-removal.jpg",
+        description:
+            "Our Q-switched laser gently breaks down tattoo pigments without damaging your skin, removing unwanted tattoos with precision and minimal scarring.",
     },
 ];
+
 
 
 export default function Demo() {
