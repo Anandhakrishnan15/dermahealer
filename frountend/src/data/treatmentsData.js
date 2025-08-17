@@ -5,6 +5,7 @@ export const treatmentsData = [
             {
                 label: "Acne & Acne Scar Treatments",
                 href: "/treatments/face/acne-scar",
+            image:"https://plymouthmeetingdermatology.com/wp-content/uploads/2023/02/AdobeStock_318562606-1024x683.jpeg",
                 description: `
           Acne & Acne Scar Treatments are designed to address both active acne and residual scarring, helping you achieve clearer, smoother skin. 
           Our dermatology experts use advanced therapies including laser treatments, microneedling, and PRP (Platelet-Rich Plasma) therapy tailored to your skin type. 
@@ -43,6 +44,7 @@ export const treatmentsData = [
             {
                 label: "Pigmentation Treatments",
                 href: "/treatments/face/pigmentation",
+              image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGE14i3Lx7Kqt4t6dilo8_birB2A8g9Pgxow&s",
                 description: `
           Pigmentation Treatments help reduce uneven skin tone caused by melasma, freckles, age spots, and hyperpigmentation. 
           Using a combination of laser therapies, chemical peels, and advanced topical solutions, we target excess melanin and restore skin’s natural glow. 
@@ -81,6 +83,7 @@ export const treatmentsData = [
             {
                 label: "Anti-Ageing & Skin Rejuvenation",
                 href: "/treatments/face/anti-ageing",
+              image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-4Di6jcxyqHhazRr8eah_rBTb6saZDwdmKw&s",
                 description: `
           Anti-Ageing & Skin Rejuvenation Treatments are designed to refresh your skin and restore youthful vitality. 
           Our clinic offers HydraFacial, PRP facials, mesotherapy, HIFU (High-Intensity Focused Ultrasound), and laser toning to reduce fine lines, wrinkles, and sagging. 
@@ -125,6 +128,7 @@ export const treatmentsData = [
         items: [
             {
                 label: "Laser Hair Removal",
+            image:"https://content.jdmagicbox.com/v2/comp/thrissur/y4/9999px487.x487.250318122204.j9y4/catalogue/thrissur-laser-clinic-ollukkara-thrissur-laser-hair-removal-treatments-1jb0k321c2.jpg",
                 href: "/treatments/hair/laser-hair-removal",
                 description: `
           Laser Hair Removal offers safe, effective, and virtually painless hair reduction for the face, body, and PCOS-related unwanted hair. 
@@ -160,6 +164,7 @@ export const treatmentsData = [
             },
             {
                 label: "Hair Loss Treatments",
+              image:"https://static01.nyt.com/images/2022/08/23/science/18sci-hairloss2/18sci-hairloss2-articleLarge.jpg?quality=75&auto=webp&disable=upscale",
                 href: "/treatments/hair/hair-loss",
                 description: `
           Hair Loss Treatments are designed to stimulate dormant hair follicles and improve overall hair density and thickness. 
@@ -202,6 +207,7 @@ export const treatmentsData = [
         items: [
             {
                 label: "Lesion Removal",
+            image:"https://i0.wp.com/post.healthline.com/wp-content/uploads/2023/08/Cold-sores-body2.jpg?w=1155&h=1528",
                 href: "/treatments/skin/lesion-removal",
                 description: `
           Lesion Removal treatments provide safe and effective removal of various skin growths such as warts, moles, skin tags, corns, and genital warts. 
@@ -237,6 +243,7 @@ export const treatmentsData = [
             },
             {
                 label: "Vitiligo Treatments",
+              image:"https://my.clevelandclinic.org/-/scassets/images/org/health/articles/12419-vitiligo",
                 href: "/treatments/skin/vitiligo",
                 description: `
           Vitiligo Treatments aim to restore pigmentation in affected areas of the skin. 
@@ -279,6 +286,7 @@ export const treatmentsData = [
             {
                 label: "Body Sculpting & Contouring",
                 href: "/treatments/body/body-treatment",
+            image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf7GpSBf_xtdmkPHrQcenIYacTujLvxc2u5A&s",
                 description: `
           Body Sculpting & Contouring treatments provide non-surgical solutions to reduce stubborn fat, shape body contours, and tighten skin. 
           Our clinic offers fat-loss injections, HDPEM (High-Density Pulsed Electromagnetic) treatments, and HIFU (High-Intensity Focused Ultrasound) body skin tightening to target specific areas safely and effectively. 
@@ -313,6 +321,7 @@ export const treatmentsData = [
             },
             {
                 label: "Beauty Services",
+              image:"https://media.istockphoto.com/id/1347013301/photo/the-procedure-of-aesthetic-medicine.jpg?s=612x612&w=0&k=20&c=SG2tcDI45GQdimpBJS92pbKONoTRfv3Ujhhk4mu8OCc=",
                 href: "/treatments/body/beauty-services",
                 description: `
           Our Beauty Services include MediFacial, HydraFacial, Vampire Facial, and Hollywood Facial treatments designed to enhance skin radiance, hydration, and overall appearance. 

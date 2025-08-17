@@ -26,6 +26,8 @@
     #eff6ff, #dbeafe
   );
   --tabelhover:rgba(167, 167, 167, 0.26);
+   --primary-color: #14b8a6; /* teal */
+  --secondary-color: #0284c7; /* blue */
 }
 .font-playfair {
   font-family: var(--font-playfair);
@@ -121,6 +123,35 @@ body {
     padding:5px;
   }
   
+}
+
+
+/* Target only inside .custom-prose */
+.custom-prose p {
+  margin: 5px 0 !important;
+}
+
+.custom-prose h2 {
+  font-size: 1.25rem; /* ~text-xl */
+  color: #14b8a6;     /* teal-500 */
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.custom-prose ul,
+.custom-prose ol {
+  list-style-type: disc; /* default bullet */
+  list-style-position: inside; /* bullets inside */
+  padding-left: 1rem;
+  margin: 5px 0;
+}
+
+.custom-prose ul li,
+.custom-prose ol li {
+  margin: 2px 0;
+  border-radius: 0.5rem;  /* rounded corners */
+  padding: 4px 8px;
+  background: #f0fdfa;    /* teal-50 */
 }
 
 

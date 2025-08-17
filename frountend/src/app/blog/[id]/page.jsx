@@ -47,9 +47,10 @@ export default function BlogDetail({ params }) {
                 className="w-full h-64 object-cover rounded-lg mb-6"
             />
             <div
-                className="prose max-w-none"
+                className="custom-prose prose max-w-none"
                 dangerouslySetInnerHTML={{ __html: post.content }}
             />
+
         </div>
     );
 }
