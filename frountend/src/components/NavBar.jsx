@@ -2,11 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // ✅ For active link highlighting
+import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
-import { treatmentsData } from "../data/treatmentsData" //satic dtat
-
-
+import { treatmentsData } from "../data/treatmentsData";
 
 export default function NavBar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +13,7 @@ export default function NavBar() {
     const [subDropdownOpen, setSubDropdownOpen] = useState(null);
 
     const navRef = useRef(null);
-    const pathname = usePathname(); // ✅ Current route
+    const pathname = usePathname();
 
     // Close dropdown & mobile menu when clicking outside
     useEffect(() => {
@@ -23,7 +21,7 @@ export default function NavBar() {
             if (navRef.current && !navRef.current.contains(event.target)) {
                 setDropdownOpen(null);
                 setSubDropdownOpen(null);
-                setIsOpen(false); // ✅ Also close mobile menu
+                setIsOpen(false);
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
@@ -39,7 +37,6 @@ export default function NavBar() {
         document.documentElement.classList.toggle("dark", savedTheme === "dark");
     }, []);
 
-    // Toggle theme
     const toggleTheme = () => {
         const newTheme = theme === "light" ? "dark" : "light";
         setTheme(newTheme);
@@ -50,7 +47,7 @@ export default function NavBar() {
     return (
         <nav
             ref={navRef}
-            className="w-full shadow-md px-4 py-3 flex items-center justify-between z-50  sticky top-0"
+            className="w-full shadow-md px-4 py-3 flex items-center justify-between z-50 sticky top-0"
             style={{ backgroundColor: "var(--navbar-bg)", color: "var(--navbar-text)" }}
         >
             {/* LEFT: Logo */}
@@ -67,8 +64,12 @@ export default function NavBar() {
                     setDropdownOpen={setDropdownOpen}
                     subDropdownOpen={subDropdownOpen}
                     setSubDropdownOpen={setSubDropdownOpen}
-                    onLinkClick={() => setIsOpen(false)}
-                    pathname={pathname} // ✅ pass pathname
+                    onLinkClick={() => {
+                        setIsOpen(false);
+                        setDropdownOpen(null);
+                        setSubDropdownOpen(null);
+                    }}
+                    pathname={pathname}
                 />
             </div>
 
@@ -105,8 +106,12 @@ export default function NavBar() {
                         subDropdownOpen={subDropdownOpen}
                         setSubDropdownOpen={setSubDropdownOpen}
                         mobile
-                        onLinkClick={() => setIsOpen(false)}
-                        pathname={pathname} // ✅ pass pathname
+                        onLinkClick={() => {
+                            setIsOpen(false);
+                            setDropdownOpen(null);
+                            setSubDropdownOpen(null);
+                        }}
+                        pathname={pathname}
                     />
                 </div>
             )}
@@ -146,42 +151,32 @@ function NavLinks({
             >
                 {label} <ChevronRight size={14} />
             </button>
-            <div className="px-2 py-0">
-                {subDropdownOpen === label && (
-                    <div
-                        className={`absolute left-full top-0 mt-0 rounded shadow-lg ${mobile ? "static w-full" : "w-56"
-                            }`}
-                        style={{
-                            backgroundColor: "var(--navbar-bg)",
-                            boxShadow: "var(--card-shadow)",
-                            border: `1px solid var(--card-border)`,
-                        }}
-                    >
-                        {items.map((item, idx) => (
-                            <div
-                                className="px-0 py-1 hover:bg-[#aaf7ff95]"
-                                key={idx}
-                            >
-                                <LinkItem
-                                    href={item.href}
-                                    label={item.label}
-                                    onClick={onLinkClick}
-                                    active={pathname === item.href} // ✅ highlight active
-                                />
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
+            {subDropdownOpen === label && (
+                <div
+                    className={`absolute left-full top-0 rounded shadow-lg ${mobile ? "static w-full" : "w-56"}`}
+                    style={{
+                        backgroundColor: "var(--navbar-bg)",
+                        boxShadow: "var(--card-shadow)",
+                        border: `1px solid var(--card-border)`,
+                    }}
+                >
+                    {items.map((item, idx) => (
+                        <div key={idx} className="px-0 py-1 hover:bg-[#aaf7ff95]">
+                            <LinkItem
+                                href={item.href}
+                                label={item.label}
+                                onClick={onLinkClick}
+                                active={pathname === item.href}
+                            />
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 
     return (
-        <div
-            className={`${mobile ? "flex flex-col space-y-4" : "flex space-x-3"
-                } items-center`}
-           
-        >
+        <div className={`${mobile ? "flex flex-col space-y-4" : "flex space-x-3"} items-center`}>
             {links.map((link, idx) =>
                 link.dropdown ? (
                     <div key={idx} className="relative group">
@@ -190,15 +185,17 @@ function NavLinks({
                                 setDropdownOpen(dropdownOpen === link.label ? null : link.label)
                             }
                             className="hover:underline flex items-center gap-1"
-                            style={{ backgroundColor: "var(--navbar-bg)", color: "var(--navbar-text)" }}
+                            style={{
+                                backgroundColor: "var(--navbar-bg)",
+                                color: "var(--navbar-text)",
+                            }}
                         >
                             {link.label} <ChevronDown size={14} />
                         </button>
 
                         {dropdownOpen === link.label && (
                             <div
-                                className={`absolute py-2 rounded shadow-lg z-20 ${mobile ? "static w-full" : "w-66"
-                                    }`}
+                                className={`absolute py-2 rounded shadow-lg z-20 ${mobile ? "static w-full" : "w-66"}`}
                                 style={{
                                     backgroundColor: "var(--navbar-bg)",
                                     boxShadow: "var(--card-shadow)",
@@ -218,7 +215,7 @@ function NavLinks({
                                             href={treatment.href}
                                             label={treatment.label}
                                             onClick={onLinkClick}
-                                            active={pathname === treatment.href} // ✅ highlight active
+                                            active={pathname === treatment.href}
                                         />
                                     )
                                 )}
@@ -231,7 +228,7 @@ function NavLinks({
                         href={link.href}
                         label={link.label}
                         onClick={onLinkClick}
-                        active={pathname === link.href} // ✅ highlight active
+                        active={pathname === link.href}
                     />
                 )
             )}
@@ -243,10 +240,9 @@ function LinkItem({ href, label, onClick, active }) {
     return (
         <Link
             href={href}
-            className={`block px-4 py-2  hover:underline rounded-md transition-colors ${active ? "text-[#4fdaea]" : "text-[var(--navbar-link)]"}`}
+            className={`block px-4 py-2 hover:underline rounded-md transition-colors ${active ? "text-[#4fdaea]" : "text-[var(--navbar-link)]"
+                }`}
             onClick={onClick}
-           
-
         >
             {label}
         </Link>
@@ -254,7 +250,7 @@ function LinkItem({ href, label, onClick, active }) {
 }
 
 /* ------------------------------
-   FANCY THEME TOGGLE
+   THEME TOGGLE
 ------------------------------ */
 function ThemeToggle({ theme, toggleTheme }) {
     return (
