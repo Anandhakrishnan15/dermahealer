@@ -52,8 +52,15 @@ export default function NavBar() {
         >
             {/* LEFT: Logo */}
             <div className="flex items-center">
-                <Link href="/" className="font-bold text-xl" onClick={() => setIsOpen(false)}>
-                    MyLogo
+                <Link href="/" onClick={() => setIsOpen(false)}>
+                    <img
+                        src="/logo2.png"   // ✅ Place your logo inside public/logo.png
+                        alt="My Logo"
+                        width={50}       // adjust as needed
+                        height={10}
+                        className="object-contain"
+                        loading="eager"
+                    />
                 </Link>
             </div>
 
