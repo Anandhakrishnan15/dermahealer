@@ -22,7 +22,7 @@ export default function TreatmentContent({ treatment }) {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
-                        className="text-5xl font-extrabold text-white drop-shadow-lg mb-4"
+                        className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white drop-shadow-lg mb-4"
                     >
                         {treatment.label}
                     </motion.h1>
@@ -30,7 +30,8 @@ export default function TreatmentContent({ treatment }) {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2, duration: 0.6 }}
-                        className="text-lg text-white/90 max-w-2xl"
+
+                        className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 max-w-2xl"
                     >
                         {treatment.description}
                     </motion.p>
