@@ -63,6 +63,7 @@ export const Header = ({ onAnimationComplete }) => {
                     variants={containerVariants}
                     onAnimationComplete={onAnimationComplete}
                 >
+                    {/* ✅ Heading */}
                     <motion.h1 className="text-6xl font-bold" variants={textVariants}>
                         Glow <span className="text-[#3ed0ca]">Confidently</span>{" "}
                         <span className="inline-flex items-center gap-1">
@@ -90,6 +91,7 @@ export const Header = ({ onAnimationComplete }) => {
                         </span>
                     </motion.h1>
 
+                    {/* ✅ Tagline */}
                     <motion.p
                         className="mt-4 text-xl text-gray-600 dark:text-gray-400"
                         variants={textVariants}
@@ -99,8 +101,28 @@ export const Header = ({ onAnimationComplete }) => {
                             USFDA-Approved Technologies
                         </span>
                     </motion.p>
+
+                    {/* ✅ CTA Buttons */}
+                    <motion.div
+                        className="mt-6 flex gap-4"
+                        variants={textVariants}
+                    >
+                        <a
+                            href="/contact-us"
+                            className="bg-[#3ed0ca] text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-teal-600 transition"
+                        >
+                            Contact Us
+                        </a>
+                        <a
+                            href="/treatments"
+                            className="bg-[#5563ff] text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-[#3a4343] transition"
+                        >
+                            Our Treatments
+                        </a>
+                    </motion.div>
                 </motion.div>
 
+                {/* ✅ Hero Image */}
                 <motion.img
                     src={images[heroImg].imgurl}
                     alt="Hero Image Large"
@@ -112,6 +134,7 @@ export const Header = ({ onAnimationComplete }) => {
                     variants={imageVariants}
                 />
             </div>
+
 
             {/* Mobile */}
             <div className="relative md:hidden w-full h-full rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
@@ -125,22 +148,41 @@ export const Header = ({ onAnimationComplete }) => {
                     animate="visible"
                     variants={imageVariants}
                 />
+
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="absolute flex flex-col justify-center inset-0 px-6 z-30"
                 >
-                    <motion.h1 className="text-5xl font-extrabold px-2 text-white mb-4 drop-shadow-lg w-60">
+                    <motion.h1 className="text-3xl sm:text-4xl font-extrabold px-2 text-white mb-4 drop-shadow-lg w-60">
                         Glow <span className="text-[#242c2c]">Confidently</span> with{" "}
-                        <span className="text-[#5563ff]"> Derma Healer</span>
+                        <span className="text-[#5563ff]">Derma Healer</span>
                     </motion.h1>
-                    <motion.p className="text-sm text-white max-w-md drop-shadow-md">
+
+                    <motion.p className="text-sm sm:text-base text-white max-w-md drop-shadow-md mb-4">
                         Leading Skin & Laser Clinic in Bihar <br />
                         Using USFDA-Approved Technologies
                     </motion.p>
+
+                    {/* ✅ CTA Buttons */}
+                    <div className="flex gap-3">
+                        <a
+                            href="/contact"
+                            className="bg-white text-[#3ed0ca] font-semibold px-4 py-2 rounded-full text-sm shadow hover:bg-gray-100 transition"
+                        >
+                            Contact Us
+                        </a>
+                        <a
+                            href="/treatments"
+                            className="bg-[#242c2c] text-white font-semibold px-4 py-2 rounded-full text-sm shadow hover:bg-[#3a4343] transition"
+                        >
+                            Our Treatments
+                        </a>
+                    </div>
                 </motion.div>
             </div>
+
         </div>
     );
 };
