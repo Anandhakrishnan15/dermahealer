@@ -6,10 +6,8 @@ import Demo from "../components/hero/Demo.jsx";
 import { QuickIntroUSP } from "../components/QuickIntroUSP.jsx";
 import { TopServicesPreview } from "../components/TopServicesPreview.jsx";
 import { Testimonials } from "../components/Testimonials.jsx";
-import { PromoOffer } from "../components/PromoOffer.jsx";
 import { BlogTips } from "../components/BlogTips.jsx";
 import { CTASection } from "../components/CTASection.jsx";
-import { ContactSocial } from "../components/ContactSocial.jsx";
 import { BeforeAfter } from "../components/BeforeAfter.jsx";
 import CertificateCarousel from "../components/Certifications.jsx";
 
@@ -44,11 +42,10 @@ export default function Home() {
       <SectionWrapper delay={0.2}><BeforeAfter /></SectionWrapper>
       <SectionWrapper delay={0.2}><Testimonials /></SectionWrapper>
       <SectionWrapper delay={0.2}><CertificateCarousel /></SectionWrapper>
-      {/* <SectionWrapper delay={0.2}><PromoOffer /></SectionWrapper> */}
-      <SectionWrapper delay={0.2}><TopServicesPreview /></SectionWrapper>
+      <SectionWrapper delay={0.2}><TopServicesPreview limit={3} /></SectionWrapper>
       <SectionWrapper delay={0.2}><BlogTips /></SectionWrapper>
       <SectionWrapper delay={0.2}><CTASection /></SectionWrapper>
-      <SectionWrapper delay={0.2}><ContactSocial /></SectionWrapper>
+      
     </div>
   );
 }
