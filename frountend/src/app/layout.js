@@ -21,8 +21,31 @@ const playfair = Playfair_Display({
 
 export const metadata = {
   title: "Derma Healer - Expert Skin & Laser Clinic in Bihar",
-  description: "Experience advanced USFDA-approved skin and laser treatments with Derma Healer. Your journey to healthier, glowing skin starts here.",
+  description:
+    "Experience advanced USFDA-approved skin and laser treatments with Derma Healer. Your journey to healthier, glowing skin starts here.",
+  icons: {
+    icon: "/logo2.png",       // ✅ favicon/logo
+    shortcut: "/logo2.png",
+    apple: "/logo2.png",
+  },
+  openGraph: {
+    title: "Derma Healer - Expert Skin & Laser Clinic in Bihar",
+    description:
+      "Experience advanced USFDA-approved skin and laser treatments with Derma Healer. Your journey to healthier, glowing skin starts here.",
+    url: "https://your-domain.com", // replace with your domain
+    siteName: "Derma Healer",
+    images: [
+      {
+        url: "/logo2.png", // ✅ stored in /public/logo.png
+        width: 800,
+        height: 600,
+        alt: "Derma Healer Logo",
+      },
+    ],
+    type: "website",
+  },
 };
+
 
 
 export default function RootLayout({ children }) {
