@@ -6,7 +6,7 @@ import { useEffect, useState, useRef } from "react";
 const doctors = [
     {
         name: "Dr. B.K. Sharma, MBBS, MD (Skin & VD)",
-        img: "https://dermahealerindia.com/wp-content/uploads/2025/06/6e7a8a-3.png",
+        img: "https://ik.imagekit.io/iwky7g0ee/6e7a8a-3.webp?updatedAt=1755608439693",
         qualification: "Senior consultant dermatologist with 30+ years of experience.",
         specialization:
             "Chronic skin diseases, STD management, vitiligo, psoriasis, eczema, leprosy, and advanced medical dermatology.",
