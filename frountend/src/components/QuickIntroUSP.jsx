@@ -1,6 +1,7 @@
-"use client"
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+"use client";
+
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
 
 const doctors = [
     {
@@ -30,7 +31,7 @@ const doctors = [
 export const QuickIntroUSP = () => {
     const [index, setIndex] = useState(0);
 
-    // Auto switch every 5s
+    // Auto switch every 8s
     useEffect(() => {
         const interval = setInterval(() => {
             setIndex((prev) => (prev + 1) % doctors.length);
@@ -39,14 +40,23 @@ export const QuickIntroUSP = () => {
     }, []);
 
     const doctor = doctors[index];
+    const sectionRef = useRef(null);
+    const inView = useInView(sectionRef, { once: true, margin: "-100px" });
+
+    const sectionVariant = {
+        hidden: { opacity: 0, y: 30 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+    };
 
     return (
-        <section className="py-16 bg-[var(--sbg)]">
-            {/* Section Heading */}
+        <section
+            ref={sectionRef}
+            className="py-16 bg-[var(--sbg)]"
+        >
             <motion.h2
-                initial={{ opacity: 0, y: -20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                initial="hidden"
+                animate={inView ? "visible" : "hidden"}
+                variants={sectionVariant}
                 className="text-center text-3xl md:text-4xl font-extrabold tracking-tight text-gray-100 mb-12"
             >
                 Specialists Behind <span className="text-indigo-500">Derma Healer</span>
@@ -111,6 +121,5 @@ export const QuickIntroUSP = () => {
                 </div>
             </div>
         </section>
-
     );
 };

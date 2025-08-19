@@ -50,10 +50,10 @@ export default function Footer() {
                 <div>
                     <h4 className="font-semibold mb-3">Follow Us</h4>
                     <div className="flex space-x-4">
-                        <a href="#" target="_blank" className="hover:text-teal-400"><Facebook /></a>
-                        <a href="#" target="_blank" className="hover:text-teal-400"><Instagram /></a>
-                        <a href="#" target="_blank" className="hover:text-teal-400"><Linkedin /></a>
-                        <a href="#" target="_blank" className="hover:text-teal-400"><Youtube /></a>
+                        <a href="https://www.facebook.com/derma.healer.2025" target="_blank" className="hover:text-teal-400"><Facebook /></a>
+                        <a href="https://www.instagram.com/dermahealerindia/?hl=en" target="_blank" className="hover:text-teal-400"><Instagram /></a>
+                        <a href="https://www.linkedin.com/in/dr-neha-rani-012395ba/" target="_blank" className="hover:text-teal-400"><Linkedin /></a>
+                        <a href="https://www.youtube.com/@dermahealerindia" target="_blank" className="hover:text-teal-400"><Youtube /></a>
                     </div>
                 </div>
             </div>

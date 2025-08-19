@@ -8,11 +8,11 @@ export const Header = ({ onAnimationComplete }) => {
     const images = [
         {
             index: 1,
-            imgurl: "https://dermahealerindia.com/wp-content/uploads/2025/06/6e7a8a-2.png",
+            imgurl: "https://ik.imagekit.io/iwky7g0ee/6e7a8a-2.webp?updatedAt=1755608440235",
         },
         {
             index: 2,
-            imgurl: "https://dermahealerindia.com/wp-content/uploads/2025/06/6e7a8a-3.png",
+            imgurl: "https://ik.imagekit.io/iwky7g0ee/6e7a8a-3.webp?updatedAt=1755608439693",
         },
     ];
 

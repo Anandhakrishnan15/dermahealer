@@ -7,35 +7,28 @@ const certificates = [
   { id: 2, title: "Clinical Dermatology Certificate", image: "https://ik.imagekit.io/e8fzvhk22/Adobe%20Scan%2014%20Aug%202025-pages-3.jpg?updatedAt=1755181012235" },
   { id: 3, title: "Cosmetic Dermatology Training", image: "https://ik.imagekit.io/e8fzvhk22/Adobe%20Scan%2014%20Aug%202025-pages-2.jpg?updatedAt=1755181012221" },
   { id: 4, title: "Skin Cancer Diagnosis Workshop", image: "https://ik.imagekit.io/e8fzvhk22/Adobe%20Scan%2014%20Aug%202025-pages-1.jpg?updatedAt=1755181012192" },
-    { id: 5, title: "Pediatric Dermatology Specialization", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s" },
+  { id: 5, title: "Pediatric Dermatology Specialization", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s" },
 ];
 
 // Duplicate list for seamless looping
 const duplicatedCertificates = [...certificates, ...certificates];
 
 export default function AutoScrollingCertificates() {
-    return (
-        <>
-            <style>{`
-        @keyframes scroll-right {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
+  return (
+    <>
+      <style>{`
+        @keyframes scroll-left {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
-
         .scrolling-wrapper {
           display: flex;
-          width: calc(200%);
-          animation: scroll-right 20s linear infinite reverse; /* reverse makes it go left→right */
+          width: 200%;
+          animation: scroll-left 20s linear infinite;
         }
-
         .scrolling-wrapper:hover {
           animation-play-state: paused;
         }
-
         .no-scrollbar::-webkit-scrollbar {
           display: none;
         }
@@ -45,29 +38,32 @@ export default function AutoScrollingCertificates() {
         }
       `}</style>
 
-            <div className="max-w-full  py-6 overflow-hidden">
-                <h2 className="text-5xl font-bold text-center">
-                    Dermatology Certificates
-                </h2>
+      <div className="max-w-full py-12 overflow-hidden">
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-8">
+          Dermatology Certificates
+        </h2>
 
-                <div className="overflow-hidden no-scrollbar p-15">
-                    <div className="scrolling-wrapper">
-                        {duplicatedCertificates.map(({ id, title, image }, index) => (
-                            <div
-                                key={id + "-" + index}
-                                className="flex-shrink-0 w-80 rounded-lg shadow-md hover:shadow-xl transition cursor-pointer mx-3"
-                            >
-                                <img
-                                    src={image}
-                                    alt={title}
-                                    className="w-full h-full object-contain rounded-t-lg"
-                                    loading="lazy"
-                                />
-                            </div>
-                        ))}
-                    </div>
+        <div className="overflow-hidden no-scrollbar px-6">
+          <div className="scrolling-wrapper">
+            {duplicatedCertificates.map(({ id, title, image }, index) => (
+              <div
+                key={id + "-" + index}
+                className="flex-shrink-0 w-64 md:w-80 h-64 rounded-lg shadow-md hover:shadow-xl transition cursor-pointer mx-3 bg-white dark:bg-gray-900"
+              >
+                <img
+                  src={image}
+                  alt={title}
+                  className="w-full h-full object-cover rounded-t-lg"
+                  loading="lazy"
+                />
+                <div className="p-2 text-center text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {title}
                 </div>
-            </div>
-        </>
-    );
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
