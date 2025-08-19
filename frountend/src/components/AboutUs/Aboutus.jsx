@@ -1,19 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import Doctors from "./Doctors";
-
-// const founders = [
-//     {
-//         name: "Dr. Neha Rani",
-//         title: "MBBS, Aesthetic Physician",
-//         img: "https://media.licdn.com/dms/image/v2/D5603AQF0IoT68yVuZw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1643119262711?e=2147483647&v=beta&t=nnXHjSkUZL2B-sSqqO2pgV1KuN5eL8pfrTQLkWgM7eo",
-//     },
-//     {
-//         name: "Dr. B.K. Sharma",
-//         title: "MBBS, MD (Skin & VD)",
-//         img: "https://media.licdn.com/dms/image/v2/D5603AQGAtIi2spihSA/profile-displayphoto-shrink_800_800/B56ZiKLVkjHUAc-/0/1754664907584?e=1757548800&v=beta&t=YklSdZ1iRxbPkrrDpfj_oLmr4MQKrJk15WRLEX9_0_c",
-//     },
-// ];
 
 export default function AboutSection() {
     return (
@@ -39,36 +25,42 @@ export default function AboutSection() {
             </motion.p>
 
             {/* Content */}
-            <div className="max-w-4xl mx-auto px-4 text-center text-[var(--text)] md:text-left">
-                <motion.p className=" leading-relaxed mb-6">
-                    Derma Healer is a leading dermatology and aesthetic laser clinic in Siwan, Bihar,
-                    dedicated to advanced and affordable skin, hair, and laser treatments. Founded by{" "}
-                    <strong>Dr. Neha Rani</strong> and supported by senior dermatologist{" "}
-                    <strong>Dr. B.K. Sharma</strong>, our expert team offers personalized care using{" "}
-                    <strong>USFDA-approved technologies</strong>.
-                </motion.p>
+            <div className="max-w-4xl mx-auto px-4 text-center text-[var(--text)] md:text-left space-y-6">
+                {[
+                    `Derma Healer is a leading dermatology and aesthetic laser clinic in Siwan, Bihar,
+                    dedicated to advanced and affordable skin, hair, and laser treatments. Founded by
+                    Dr. Neha Rani and supported by senior dermatologist Dr. B.K. Sharma, our expert team offers
+                    personalized care using USFDA-approved technologies.`,
 
-                <motion.p className=" leading-relaxed mb-6">
-                    We specialize in treatments for{" "}
-                    <strong>
-                        acne, acne scars, pigmentation, laser hair removal, vitiligo, anti-aging, skin
-                        rejuvenation, PRP therapy
-                    </strong>
-                    , and more. At Derma Healer, our goal is to combine evidence-based dermatology with
-                    compassionate care, ensuring visible results and long-term skin health.
-                </motion.p>
+                    `We specialize in treatments for acne, acne scars, pigmentation, laser hair removal,
+                    vitiligo, anti-aging, skin rejuvenation, PRP therapy, and more. At Derma Healer, our goal
+                    is to combine evidence-based dermatology with compassionate care, ensuring visible results
+                    and long-term skin health.`,
 
-                <motion.p className=" leading-relaxed">
-                    If you’re searching for the <strong>best dermatologist in Siwan</strong>, or
-                    looking for safe and effective <strong>laser treatment in Bihar</strong>, Derma
-                    Healer is your trusted destination.
-                </motion.p>
+                    `If you’re searching for the best dermatologist in Siwan, or looking for safe and effective
+                    laser treatment in Bihar, Derma Healer is your trusted destination.`
+                ].map((text, i) => (
+                    <motion.p
+                        key={i}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 * i, duration: 0.6 }}
+                        className="leading-relaxed"
+                    >
+                        {text}
+                    </motion.p>
+                ))}
             </div>
 
             {/* Founders Section */}
-            <div className="max-w-5xl mx-auto mt-16 px-4">               
-                    <Doctors/>
-            </div>
+            {/* <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+                className="max-w-5xl mx-auto mt-16 px-4"
+            >
+                <Doctors />
+            </motion.div> */}
         </section>
     );
 }

@@ -152,6 +152,34 @@ body {
   border-radius: 0.5rem;  /* rounded corners */
   padding: 4px 8px;
   background: #f0fdfa;    /* teal-50 */
+  color:black;
 }
 
 
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes scroll-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-scroll {
+  animation-name: scroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.animate-scroll-reverse {
+  animation-name: scroll-reverse;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+animation: scroll-left 5s linear infinite;
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}

@@ -17,7 +17,7 @@ export default function AboutUs() {
             <AboutSection/>
             <MissionVision />
             <WhyChooseUs />
-            {/* <Doctors /> */}
+            <Doctors />
             <Treatments />
             <FAQs />
             <FinalCTA />
