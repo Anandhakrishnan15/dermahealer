@@ -1,68 +1,92 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, ArrowDown } from "lucide-react";
 
-export const BeforeAfter = () => {
-    const containerVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.8, ease: "easeOut" },
-        },
-    };
+export default function BeforeAfterSlideshow({ data }) {
+    const [current, setCurrent] = useState(0);
+
+    // Auto change every 5s
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrent((prev) => (prev + 1) % data.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [data.length]);
 
     return (
-        <motion.section
-            className="py-16 bg-[var(--bg)] text-center"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-        >
-            <motion.h2 className="text-4xl font-bold mb-6">
-                <span className="">Before</span>
-                <span className="mx-2 text-gray-600">&</span>
-                <span className="text-[#3e4ad0]">After</span>
-            </motion.h2>
+        <div className="bg-[var(--bg)] py-12 px-4 md:px-8 text-center relative overflow-hidden">
+            {/* ✅ Section Title */}
+            <h2 className="text-3xl md:text-4xl font-bold text-[#242c2c] mb-12">
+                BEFORE AND AFTER <span className="text-[#5563ff]">OUR TREATMENT</span>
+            </h2>
 
-
-            <p className="text-gray-400 max-w-xl mx-auto mb-10">
-                See the transformation our treatments can bring. Real results from real clients.
-            </p>
-
-            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
-                {[
-                    {
-                        src:
-                            "https://rejuvenationmdaesthetics.com/storage/2024/01/co2-laser-resurfacing-before-and-after-rewind-the-clock.webp",
-                        alt: "Before treatment",
-                        label: "Before",
-                    },
-                    {
-                        src:
-                            "https://www.houstonoculofacial.com/files/2016/12/CO2-Laser-Skin-Resurfacing-Before-After-Photo-4.jpg",
-                        alt: "After treatment",
-                        label: "After",
-                    },
-                ].map(({ src, alt, label }) => (
+            <div className="flex justify-center items-center">
+                <AnimatePresence mode="wait">
                     <motion.div
-                        key={label}
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                        className="rounded-lg shadow-lg overflow-hidden cursor-pointer"
+                        key={current}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -30 }}
+                        transition={{ duration: 0.6 }}
+                        className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16"
                     >
-                        <img
-                            src={src}
-                            alt={alt}
-                            className="w-full h-auto object-cover rounded-lg"
-                            loading="lazy"
-                            draggable={false}
-                        />
-                        <p className="mt-2 font-medium text-gray-700">{label}</p>
+                        {/* Before Card */}
+                        <motion.div
+                            whileHover={{ rotate: -2, scale: 1.02 }}
+                            className="bg-[var(--navbar-bg)] border border-[var(--border)] shadow-lg rounded-md p-3 transform rotate-[-3deg] w-64 relative"
+                        >
+                            <img
+                                src={data[current].beforeImg}
+                                alt="Before"
+                                className="rounded-sm object-cover h-80 w-full"
+                                draggable={false}
+                            />
+                            <p className="mt-2 font-semibold tracking-wide">BEFORE</p>
+
+                            {/* Arrow (desktop) */}
+                            <ArrowRight className="hidden md:block absolute top-1/2 -right-12 w-8 h-8 text-[#5563ff]" />
+                        </motion.div>
+
+                        {/* After Card */}
+                        <motion.div
+                            whileHover={{ rotate: 2, scale: 1.02 }}
+                            className="bg-[var(--navbar-bg)] border border-[var(--border)] shadow-lg rounded-md p-3 transform rotate-[3deg] w-64 relative"
+                        >
+                            <img
+                                src={data[current].afterImg}
+                                alt="After"
+                                className="rounded-sm object-cover h-80 w-full"
+                                draggable={false}
+                            />
+                            <p className="mt-2 font-semibold tracking-wide">AFTER</p>
+
+                            {/* Arrow (mobile stacked) */}
+                            <ArrowDown className="md:hidden absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-8 h-8 text-[#5563ff]" />
+                        </motion.div>
                     </motion.div>
-                ))}
+                </AnimatePresence>
             </div>
-        </motion.section>
+
+            {/* ✅ Heading + Description Below */}
+            <motion.div
+                key={current + "-text"}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.6 }}
+                className="mt-8"
+            >
+                {data[current].heading && (
+                    <h3 className="text-xl font-semibold text-[#242c2c] mb-2">
+                        {data[current].heading}
+                    </h3>
+                )}
+                <p className="text-gray-700 max-w-2xl mx-auto text-sm md:text-base">
+                    {data[current].description}
+                </p>
+            </motion.div>
+        </div>
     );
-};
+}
