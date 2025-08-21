@@ -21,12 +21,12 @@ export default function Founders() {
         {
             name: "Dr. Neha Rani",
             role: "Founder & Dermatologist",
-            img: "https://dermahealerindia.com/wp-content/uploads/2025/06/6e7a8a-2.png",
+            img: "https://ik.imagekit.io/iwky7g0ee/6e7a8a-2.webp?updatedAt=1755608440235",
         },
         {
             name: "Dr. B.K. Sharma",
             role: "Senior Dermatologist",
-            img: "https://dermahealerindia.com/wp-content/uploads/2025/06/6e7a8a-3.png",
+            img: "https://ik.imagekit.io/iwky7g0ee/6e7a8a-3.webp?updatedAt=1755608439693",
         },
     ];
 
