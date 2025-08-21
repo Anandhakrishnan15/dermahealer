@@ -359,6 +359,7 @@ export const treatmentsData = [
 
     {
         label: "Wellness & Health",
+      image:"https://dev.hclhealthcare.in/wp-content/uploads/2023/06/wellness.jpg",
         href: "/treatments/wellness-health",
         description: `
           Our Wellness & Health treatments are designed to boost overall health, immunity, and quality of life. 
@@ -392,6 +393,7 @@ export const treatmentsData = [
     },
     {
         label: "Sexual Health",
+      image:"https://www.pearlchemistgroup.co.uk/media/magefan_blog/Pharmacist_s_Tips_to_Improve_Your_Sexual_Health.jpg",
         href: "/treatments/sexual-health",
         description: `
           Our Sexual Health treatments provide safe, effective solutions for genital warts, premature ejaculation, and non-surgical vaginal tightening. 

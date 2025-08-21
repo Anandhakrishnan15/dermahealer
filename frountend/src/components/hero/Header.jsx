@@ -138,10 +138,12 @@ export const Header = ({ onAnimationComplete }) => {
 
             {/* Mobile */}
             <div className="relative md:hidden w-full h-full rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
+                {/* ✅ Mobile Hero Images */}
+                {/* Show this image ONLY above 495px */}
                 <motion.img
                     src="https://ik.imagekit.io/e8fzvhk22/Untitled%20design.jpg?updatedAt=1754665508921"
                     alt="Hero Image Small"
-                    className="relative z-10 object-right object-cover h-80"
+                    className="relative z-10 object-right object-cover h-80 hidden [@media(min-width:495px)]:block"
                     loading="eager"
                     draggable={false}
                     initial="hidden"
@@ -149,24 +151,93 @@ export const Header = ({ onAnimationComplete }) => {
                     variants={imageVariants}
                 />
 
+                {/* Show this image ONLY below 495px */}
+                <motion.img
+                    src="https://ik.imagekit.io/e8fzvhk22/Untitled%20design.jpg?updatedAt=1754665508921"
+                    alt="Hero Image Extra Small"
+                    className="relative z-10 object-cover h-72 w-full block [@media(min-width:495px)]:hidden"
+                    loading="eager"
+                    draggable={false}
+                    initial="hidden"
+                    animate="visible"
+                    variants={imageVariants}
+                />
+
+
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="absolute flex flex-col justify-center inset-0 px-6 z-30"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                        hidden: { opacity: 0 },
+                        visible: {
+                            opacity: 1,
+                            transition: { staggerChildren: 0.3 },
+                        },
+                    }}
+                    className="absolute flex flex-col justify-center inset-0 px-2 z-30"
                 >
-                    <motion.h1 className="text-3xl sm:text-4xl font-extrabold px-2 text-white mb-4 drop-shadow-lg w-60">
-                        Glow <span className="text-[#242c2c]">Confidently</span> with{" "}
+                    {/* ✅ Heading */}
+                    <motion.h1
+                        variants={{
+                            hidden: { opacity: 0, y: 40 },
+                            visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+                        }}
+                        className="
+      text-3xl sm:text-4xl font-extrabold text-white mb-4 drop-shadow-xl 
+      px-2 w-60 responmobilheading
+      [@media(max-width:495px)]:px-0
+      [@media(max-width:495px)]:w-50
+      [@media(max-width:495px)]:text-3xl
+    "
+                    >
+                        Glow<span className="inline-flex items-center gap-1">
+                       
+                            {/* ✨ Sparkle animation */}
+                            <motion.span
+                                className="text-2xl sm:text-3xl"
+                                initial={{ y: -5, rotate: 0, opacity: 0 }}
+                                animate={{
+                                    y: [-5, 0, -5],
+                                    rotate: [0, 15, -15, 0],
+                                    opacity: 1,
+                                }}
+                                transition={{
+                                    y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                                    rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                                    opacity: { delay: 0.5, duration: 0.5 },
+                                }}
+                            >
+                                ✨
+                            </motion.span>
+                        </span>{" "} <span className="text-[#242c2c]">Confidently</span>{" "}
+                        with{" "}
                         <span className="text-[#5563ff]">Derma Healer</span>
                     </motion.h1>
 
-                    <motion.p className="text-sm sm:text-base text-white max-w-md drop-shadow-md mb-4">
+                    {/* ✅ Tagline */}
+                    <motion.p
+                        variants={{
+                            hidden: { opacity: 0, y: 30 },
+                            visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut", delay: 0.2 } },
+                        }}
+                        className="text-sm sm:text-base text-white max-w-md drop-shadow-md mb-4"
+                    >
                         Leading Skin & Laser Clinic in Bihar <br />
-                        Using USFDA-Approved Technologies
+                        Using<br/>
+                        <span className="font-semibold bg-[#ffe680] text-[#161615] px-1 rounded">
+                            USFDA-Approved Technologies
+                        </span>
+
                     </motion.p>
 
                     {/* ✅ CTA Buttons */}
-                    <div className="flex gap-3">
+                    <motion.div
+                        variants={{
+                            hidden: { opacity: 0, y: 20 },
+                            visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut", delay: 0.4 } },
+                        }}
+                        className="flex gap-3"
+                    >
                         <a
                             href="/contact"
                             className="bg-white text-[#3ed0ca] font-semibold px-4 py-2 rounded-full text-sm shadow hover:bg-gray-100 transition"
@@ -175,12 +246,14 @@ export const Header = ({ onAnimationComplete }) => {
                         </a>
                         <a
                             href="/treatments"
-                            className="bg-[#242c2c] text-white font-semibold px-4 py-2 rounded-full text-sm shadow hover:bg-[#3a4343] transition"
+                            className="bg-[#1f2937] text-white font-semibold px-4 py-2 rounded-full text-sm shadow hover:bg-[#111827] transition"
                         >
                             Our Treatments
                         </a>
-                    </div>
+                    </motion.div>
                 </motion.div>
+
+
             </div>
 
         </div>
