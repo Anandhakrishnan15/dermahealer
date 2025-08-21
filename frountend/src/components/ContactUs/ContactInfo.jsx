@@ -1,74 +1,119 @@
 "use client";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Mail, Phone, Clock, MessageCircle } from "lucide-react";
 
 export default function ContactInfo() {
     return (
         <div
-            className="w-full border m-auto p-6 rounded-2xl shadow-md max-w-md md:max-w-none"
+            className="w-full border m-auto p-8 rounded-2xl shadow-md max-w-3xl "
             style={{ background: "var(--card-bg)" }}
         >
-            <h2 className="text-2xl font-semibold mb-6 text-center md:text-left text-[var(--text)]">
+            {/* Quote */}
+            <p className="italic text-lg mb-4 text-center text-[var(--text)]">
+                “Glowing skin starts with a conversation — reach out to us!”
+            </p>
+
+            {/* Heading */}
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-10 text-center text-[var(--heading)]">
                 Contact Information
             </h2>
 
-            <div className="flex flex-col md:flex-row md:space-x-8 text-[var(--text)]">
-                {/* Left column */}
-                <div className="flex-1 space-y-6 mb-6 md:mb-0">
-                    <div className="flex items-start space-x-3">
-                        <MapPin className="text-teal-600 mt-1" size={20} />
-                        <address className="not-italic">
-                            <strong className="block">Address:</strong>
+
+            {/* Row 1: Address + Email/Phone */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-[var(--text)]">
+                {/* Address */}
+                <div className="flex items-start gap-3">
+                    <MapPin className="text-teal-600 mt-1 flex-shrink-0" size={22} />
+                    <div>
+                        <h3 className="font-semibold text-lg text-[var(--heading)]">Address</h3>
+                        <address className="not-italic leading-relaxed">
                             North of Gandhi Maidan <br />
                             Siwan – 841226 <br />
                             Bihar, India
                         </address>
-                    </div>
-
-                    <div className="flex items-center space-x-3">
-                        <Phone className="text-teal-600" size={20} />
-                        <p>
-                            <strong>Phone:</strong>{" "}
-                            <a
-                                href="tel:+919876543210"
-                                className="text-teal-600 hover:underline"
-                            >
-                                +91 98765 43210
-                            </a>
-                        </p>
+                        <a
+                            href="https://maps.google.com/?q=North+of+Gandhi+Maidan,+Siwan"
+                            target="_blank"
+                            className="text-teal-600 hover:underline text-sm mt-1 inline-block"
+                        >
+                            📍 View on Google Maps
+                        </a>
                     </div>
                 </div>
 
-                {/* Right column */}
-                <div className="flex-1 space-y-6">
-                    <div className="flex items-center space-x-3">
-                        <Mail className="text-teal-600" size={20} />
-                        <p>
-                            <strong>Email:</strong>{" "}
+                {/* Email + Phone + WhatsApp */}
+                <div className="space-y-4">
+                    {/* Email */}
+                    <div className="flex items-start gap-3">
+                        <Mail className="text-teal-600 mt-1 flex-shrink-0" size={22} />
+                        <div>
+                            <h3 className="font-semibold text-lg text-[var(--heading)]">Email</h3>
                             <a
                                 href="mailto:hello@clinic.com"
                                 className="text-teal-600 hover:underline"
                             >
                                 hello@clinic.com
                             </a>
-                        </p>
-                    </div>
-
-                    <div className="flex items-start space-x-3">
-                        <Clock className="text-teal-600 mt-1" size={20} />
-                        <div>
-                            <strong>Office Hours:</strong>
-                            <ul className="mt-1 list-disc list-inside">
-                                <li>
-                                    Mon – Sat:{" "}
-                                    <time dateTime="09:00">9:00 AM</time> –{" "}
-                                    <time dateTime="17:00">5:00 PM</time>
-                                </li>
-                                <li>Sun: Closed</li>
-                            </ul>
                         </div>
                     </div>
+
+                    {/* Phone */}
+                    <div className="flex items-start gap-3">
+                        <Phone className="text-teal-600 mt-1 flex-shrink-0" size={22} />
+                        <div>
+                            <h3 className="font-semibold text-lg text-[var(--heading)]">Phone</h3>
+                            <a
+                                href="tel:+919876543210"
+                                className="text-teal-600 hover:underline"
+                            >
+                                +91 98765 43210
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* WhatsApp (optional) */}
+                    {/* <div className="flex items-start gap-3">
+                        <Phone className="text-green-600 mt-1 flex-shrink-0" size={22} />
+                        <div>
+                            <h3 className="font-semibold text-lg text-[var(--heading)]">
+                                WhatsApp
+                            </h3>
+                            <a
+                                href="https://wa.me/919876543210"
+                                target="_blank"
+                                className="text-green-600 hover:underline"
+                            >
+                                Chat with us
+                            </a>
+                        </div>
+                    </div> */}
+                </div>
+            </div>
+
+            {/* Row 2: Office Hours */}
+            <div className="mt-10 flex items-start gap-3">
+                <Clock className="text-teal-600 mt-1 flex-shrink-0" size={22} />
+                <div>
+                    <h3 className="font-semibold text-lg text-[var(--heading)] flex items-center gap-2">
+                       
+                        We’re Here For You
+                    </h3>
+
+                    <ul className="grid grid-cols-2 gap-y-2 text-sm md:text-base">
+                        <li className="col-span-1 font-medium">Monday – Saturday</li>
+                        <li className="col-span-1 text-right">
+                            <time dateTime="09:00">9:00 AM</time> –{" "}
+                            <time dateTime="17:00">5:00 PM</time>
+                        </li>
+
+                        <li className="col-span-1 font-medium">Sunday</li>
+                        <li className="col-span-1 text-right text-red-500 font-medium">Closed</li>
+                    </ul>
+
                 </div>
             </div>
         </div>
+
+
+
     );
 }
