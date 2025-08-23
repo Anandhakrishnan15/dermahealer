@@ -48,10 +48,10 @@ export default function ContactInfo() {
                         <div>
                             <h3 className="font-semibold text-lg text-[var(--heading)]">Email</h3>
                             <a
-                                href="mailto:hello@clinic.com"
+                                href="mailto:support@dermahealerindia.com"
                                 className="text-teal-600 hover:underline"
                             >
-                                hello@clinic.com
+                                support@dermahealerindia.com
                             </a>
                         </div>
                     </div>
