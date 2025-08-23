@@ -11,7 +11,7 @@ import BeforeAfterSlideshow from "@/components/BeforeAfter.jsx";
 import treatments from "@/data/BeforAndAfter.jsx";
 
 export default function Home() {
-  
+ 
   return (
     <div>
       <Demo />
@@ -19,6 +19,7 @@ export default function Home() {
       <QuickIntroUSP />
 
       <BeforeAfterSlideshow data={treatments} />
+      {/* <ImageGallery images={imageList} /> */}
 
       <Testimonials />
 

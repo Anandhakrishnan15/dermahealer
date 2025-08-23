@@ -42,7 +42,10 @@ export default function Footer() {
                         <li>📍  North of Gandhi Maidan <br />
                             Siwan – 841226 <br />
                             Bihar, India</li>
-                        <li>📞 <a href="tel:+911234567890" className="hover:underline">+91 12345 67890</a></li>
+                        <li>📞 <a href="tel:+919931766933" className="hover:underline">+91 9931766933</a></li>
+                        <li>📞 <a href="tel:+919693601499" className="hover:underline">+91 9693601499</a></li>
+
+                        
                         <li>✉ <a href="mailto:contact@dermahealer.com" className="hover:underline">contact@dermahealer.com</a></li>
                         <li>🕒 Mon–Sat: 10 AM – 7 PM</li>
                     </ul>

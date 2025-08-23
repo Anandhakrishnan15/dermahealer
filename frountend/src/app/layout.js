@@ -3,7 +3,6 @@ import "./globals.css";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import ClientWrapper from "./ClientWrapper";
-import Script from "next/script";
 
 // Fonts
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -58,10 +57,10 @@ export default function RootLayout({ children }) {
     "@context": "https://schema.org",
     "@type": "MedicalClinic",
     "name": "Derma Healer India",
-    "image": "https://dermahealerindia.com/logo-full.png",
+    "image": "/logo.jpg",
     "@id": "https://dermahealerindia.com",
     "url": "https://dermahealerindia.com",
-    "telephone": "+91-9546252909", // Use your real phone number
+    "telephone": "+91-919931766933", // Use your real phone number
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "North of Gandhi Maidan",

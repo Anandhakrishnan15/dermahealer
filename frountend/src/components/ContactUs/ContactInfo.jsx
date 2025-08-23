@@ -31,7 +31,7 @@ export default function ContactInfo() {
                             Bihar, India
                         </address>
                         <a
-                            href="https://maps.google.com/?q=North+of+Gandhi+Maidan,+Siwan"
+                            href="https://maps.app.goo.gl/TiVaxr4iGNtbHdxDA"
                             target="_blank"
                             className="text-teal-600 hover:underline text-sm mt-1 inline-block"
                         >
@@ -62,10 +62,18 @@ export default function ContactInfo() {
                         <div>
                             <h3 className="font-semibold text-lg text-[var(--heading)]">Phone</h3>
                             <a
-                                href="tel:+919876543210"
+                                href="tel:+919931766933"
                                 className="text-teal-600 hover:underline"
                             >
-                                +91 98765 43210
+                                +91 9931766933
+                            </a>
+                            <br/>
+                        
+                            <a
+                                href="tel:+919693601499"
+                                className="text-teal-600 hover:underline"
+                            >
+                                +91 9693601499
                             </a>
                         </div>
                     </div>

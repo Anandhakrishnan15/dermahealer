@@ -141,7 +141,7 @@ export const Header = ({ onAnimationComplete }) => {
                 {/* ✅ Mobile Hero Images */}
                 {/* Show this image ONLY above 495px */}
                 <motion.img
-                    src="https://ik.imagekit.io/e8fzvhk22/Untitled%20design.jpg?updatedAt=1754665508921"
+                    src="https://ik.imagekit.io/iwky7g0ee/Untitled%20design.jpg?updatedAt=1755938871068"
                     alt="Hero Image Small"
                     className="relative z-10 object-right object-cover h-80 hidden [@media(min-width:495px)]:block"
                     loading="eager"
@@ -153,7 +153,7 @@ export const Header = ({ onAnimationComplete }) => {
 
                 {/* Show this image ONLY below 495px */}
                 <motion.img
-                    src="https://ik.imagekit.io/e8fzvhk22/Untitled%20design.jpg?updatedAt=1754665508921"
+                    src="https://ik.imagekit.io/iwky7g0ee/Untitled%20design.jpg?updatedAt=1755938871068"
                     alt="Hero Image Extra Small"
                     className="relative z-10 object-cover h-72 w-full block [@media(min-width:495px)]:hidden"
                     loading="eager"
