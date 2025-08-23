@@ -48,11 +48,11 @@ export const metadata = {
         title: "Contact Derma Healer | Siwan, Bihar",
         description:
             "Get in touch with Derma Healer in Siwan, Bihar, for expert dermatology care and consultations with Dr. Neha Rani & Dr. B.K. Sharma.",
-        url: "https://yourwebsite.com/contact-us",
+        url: "https://dermahealerindia.com/contact-us",
         siteName: "Derma Healer India",
         images: [
             {
-                url: "https://yourwebsite.com/og-contact.jpg",
+                url: "https://dermahealerindia.com/og-contact.jpg",
                 width: 1200,
                 height: 630,
                 alt: "Derma Healer India - Contact Us, Siwan, Bihar",
@@ -67,7 +67,7 @@ export const metadata = {
         title: "Contact Derma Healer, Siwan, Bihar",
         description:
             "Contact Derma Healer to book an appointment with our dermatology experts in Siwan, Bihar.",
-        images: ["https://yourwebsite.com/og-contact.jpg"],
+        images: ["https://dermahealerindia.com/og-contact.jpg"],
     },
 };
 
@@ -76,8 +76,8 @@ export default function Contactus() {
         "@context": "https://schema.org",
         "@type": "MedicalClinic",
         name: "Derma Healer India",
-        url: "https://yourwebsite.com/contact-us",
-        logo: "https://yourwebsite.com/logo.png",
+        url: "https://dermahealerindia.com/contact-us",
+        logo: "/logo2.png",
         description:
             "Derma Healer is an advanced dermatology and skin care clinic with expert doctors in Siwan, Bihar.",
 

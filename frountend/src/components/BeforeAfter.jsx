@@ -1,92 +1,97 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowDown } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
-export default function BeforeAfterSlideshow({ data }) {
+export default function MultiImageSlideshow({ data }) {
     const [current, setCurrent] = useState(0);
+    const timeoutRef = useRef(null);
 
-    // Auto change every 5s
+    const nextSlide = () => {
+        setCurrent((prev) => (prev + 1) % data.length);
+    };
+
+    const prevSlide = () => {
+        setCurrent((prev) => (prev - 1 + data.length) % data.length);
+    };
+
+    // Clear timeout on unmount
     useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrent((prev) => (prev + 1) % data.length);
-        }, 5000);
-        return () => clearInterval(interval);
-    }, [data.length]);
+        return () => clearTimeout(timeoutRef.current);
+    }, []);
+
+    const currentSlide = data[current];
 
     return (
-        <div className="bg-[var(--bg)] py-12 px-4 md:px-8 text-center relative overflow-hidden">
-            {/* ✅ Section Title */}
-            <h2 className="text-3xl md:text-4xl font-bold text-[#242c2c] mb-12">
-                BEFORE AND AFTER <span className="text-[#5563ff]">OUR TREATMENT</span>
+        <div className="relative w-full max-w-6xl mx-auto py-12 px-4 flex flex-col items-center gap-6">
+
+            {/* ✅ Section Heading */}
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)] mb-8 text-center">
+                BEFORE & AFTER<br /> <span className="text-blue-600">OUR TREATMENTS</span>
             </h2>
 
-            <div className="flex justify-center items-center">
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={current}
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -30 }}
-                        transition={{ duration: 0.6 }}
-                        className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16"
-                    >
-                        {/* Before Card */}
-                        <motion.div
-                            whileHover={{ rotate: -2, scale: 1.02 }}
-                            className="bg-[var(--navbar-bg)] border border-[var(--border)] shadow-lg rounded-md p-3 transform rotate-[-3deg] w-64 relative"
-                        >
+            {/* Images Section (top, max 3 images) */}
+            <AnimatePresence mode="wait" onExitComplete={() => {
+                // ⏱ Start timer *after* animation finishes
+                clearTimeout(timeoutRef.current);
+                timeoutRef.current = setTimeout(nextSlide, 5000);
+            }}>
+                <motion.div
+                    key={current + "-images"}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.6 }}
+                    className="flex justify-center gap-4 flex-wrap"
+                >
+                    {currentSlide.images.slice(0, 3).map((imgSrc, index) => (
+                        <div key={index} className="rounded-md overflow-hidden shadow-lg w-40 md:w-56">
                             <img
-                                src={data[current].beforeImg}
-                                alt="Before"
-                                className="rounded-sm object-cover h-80 w-full"
+                                src={imgSrc}
+                                alt={`${currentSlide.heading} Image ${index + 1}`}
+                                className="w-full h-40 md:h-56 object-cover"
                                 draggable={false}
                             />
-                            <p className="mt-2 font-semibold tracking-wide">BEFORE</p>
+                        </div>
+                    ))}
+                </motion.div>
+            </AnimatePresence>
 
-                            {/* Arrow (desktop) */}
-                            <ArrowRight className="hidden md:block absolute top-1/2 -right-12 w-8 h-8 text-[#5563ff]" />
-                        </motion.div>
+            {/* Text Section */}
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={current + "-text"}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center max-w-3xl"
+                >
+                    {currentSlide.heading && (
+                        <h3 className="text-2xl md:text-3xl font-semibold text-[var(--text)] mb-2">
+                            {currentSlide.heading}
+                        </h3>
+                    )}
+                    <p className="text-gray-700 text-sm md:text-base">{currentSlide.description}</p>
 
-                        {/* After Card */}
-                        <motion.div
-                            whileHover={{ rotate: 2, scale: 1.02 }}
-                            className="bg-[var(--navbar-bg)] border border-[var(--border)] shadow-lg rounded-md p-3 transform rotate-[3deg] w-64 relative"
+                    {/* Navigation Arrows */}
+                    <div className="flex gap-4 justify-center mt-4">
+                        <button
+                            onClick={prevSlide}
+                            className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700"
                         >
-                            <img
-                                src={data[current].afterImg}
-                                alt="After"
-                                className="rounded-sm object-cover h-80 w-full"
-                                draggable={false}
-                            />
-                            <p className="mt-2 font-semibold tracking-wide">AFTER</p>
-
-                            {/* Arrow (mobile stacked) */}
-                            <ArrowDown className="md:hidden absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-8 h-8 text-[#5563ff]" />
-                        </motion.div>
-                    </motion.div>
-                </AnimatePresence>
-            </div>
-
-            {/* ✅ Heading + Description Below */}
-            <motion.div
-                key={current + "-text"}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.6 }}
-                className="mt-8"
-            >
-                {data[current].heading && (
-                    <h3 className="text-xl font-semibold text-[#242c2c] mb-2">
-                        {data[current].heading}
-                    </h3>
-                )}
-                <p className="text-gray-700 max-w-2xl mx-auto text-sm md:text-base">
-                    {data[current].description}
-                </p>
-            </motion.div>
+                            <ArrowLeft className="w-5 h-5" />
+                        </button>
+                        <button
+                            onClick={nextSlide}
+                            className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700"
+                        >
+                            <ArrowRight className="w-5 h-5" />
+                        </button>
+                    </div>
+                </motion.div>
+            </AnimatePresence>
         </div>
     );
 }

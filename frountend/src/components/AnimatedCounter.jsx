@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const stats = [
-    { label: "Successful Treatments", value: 5000 },
-    { label: "Happy Patients", value: 3500 },
-    { label: "Years of Expertise", value: 30 },
+    { label: "Years of Dermatology Expertise", value: 30 },
+    { label: "Years of Excellence in Laser Treatments", value: 10 },
+    { label: "Happy & Satisfied Patients", value: 600000 },
 ];
 
 function AnimatedCounter({ value, duration = 2000 }) {
@@ -34,7 +34,7 @@ function AnimatedCounter({ value, duration = 2000 }) {
 export default function OurExperts() {
     return (
         <section className="relative py-16 px-6 md:px-12 bg-[var(--navbar-bg)] text-center overflow-hidden">
-            {/* Top Wave Full Width */}
+            {/* Top Wave */}
             <div className="absolute top-0 left-0 w-full">
                 <svg
                     viewBox="0 0 1440 320"
@@ -79,7 +79,5 @@ export default function OurExperts() {
                 ))}
             </div>
         </section>
-
-
     );
 }

@@ -3,11 +3,11 @@
 import React from "react";
 
 const certificates = [
-  { id: 1, title: "Advanced Dermatology Course", image: "https://ik.imagekit.io/e8fzvhk22/WhatsApp%20Image%202025-08-14%20at%206.35.05%20PM.jpeg?updatedAt=1755181072077" },
-  { id: 2, title: "Clinical Dermatology Certificate", image: "https://ik.imagekit.io/e8fzvhk22/Adobe%20Scan%2014%20Aug%202025-pages-3.jpg?updatedAt=1755181012235" },
-  { id: 3, title: "Cosmetic Dermatology Training", image: "https://ik.imagekit.io/e8fzvhk22/Adobe%20Scan%2014%20Aug%202025-pages-2.jpg?updatedAt=1755181012221" },
-  { id: 4, title: "Skin Cancer Diagnosis Workshop", image: "https://ik.imagekit.io/e8fzvhk22/Adobe%20Scan%2014%20Aug%202025-pages-1.jpg?updatedAt=1755181012192" },
-  { id: 5, title: "Pediatric Dermatology Specialization", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6bOSohq-llFYpvbCQJycTFHyBoG2TaqO39w&s" },
+  { id: 1, title: "Advanced Dermatology Course", image: "https://ik.imagekit.io/iwky7g0ee/Adobe%20Scan%2014%20Aug%202025-pages-2.webp?updatedAt=1755939065716" },
+  { id: 2, title: "Clinical Dermatology Certificate", image: "https://ik.imagekit.io/iwky7g0ee/Adobe%20Scan%2014%20Aug%202025-pages-3.webp?updatedAt=1755939065681" },
+  { id: 3, title: "Cosmetic Dermatology Training", image: "https://ik.imagekit.io/iwky7g0ee/Adobe%20Scan%2014%20Aug%202025-pages-1.webp?updatedAt=1755939065503" },
+  { id: 4, title: "Skin Cancer Diagnosis Workshop", image: "https://ik.imagekit.io/iwky7g0ee/WhatsApp%20Image%202025-08-14%20at%206.35.05%20PM.webp?updatedAt=1755939065442" },
+  { id: 5, title: "Pediatric Dermatology Specialization", image: "https://ik.imagekit.io/iwky7g0ee/images.jpg?updatedAt=1755939065029" },
 ];
 
 // Duplicate list for seamless looping
