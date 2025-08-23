@@ -7,35 +7,49 @@ export const Testimonials = () => {
     const demoTestimonials = [
         {
             quote:
-                "Absolutely transformed my skin! The team is professional, caring, and delivers amazing results.",
-            name: "Sarah Johnson",
+                "My acne was severe, and nothing seemed to work until I visited this clinic. Their advanced acne management plan, including oral and topical treatments, cleared my skin completely. Best Leprosy care with expert dermatologists.",
+            name: "Palak Kumari",
             rating: 5,
-            image: "https://randomuser.me/api/portraits/women/44.jpg",
         },
         {
             quote:
-                "I’ve never felt more confident. The before/after difference is unbelievable.",
-            name: "Michael Lee",
-            rating: 4,
-            image: "https://randomuser.me/api/portraits/men/32.jpg",
+                "The team at Derma Healer helped me manage my rosacea with personalized skincare and laser treatments for redness. My skin is now clearer, and I feel more confident. Best place for rosacea treatment!",
+            name: "Shiya Kumari",
+            rating: 5,
         },
         {
             quote:
-                "From the moment I walked in, I felt at ease. The results exceeded my expectations!",
-            name: "Emily Carter",
+                "I started noticing white patches on my skin and consulted here immediately. Early intervention helped prevent the spread, and the results are remarkable. Best clinic for vitiligo treatment in Bihar.",
+            name: "Golu Yadav",
             rating: 5,
-            image: "https://randomuser.me/api/portraits/women/68.jpg",
         },
         {
             quote:
-                "Skin transformation beyond my expectations. Highly recommend their services!",
-            name: "David Green",
+                "I had white patches due to vitiligo, which were spreading. After starting treatment, I noticed significant improvements. Dr. Binay Kumar Sharma provided the best care and guided me through the process. Best vitiligo treatment in Siwan.",
+            name: "Rahul Kumar",
             rating: 5,
-            image: "https://randomuser.me/api/portraits/men/50.jpg",
+        },
+        {
+            quote:
+                "I was experiencing hair loss and dandruff, but the experts Dr. B.K. Sharma & Dr. Neha Rani provided the best PRP and scalp treatments. My hair is now thicker and healthier. Highly recommended for hair fall treatment!",
+            name: "Prabhunathprasad Yadav",
+            rating: 5,
+        },
+        {
+            quote:
+                "I had a birthmark on my face that affected my confidence. Their advanced laser technology helped lighten and eventually remove it. Best clinic for birthmark removal in Siwan with expert dermatologist.",
+            name: "Sachin Kumar",
+            rating: 5,
+        },
+        {
+            quote:
+                "I had been battling psoriasis for years with little relief. After consulting Dr. Binay Kumar Sharma at Derma Healer, I started advanced treatment that reduced scaling and itching. My condition is now under control. Best psoriasis treatment in Siwan with long lasting results.",
+            name: "Atul Rai",
+            rating: 5,
         },
     ];
 
-    // Duplicate array so it loops seamlessly
+    // Duplicate array so loop is seamless
     const loopTestimonials = [...demoTestimonials, ...demoTestimonials];
 
     return (
@@ -46,10 +60,10 @@ export const Testimonials = () => {
 
             <motion.div
                 className="flex gap-6"
-                animate={{ x: ["0%", "-50%"] }} // move half of total width
+                animate={{ x: ["0%", "-100%"] }}
                 transition={{
                     repeat: Infinity,
-                    duration: 20,
+                    duration: 40, // slower & smoother
                     ease: "linear",
                 }}
             >
@@ -63,11 +77,9 @@ export const Testimonials = () => {
                         </p>
 
                         <div className="flex items-center gap-3">
-                            <img
-                                src={t.image}
-                                alt={t.name}
-                                className="w-12 h-12 rounded-full object-cover"
-                            />
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
+                                {t.name.charAt(0)}
+                            </div>
                             <div>
                                 <div className="flex items-center">
                                     {[...Array(5)].map((_, i) => (
@@ -91,5 +103,3 @@ export const Testimonials = () => {
         </section>
     );
 };
-
-
