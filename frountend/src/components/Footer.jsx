@@ -46,7 +46,7 @@ export default function Footer() {
                         <li>📞 <a href="tel:+919693601499" className="hover:underline">+91 9693601499</a></li>
 
                         
-                        <li>✉ <a href="mailto:contact@dermahealer.com" className="hover:underline">contact@dermahealer.com</a></li>
+                        <li>✉ <a href="mailto:support@dermahealerindia.com" className="hover:underline">support@dermahealerindia.com</a></li>
                         <li>🕒 Mon–Sat: 10 AM – 7 PM</li>
                     </ul>
                 </div>
