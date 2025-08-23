@@ -144,7 +144,7 @@ function NavLinks({
         { href: "/blog", label: "Blog" },
         { href: "/about-us", label: "About Us" },
         { href: "/contact-us", label: "Contact Us" },
-        { href: "/admin", label: "Admin" },
+        // { href: "/admin", label: "Admin" },
     ];
 
     const NestedMenu = ({ label, items }) => (
