@@ -3,11 +3,14 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function AdminLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
+        <>
+        <ProtectedRoute >
         <div className="flex min-h-screen bg-gray-100">
             {/* Sidebar */}
             <AnimatePresence>
@@ -67,5 +70,7 @@ export default function AdminLayout({ children }) {
                 </main>
             </div>
         </div>
+        </ProtectedRoute>
+        </>
     );
 }
