@@ -28,7 +28,7 @@ export const treatmentsData = [
           - Topical or oral medications if needed for severe cases.
         `,
                 duration: "30-60 minutes per session depending on treatment type",
-                sessionsRequired: "4-8 sessions on average, spaced 2-4 weeks apart",
+                sessionsRequired: "4-8 sessions on average, spaced 3-6 weeks apart",
                 suitableFor: "Teenagers and adults with active acne, post-acne marks, or mild to moderate scarring",
                 aftercare: `
           - Avoid direct sun exposure for a few days after treatment.
@@ -67,7 +67,7 @@ export const treatmentsData = [
           - Combination therapy depending on severity and skin type.
         `,
                 duration: "30-45 minutes per session",
-                sessionsRequired: "4-6 sessions, spaced 2-3 weeks apart",
+                sessionsRequired: "4-6 sessions, spaced 3-6 weeks apart",
                 suitableFor: "Individuals with melasma, age spots, sun damage, or uneven skin tone",
                 aftercare: `
           - Avoid sun exposure and use broad-spectrum sunscreen daily.
@@ -306,7 +306,7 @@ export const treatmentsData = [
           - Treatment plans are personalized based on target areas and goals.
         `,
                 duration: "30-90 minutes per session depending on treatment and area",
-                sessionsRequired: "4-8 sessions recommended for optimal results, spaced 2-4 weeks apart",
+                sessionsRequired: "4-8 sessions recommended for optimal results, spaced 3-6 weeks apart",
                 suitableFor: "Individuals looking to reduce stubborn fat, tighten skin, and contour body shape without surgery",
                 aftercare: `
           - Maintain hydration and healthy diet to enhance results.

@@ -73,7 +73,7 @@ export default function MultiImageSlideshow({ data }) {
                             {currentSlide.heading}
                         </h3>
                     )}
-                    <p className="text-gray-700 text-sm md:text-base">{currentSlide.description}</p>
+                    <p className="text-[var(--navbar-text)] text-sm md:text-base">{currentSlide.description}</p>
 
                     {/* Navigation Arrows */}
                     <div className="flex gap-4 justify-center mt-4">

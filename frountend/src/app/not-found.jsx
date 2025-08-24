@@ -148,25 +148,21 @@ export default function NotFound() {
                     <p className="mb-3">Here are some helpful links:</p>
                     <ul className="flex flex-wrap items-center justify-center gap-3">
                         <li>
-                            <Link href="/about" className="underline-offset-4 hover:underline">
+                            <Link href="/about-us" className="underline-offset-4 hover:underline">
                                 About
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link href="/services" className="underline-offset-4 hover:underline">
                                 Services
                             </Link>
-                        </li>
+                        </li> */}
                         <li>
                             <Link href="/blog" className="underline-offset-4 hover:underline">
                                 Blog
                             </Link>
                         </li>
-                        <li>
-                            <Link href="/faq" className="underline-offset-4 hover:underline">
-                                FAQ
-                            </Link>
-                        </li>
+                       /
                     </ul>
                 </motion.div>
             </main>

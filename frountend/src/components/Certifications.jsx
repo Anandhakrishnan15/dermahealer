@@ -7,7 +7,7 @@ const certificates = [
   { id: 2, title: "Clinical Dermatology Certificate", image: "https://ik.imagekit.io/iwky7g0ee/Adobe%20Scan%2014%20Aug%202025-pages-3.webp?updatedAt=1755939065681" },
   { id: 3, title: "Cosmetic Dermatology Training", image: "https://ik.imagekit.io/iwky7g0ee/Adobe%20Scan%2014%20Aug%202025-pages-1.webp?updatedAt=1755939065503" },
   { id: 4, title: "Skin Cancer Diagnosis Workshop", image: "https://ik.imagekit.io/iwky7g0ee/WhatsApp%20Image%202025-08-14%20at%206.35.05%20PM.webp?updatedAt=1755939065442" },
-  { id: 5, title: "Pediatric Dermatology Specialization", image: "https://ik.imagekit.io/iwky7g0ee/images.jpg?updatedAt=1755939065029" },
+  // { id: 5, title: "Pediatric Dermatology Specialization", image: "https://ik.imagekit.io/iwky7g0ee/images.jpg?updatedAt=1755939065029" },
 ];
 
 // Duplicate list for seamless looping

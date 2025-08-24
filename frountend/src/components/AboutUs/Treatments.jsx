@@ -130,7 +130,7 @@ export default function Treatments() {
                             ))}
                         </motion.span>
 
-                        <span className="text-teal-600 ml-2">Treatments</span>
+                        <span className="bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent ml-2">Treatments</span>
 
                         <br />
 
@@ -161,8 +161,10 @@ export default function Treatments() {
                         {treatments.map(({ icon: Icon, title, desc, keywords }, i) => (
                             <motion.div
                                 key={i}
-                                className="bg-[var(--bg)] rounded-xl shadow-lg p-8 text-center transition-all duration-300 
-                                           hover:bg-teal-600 hover:scale-[1.05] hover:shadow-2xl group"
+                                className="rounded-xl shadow-lg p-8 text-center transition-all duration-500
+                 bg-[var(--navbar-bg)] text-navbar border border-[var(--border)]
+                 hover:bg-gradient-to-r hover:from-teal-600 hover:to-emerald-500
+                 hover:scale-[1.05] hover:shadow-2xl group"
                                 custom={i}
                                 initial="hidden"
                                 animate="visible"
