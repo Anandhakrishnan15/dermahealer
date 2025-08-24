@@ -139,7 +139,7 @@ export default function TreatmentContent({ treatment }) {
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    className="border border-[var(--border)] p-8 rounded-3xl shadow-lg"
+                    className="p-8 rounded-3xl shadow-lg"
                     style={{ background: "var(--card-bg)" }}
                 >
                     <h2 className="text-4xl font-extrabold mb-6 text-center text-[var(--text)] flex justify-center items-center gap-3">
@@ -150,7 +150,7 @@ export default function TreatmentContent({ treatment }) {
                         {treatment.benefits.map((b, i) => (
                             <div
                                 key={i}
-                                className="flex items-center gap-3 p-4 bg-[var(--form-bg)] rounded-xl shadow hover:scale-105 transition-transform"
+                                className="flex items-center gap-3 p-4 bg-[var(--form-bg)]  rounded-xl shadow hover:scale-105 transition-transform"
                             >
                                 <CheckCircle className="w-6 h-6 text-[var(--primary-color)]" />
                                 <p className="text-[var(--text)]">{b}</p>
