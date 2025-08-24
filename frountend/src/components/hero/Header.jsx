@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 export const Header = ({ onAnimationComplete }) => {
     const [heroImg, setHeroImg] = useState(0);
 
+    // ✅ Desktop images
     const images = [
         {
             index: 1,
@@ -14,6 +15,16 @@ export const Header = ({ onAnimationComplete }) => {
             index: 2,
             imgurl: "https://ik.imagekit.io/iwky7g0ee/6e7a8a-3.webp?updatedAt=1755608439693",
         },
+    ];
+
+    // ✅ Mobile images
+    const mobileImages = [
+        "https://ik.imagekit.io/e8fzvhk22/Untitled%20design.png?updatedAt=1756027157270",
+        "https://ik.imagekit.io/e8fzvhk22/Untitled%20design%20(1).png?updatedAt=1756027157151",
+    ];
+    const doctorNames = [
+        "Dr. Neha Rani – Aesthetic Physician",
+        "Dr. B.K. Sharma, MBBS, MD (Skin & VD)",
     ];
 
     // Animation variants
@@ -44,7 +55,7 @@ export const Header = ({ onAnimationComplete }) => {
         },
     };
 
-    // Auto-change hero image every 5 seconds
+    // ✅ Auto-change hero image every 10 seconds
     useEffect(() => {
         const interval = setInterval(() => {
             setHeroImg((prev) => (prev + 1) % images.length);
@@ -132,37 +143,32 @@ export const Header = ({ onAnimationComplete }) => {
                     initial="hidden"
                     animate="visible"
                     variants={imageVariants}
+                    key={heroImg} // re-trigger animation
                 />
             </div>
 
-
             {/* Mobile */}
             <div className="relative md:hidden w-full h-full rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
-                {/* ✅ Mobile Hero Images */}
-                {/* Show this image ONLY above 495px */}
+                {/* ✅ Auto-changing Mobile Hero Image */}
                 <motion.img
-                    src="https://ik.imagekit.io/iwky7g0ee/Untitled%20design.jpg?updatedAt=1755938871068"
-                    alt="Hero Image Small"
-                    className="relative z-10 object-right object-cover h-80 hidden [@media(min-width:495px)]:block"
+                    src={mobileImages[heroImg % mobileImages.length]}
+                    alt="Hero Image Mobile"
+                    className="relative z-10 object-cover h-72 sm:h-80 w-full"
                     loading="eager"
                     draggable={false}
                     initial="hidden"
                     animate="visible"
                     variants={imageVariants}
+                    key={heroImg} // 👈 ensures re-animation on change
                 />
 
-                {/* Show this image ONLY below 495px */}
-                <motion.img
-                    src="https://ik.imagekit.io/iwky7g0ee/Untitled%20design.jpg?updatedAt=1755938871068"
-                    alt="Hero Image Extra Small"
-                    className="relative z-10 object-cover h-72 w-full block [@media(min-width:495px)]:hidden"
-                    loading="eager"
-                    draggable={false}
-                    initial="hidden"
-                    animate="visible"
-                    variants={imageVariants}
-                />
-
+                {/* ✅ Doctor Name Overlay */}
+                <div className="absolute w-50 bottom-10 right-0 rounded-l-sm  bg-gray-100 text-teal-600 text-center py-2 z-20 [@media(max-width:495px)]:hidden
+">
+                    <p className="text-sm font-semibold">
+                        {doctorNames[heroImg % doctorNames.length]}
+                    </p>
+                </div>
 
                 <motion.div
                     initial="hidden"
@@ -183,15 +189,14 @@ export const Header = ({ onAnimationComplete }) => {
                             visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
                         }}
                         className="
-      text-3xl sm:text-4xl font-extrabold text-white mb-4 drop-shadow-xl 
-      px-2 w-60 responmobilheading
-      [@media(max-width:495px)]:px-0
-      [@media(max-width:495px)]:w-50
-      [@media(max-width:495px)]:text-3xl
-    "
+                            text-3xl sm:text-4xl font-extrabold text-white mb-4 drop-shadow-xl 
+                            px-2 w-60 responmobilheading
+                            [@media(max-width:495px)]:px-0
+                            [@media(max-width:495px)]:w-50
+                            [@media(max-width:495px)]:text-3xl
+                        "
                     >
                         Glow<span className="inline-flex items-center gap-1">
-                       
                             {/* ✨ Sparkle animation */}
                             <motion.span
                                 className="text-2xl sm:text-3xl"
@@ -209,7 +214,8 @@ export const Header = ({ onAnimationComplete }) => {
                             >
                                 ✨
                             </motion.span>
-                        </span>{" "} <span className="text-[#242c2c]">Confidently</span>{" "}
+                        </span>{" "}
+                        <span className="text-[#242c2c]">Confidently</span>{" "}
                         with{" "}
                         <span className="text-[#5563ff]">Derma Healer</span>
                     </motion.h1>
@@ -223,11 +229,10 @@ export const Header = ({ onAnimationComplete }) => {
                         className="text-sm sm:text-base text-white max-w-md drop-shadow-md mb-4"
                     >
                         Leading Skin & Laser Clinic in Bihar <br />
-                        Using<br/>
+                        Using<br />
                         <span className="font-semibold bg-[#ffe680] text-[#161615] px-1 rounded">
                             USFDA-Approved Technologies
                         </span>
-
                     </motion.p>
 
                     {/* ✅ CTA Buttons */}
@@ -252,10 +257,7 @@ export const Header = ({ onAnimationComplete }) => {
                         </a>
                     </motion.div>
                 </motion.div>
-
-
             </div>
-
         </div>
     );
 };
