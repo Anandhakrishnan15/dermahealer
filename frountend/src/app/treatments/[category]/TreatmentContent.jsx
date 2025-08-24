@@ -66,7 +66,7 @@ export default function TreatmentContent({ treatment }) {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="flex-1 min-w-[300px] p-6 bg-[var(--card-bg)] dark:bg-[var(--card-bg-dark)] rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
+                        className="flex-1 min-w-[300px] p-6 bg-[var(--sbg)]  rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
                     >
                         <h2 className="text-3xl font-bold mb-4 flex items-center gap-2 text-[var(--heading-color)]">
                             <Clock className="w-6 h-6 text-[var(--primary-color)]" />
@@ -83,7 +83,7 @@ export default function TreatmentContent({ treatment }) {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="flex-1 min-w-[300px] p-6 bg-[var(--card-bg)] dark:bg-[var(--card-bg-dark)] rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
+                        className="flex-1 min-w-[300px] p-6 bg-[var(--sbg)] rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
                     >
                         <h2 className="text-3xl font-bold mb-4 flex items-center gap-2 text-[var(--heading-color)]">
                             <UserCheck className="w-6 h-6 text-[var(--primary-color)]" />
@@ -101,29 +101,29 @@ export default function TreatmentContent({ treatment }) {
             {/* Key Info */}
             <section className="grid md:grid-cols-3 gap-6">
                 {treatment.duration && (
-                    <motion.div className="p-6 bg-teal-50 dark:bg-gray-800 rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3">
+                    <motion.div className="p-6 bg-[var(--sbg)] rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3">
                         <Clock className="w-6 h-6 text-[var(--primary-color)]" />
                         <div>
-                            <h3 className="text-xl font-semibold mb-1 text-gray-200">Duration</h3>
-                            <p className="text-gray-200">{treatment.duration}</p>
+                            <h3 className="text-xl font-semibold mb-1 text-[var(--text)]">Duration</h3>
+                            <p className="text-[var(--text)]">{treatment.duration}</p>
                         </div>
                     </motion.div>
                 )}
                 {treatment.sessionsRequired && (
-                    <motion.div className="p-6 bg-teal-50 dark:bg-gray-800 rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3">
+                    <motion.div className="p-6 bg-[var(--sbg)]rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3">
                         <Calendar className="w-6 h-6 text-[var(--primary-color)]" />
                         <div>
-                            <h3 className="text-xl font-semibold mb-1 text-gray-200">Sessions Required</h3>
-                            <p className="text-gray-200">{treatment.sessionsRequired}</p>
+                            <h3 className="text-xl font-semibold mb-1 text-[var(--text)]">Sessions Required</h3>
+                            <p className="text-[var(--text)]">{treatment.sessionsRequired}</p>
                         </div>
                     </motion.div>
                 )}
                 {treatment.suitableFor && (
-                    <motion.div className="p-6 bg-teal-50 dark:bg-gray-800 rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3">
+                    <motion.div className="p-6 bg-[var(--sbg)] rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3">
                         <Star className="w-6 h-6 text-[var(--primary-color)]" />
                         <div>
-                            <h3 className="text-xl font-semibold mb-1 text-gray-200">Suitable For</h3>
-                            <p className="text-gray-200" >{treatment.suitableFor}</p>
+                            <h3 className="text-xl font-semibold mb-1 text-[var(--text)]">Suitable For</h3>
+                            <p className="text-[var(--text)]" >{treatment.suitableFor}</p>
                         </div>
                     </motion.div>
                 )}
@@ -137,7 +137,7 @@ export default function TreatmentContent({ treatment }) {
                     viewport={{ once: true }}
                     className="bg-gradient-to-r from-teal-50 to-teal-100 dark:from-gray-800 dark:to-gray-900 p-8 rounded-3xl shadow-lg"
                 >
-                    <h2 className="text-4xl font-extrabold mb-6 text-center text-gray-200 flex justify-center items-center gap-3">
+                    <h2 className="text-4xl font-extrabold mb-6 text-center text-[var(--text)] flex justify-center items-center gap-3">
                         <CheckCircle className="w-8 h-8 text-[var(--primary-color)]" />
                         Benefits
                     </h2>
@@ -148,7 +148,7 @@ export default function TreatmentContent({ treatment }) {
                                 className="flex items-center gap-3 p-4 bg-[var(--card-bg)] dark:bg-[var(--card-bg-dark)] rounded-xl shadow hover:scale-105 transition-transform"
                             >
                                 <CheckCircle className="w-6 h-6 text-[var(--primary-color)]" />
-                                <p className="text-gray-200">{b}</p>
+                                <p className="text-[var(--text)]">{b}</p>
                             </div>
                         ))}
                     </div>
@@ -163,11 +163,11 @@ export default function TreatmentContent({ treatment }) {
                     viewport={{ once: true }}
                     className="p-8 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-900 rounded-3xl shadow-lg"
                 >
-                    <h2 className="text-3xl font-bold mb-4 flex items-center text-gray-200 gap-2">
+                    <h2 className="text-3xl font-bold mb-4 flex items-center text-[var(--text)] gap-2">
                         <CheckCircle className="w-6 h-6 text-[var(--primary-color)]" />
                         Expected Results
                     </h2>
-                    <p className="text-gray-200 whitespace-pre-line">
+                    <p className="text-[var(--text)] whitespace-pre-line">
                         {treatment.expectedResults}
                     </p>
                 </motion.section>
