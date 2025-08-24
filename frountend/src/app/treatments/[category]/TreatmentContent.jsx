@@ -30,7 +30,6 @@ export default function TreatmentContent({ treatment }) {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2, duration: 0.6 }}
-
                         className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 max-w-2xl"
                     >
                         {treatment.description}
@@ -57,16 +56,14 @@ export default function TreatmentContent({ treatment }) {
                 </div>
             </section>
 
-           
-
-            {/* Procedure & Aftercare as cards */}
+            {/* Procedure & Aftercare */}
             <div className="flex flex-wrap gap-6">
                 {treatment.procedure && (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="flex-1 min-w-[300px] p-6 bg-[var(--bg)]  rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
+                        className="flex-1 min-w-[300px] p-6 bg-[var(--card-bg)] rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
                     >
                         <h2 className="text-3xl font-bold mb-4 flex items-center gap-2 text-[var(--text)]">
                             <Clock className="w-6 h-6 text-[var(--primary-color)]" />
@@ -83,7 +80,7 @@ export default function TreatmentContent({ treatment }) {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="flex-1 min-w-[300px] p-6 bg-[var(--bg)] rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
+                        className="flex-1 min-w-[300px] p-6 bg-[var(--card-bg)] rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
                     >
                         <h2 className="text-3xl font-bold mb-4 flex items-center gap-2 text-[var(--text)]">
                             <UserCheck className="w-6 h-6 text-[var(--primary-color)]" />
@@ -96,13 +93,13 @@ export default function TreatmentContent({ treatment }) {
                 )}
             </div>
 
-
-
             {/* Key Info */}
             <section className="grid md:grid-cols-3 gap-6">
                 {treatment.duration && (
-                    <motion.div className="p-6rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3"
-                        style={{ background:"[var(--form-bg)]"}}>
+                    <motion.div
+                        className="p-6 rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3"
+                        style={{ background: "var(--form-bg)" }}
+                    >
                         <Clock className="w-6 h-6 text-[var(--primary-color)]" />
                         <div>
                             <h3 className="text-xl font-semibold mb-1 text-[var(--text)]">Duration</h3>
@@ -111,7 +108,10 @@ export default function TreatmentContent({ treatment }) {
                     </motion.div>
                 )}
                 {treatment.sessionsRequired && (
-                    <motion.div className="p-6 rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3" style={{ background: "[var(--form-bg)]" }}>
+                    <motion.div
+                        className="p-6 rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3"
+                        style={{ background: "var(--form-bg)" }}
+                    >
                         <Calendar className="w-6 h-6 text-[var(--primary-color)]" />
                         <div>
                             <h3 className="text-xl font-semibold mb-1 text-[var(--text)]">Sessions Required</h3>
@@ -120,11 +120,14 @@ export default function TreatmentContent({ treatment }) {
                     </motion.div>
                 )}
                 {treatment.suitableFor && (
-                    <motion.div className="p-6  rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3" style={{ background: "[var(--form-bg)]" }}>
+                    <motion.div
+                        className="p-6 rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3"
+                        style={{ background: "var(--form-bg)" }}
+                    >
                         <Star className="w-6 h-6 text-[var(--primary-color)]" />
                         <div>
                             <h3 className="text-xl font-semibold mb-1 text-[var(--text)]">Suitable For</h3>
-                            <p className="text-[var(--text)]" >{treatment.suitableFor}</p>
+                            <p className="text-[var(--text)]">{treatment.suitableFor}</p>
                         </div>
                     </motion.div>
                 )}
@@ -136,8 +139,8 @@ export default function TreatmentContent({ treatment }) {
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    className=" border border-[var(--border)] p-8 rounded-3xl shadow-lg"
-                    style={{ background: "[var(--card-bg)]" }}
+                    className="border border-[var(--border)] p-8 rounded-3xl shadow-lg"
+                    style={{ background: "var(--card-bg)" }}
                 >
                     <h2 className="text-4xl font-extrabold mb-6 text-center text-[var(--text)] flex justify-center items-center gap-3">
                         <CheckCircle className="w-8 h-8 text-[var(--primary-color)]" />
@@ -147,7 +150,7 @@ export default function TreatmentContent({ treatment }) {
                         {treatment.benefits.map((b, i) => (
                             <div
                                 key={i}
-                                className="flex items-center gap-3 p-4 bg-[var(--card-bg)] dark:bg-[var(--card-bg-dark)] rounded-xl shadow hover:scale-105 transition-transform"
+                                className="flex items-center gap-3 p-4 bg-[var(--form-bg)] rounded-xl shadow hover:scale-105 transition-transform"
                             >
                                 <CheckCircle className="w-6 h-6 text-[var(--primary-color)]" />
                                 <p className="text-[var(--text)]">{b}</p>
@@ -163,8 +166,8 @@ export default function TreatmentContent({ treatment }) {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="p-8  rounded-3xl shadow-lg"
-                    style={{ background: "[var(--card-bg)]" }}
+                    className="p-8 rounded-3xl shadow-lg"
+                    style={{ background: "var(--card-bg)" }}
                 >
                     <h2 className="text-3xl font-bold mb-4 flex items-center text-[var(--text)] gap-2">
                         <CheckCircle className="w-6 h-6 text-[var(--primary-color)]" />
@@ -176,7 +179,6 @@ export default function TreatmentContent({ treatment }) {
                 </motion.section>
             )}
 
-            
         </main>
     );
 }
