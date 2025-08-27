@@ -1,18 +1,19 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react"; // ✅ icons
+import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
+import products from "../data/serviciess"; // ✅ Import all services
 
 export default function Footer() {
     return (
         <footer className="bg-[var(--sbg)] text-gray-50 py-10 px-6">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="max-w-7xl mx-auto flex flex-wrap gap-8">
 
                 {/* Logo + tagline */}
-                <div>
+                <div className="w-full sm:w-[45%] md:w-[20%]">
                     <div className="flex items-center space-x-2 mb-4">
                         <img
-                            src="/logo2.png" // ✅ put your logo in /public/logo.png
+                            src="/logo2.png"
                             alt="DermaHealer Logo"
                             className="h-10 w-auto object-contain"
                         />
@@ -24,7 +25,7 @@ export default function Footer() {
                 </div>
 
                 {/* Quick Links */}
-                <div>
+                <div className="w-full sm:w-[45%] md:w-[15%]">
                     <h4 className="font-semibold mb-3">Quick Links</h4>
                     <ul className="space-y-2 text-sm">
                         <li><Link href="/" className="hover:underline">Home</Link></li>
@@ -35,24 +36,51 @@ export default function Footer() {
                     </ul>
                 </div>
 
-                {/* Contact */}
-                <div>
-                    <h4 className="font-semibold mb-3">Contact Us</h4>
-                    <ul className="space-y-2 text-sm">
-                        <li>📍  North of Gandhi Maidan <br />
-                            Siwan – 841226 <br />
-                            Bihar, India</li>
-                        <li>📞 <a href="tel:+919931766933" className="hover:underline">+91 9931766933</a></li>
-                        <li>📞 <a href="tel:+919693601499" className="hover:underline">+91 9693601499</a></li>
-
-                        
-                        <li>✉ <a href="mailto:support@dermahealerindia.com" className="hover:underline">support@dermahealerindia.com</a></li>
-                        <li>🕒 Mon–Sat: 10 AM – 7 PM</li>
+                {/* Treatments List */}
+                <div className="w-full md:w-[30%]">
+                    <h4 className="font-semibold mb-3">Our Treatments</h4>
+                    <ul className="space-y-2 text-sm pr-2">
+                        {products.map((service, idx) => (
+                            <li key={idx} className="truncate">
+                                <a
+                                    href={`/treatments/${service.category}/${service.slug}`}
+                                    className="hover:underline block truncate"
+                                    title={service.title}
+                                >
+                                    {service.title}
+                                </a>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 
+                {/* Contact */}
+                <div className="w-full sm:w-[45%] md:w-[20%]">
+                    <h4 className="font-semibold mb-3">Contact Us</h4>
+                    <ul className="space-y-2 text-sm break-words">
+                        <li>
+                            📍 North of Gandhi Maidan <br />
+                            Siwan – 841226 <br />
+                            Bihar, India
+                        </li>
+                        <li>
+                            📞 <a href="tel:+919931766933" className="hover:underline">+91 9931766933</a>
+                        </li>
+                        <li>
+                            📞 <a href="tel:+919693601499" className="hover:underline">+91 9693601499</a>
+                        </li>
+                        <li className="break-all">
+                            ✉ <a href="mailto:support@dermahealerindia.com" className="hover:underline">
+                                support@dermahealerindia.com
+                            </a>
+                        </li>
+                        <li>🕒 Mon–Sat: 10 AM – 5 PM</li>
+                    </ul>
+                </div>
+
+
                 {/* Social Media */}
-                <div>
+                <div className="w-full sm:w-[45%] md:w-[15%]">
                     <h4 className="font-semibold mb-3">Follow Us</h4>
                     <div className="flex space-x-4">
                         <a href="https://www.facebook.com/derma.healer.2025" target="_blank" className="hover:text-teal-400"><Facebook /></a>
@@ -67,7 +95,7 @@ export default function Footer() {
             <div className="mt-10 border-t border-gray-600 pt-4 flex flex-col md:flex-row items-center justify-between text-sm opacity-80">
                 <p>&copy; {new Date().getFullYear()} DermaHealer. All rights reserved.</p>
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 mt-2 md:mt-0">
                     <p>
                         Built by{" "}
                         <a
@@ -80,13 +108,13 @@ export default function Footer() {
                         </a>
                     </p>
                     <img
-                        src="https://ik.imagekit.io/e8fzvhk22/mylogo?updatedAt=1754921880920" // ✅ place your logo in /public/mylogo.png
+                        src="https://ik.imagekit.io/e8fzvhk22/mylogo?updatedAt=1754921880920"
                         alt="Anandhakrishnan Logo"
                         className="h-6 w-6 object-contain"
                     />
                 </div>
             </div>
-
         </footer>
+
     );
 }
