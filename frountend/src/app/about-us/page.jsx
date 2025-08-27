@@ -7,6 +7,7 @@ import MissionVision from "@/components/AboutUs/MissionVision";
 import Treatments from "@/components/AboutUs/Treatments";
 import WhyChooseUs from "@/components/AboutUs/WhyChooseUs";
 import OurExperts from "@/components/AnimatedCounter";
+import { QuickIntroUSP } from "@/components/QuickIntroUSP";
 import React from "react";
 
 // SEO metadata
@@ -67,14 +68,16 @@ export const metadata = {
 export default function AboutUs() {
     return (
         <>
-            <AboutHero />
+            
+        <AboutHero/>
+            <QuickIntroUSP />
             <AboutSection />
+            <Doctors />
+            <OurExperts />
             <MissionVision />
             <WhyChooseUs />
-            <Doctors />
             <Treatments />
             <FAQs />
-            <OurExperts />
             <FinalCTA />
         </>
     );
