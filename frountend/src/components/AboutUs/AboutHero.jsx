@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 const slides = [
     {
@@ -116,10 +117,10 @@ export default function AboutHero() {
 
                         <button
                             className="bg-teal-400 hover:bg-cyan-500 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition"
-                            onClick={() => alert(`Clicked on "${slides[index].title}" CTA`)}
                         >
-                            Learn More
+                            <Link href="/treatments">Learn More</Link>
                         </button>
+
                     </motion.div>
                 </AnimatePresence>
             </div>
