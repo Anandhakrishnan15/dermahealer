@@ -3,6 +3,8 @@ import Link from "next/link";
 import { treatmentsData } from "../../../data/treatmentsData";
 import TreatmentContent from "@/app/treatments/[category]/TreatmentContent";
 import Script from "next/script";
+import OurExperts from "@/components/AnimatedCounter";
+import { CTASection } from "@/components/CTASection";
 
 // ✅ Generate dynamic metadata for each category
 export async function generateMetadata({ params }) {
@@ -92,7 +94,12 @@ export default async function TreatmentCategoryPage({ params }) {
 
     // If this is a leaf treatment (no sub-items)
     if (!categoryData.items) {
-        return <TreatmentContent treatment={categoryData} />;
+        return (<>
+            <TreatmentContent treatment={categoryData} />
+             <OurExperts/>
+             <CTASection/>
+        </>);
+        
     }
 
     // If category has multiple sub-items
@@ -120,6 +127,7 @@ export default async function TreatmentCategoryPage({ params }) {
                     ))}
                 </ul>
             </main>
+             
         </>
     );
 }
