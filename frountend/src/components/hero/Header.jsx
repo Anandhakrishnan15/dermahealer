@@ -64,7 +64,7 @@ export const Header = ({ onAnimationComplete }) => {
     }, [images.length]);
 
     return (
-        <div className="relative top-8 z-50 max-w-7xl mb-10 mx-auto py-12 md:py-10 px-4">
+        <div className="relative top-8 z-50 max-w-7xl mb-10 mx-auto py-0 md:py-10 px-4">
             {/* Desktop */}
             <div className="hidden md:flex items-center">
                 <motion.div
