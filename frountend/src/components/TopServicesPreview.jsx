@@ -8,7 +8,7 @@ export const TopServicesPreview = ({ limit = null }) => {
     const displayedServices = limit ? products.slice(0, limit) : products;
 
     return (
-        <section className="py-16 bg-[var(--bg)]">
+        <section className="py-0 mb-20 bg-[var(--bg)]">
             <h2 className="text-center text-3xl font-bold mb-10 text-[var(--text)]">
                 Our Signature Services
             </h2>
@@ -30,6 +30,8 @@ export const TopServicesPreview = ({ limit = null }) => {
                             <h3 className="mt-4 text-lg font-semibold text-gray-200 line-clamp-2">
                                 {service.title}
                             </h3>
+                            <h4 className=" text-sm font-semibold text-gray-500 line-clamp-2">
+                                {service.subtitle}</h4>
                             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
                                 {service.description}
                             </p>
@@ -46,6 +48,21 @@ export const TopServicesPreview = ({ limit = null }) => {
                     </div>
                 ))}
             </div>
+
+            {/* 👇 Show "See More" button only if limit is set */}
+            {limit && (
+                <div className="flex justify-center mt-10">
+                    <Link href="/treatments">
+                        <button
+                            className="px-6 py-2 bg-transparent border border-teal-600 text-teal-600 
+                                       rounded-full text-sm font-medium hover:bg-teal-600 hover:text-white 
+                                       transition-all"
+                        >
+                            See More →
+                        </button>
+                    </Link>
+                </div>
+            )}
         </section>
     );
 };
