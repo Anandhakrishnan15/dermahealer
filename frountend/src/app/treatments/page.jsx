@@ -2,6 +2,8 @@
 import { TopServicesPreview } from "@/components/TopServicesPreview";
 import React from "react";
 import products from "../../data/serviciess";
+import OurExperts from "@/components/AnimatedCounter";
+import { CTASection } from "@/components/CTASection";
 
 // ✅ SEO Metadata
 export const metadata = {
@@ -97,6 +99,9 @@ export default function TreatmentsPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
             />
             <TopServicesPreview />
+            <OurExperts/>
+            <CTASection/>
+            
         </>
     );
 }

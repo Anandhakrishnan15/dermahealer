@@ -3,6 +3,8 @@ import { treatmentsData } from "../../../../data/treatmentsData";
 import { notFound } from "next/navigation";
 import TreatmentContent from "../TreatmentContent";
 import Script from "next/script"; // Import Script component
+import OurExperts from "@/components/AnimatedCounter";
+import { CTASection } from "@/components/CTASection";
 
 //  Generate metadata dynamically
 
@@ -71,7 +73,9 @@ export default async function TreatmentPage({ params }) {
         .flatMap((cat) => cat.items || [cat])
         .find((item) => item.href.includes(slug));
 
-    if (!treatment) return <p>Treatment not found.</p>;
+    if (!treatment) {
+        notFound(); // ⬅️ This will trigger your 404 page
+    }
 
     const canonicalUrl = `https://www.dermahealerindia.com/treatments/${category}/${slug}`;
 
@@ -126,6 +130,8 @@ export default async function TreatmentPage({ params }) {
             />
             {/* Client component renders UI */}
             <TreatmentContent treatment={treatment} />
+            <OurExperts/>
+             <CTASection/>
         </>
     );
 }
