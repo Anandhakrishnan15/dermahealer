@@ -169,17 +169,18 @@ const navbarDropdownData = [
         label: "Sexual Health",
         items: [
             {
-                label: "vaginal tightenis",
+                label: "Vaginal Tightening",
                 href: "/treatments/Sexual-Health/vaginal-tightening",
             },
             {
-                label: "premwture ejacution Treatment",
+                label: "Premature Ejaculation Treatment",
                 href: "/treatments/Sexual-Health/premature-ejaculation",
             },
             {
-                label: "Genital Wort removal",
+                label: "Genital Wart Removal",
                 href: "/treatments/Sexual-Health/genital-wart-removal",
             },
+
         ],
 
     },
