@@ -15,20 +15,11 @@ export default function Home() {
   return (
     <div>
       <Demo />
-
-      <QuickIntroUSP />
-
+      <TopServicesPreview limit={3} showSeeMore />
       <BeforeAfterSlideshow data={treatments} />
-      {/* <ImageGallery images={imageList} /> */}
-
       <Testimonials />
-
       <CertificateCarousel />
-
-      <TopServicesPreview limit={3} />
-
       <BlogTips />
-
       <CTASection />
     </div>
   );
