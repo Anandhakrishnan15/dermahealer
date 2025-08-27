@@ -2,9 +2,12 @@
 
 export default function Loading() {
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-transparent backdrop-blur-xl">
+        <div className="flex flex-col items-center justify-center h-screen bg-transparent backdrop-blur-xl relative overflow-hidden">
+            {/* Soft radial glow background */}
+            <div className="absolute w-[500px] h-[500px] rounded-full bg-teal-400/10 blur-3xl animate-pulse" />
+
             {/* Logo with bounce + breathing glow */}
-            <div className="w-24 h-24 relative">
+            <div className="w-24 h-24 relative z-10">
                 <img
                     src="/icon0.svg"
                     alt="Loading Icon"
@@ -16,7 +19,7 @@ export default function Loading() {
             </div>
 
             {/* Brand name with gradient + shimmer */}
-            <p className="mt-4 text-3xl font-extrabold bg-gradient-to-r from-teal-300 via-emerald-400 to-teal-500 bg-clip-text text-transparent relative">
+            <p className="mt-4 text-3xl font-extrabold bg-gradient-to-r from-teal-300 via-emerald-400 to-teal-500 bg-clip-text text-transparent relative z-10">
                 <span className="relative inline-block">
                     Derma Healer
                     <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] animate-[shine_3s_linear_infinite]" />
@@ -24,7 +27,7 @@ export default function Loading() {
             </p>
 
             {/* Sub tagline with fade-in */}
-            <p className="text-sm md:text-base text-[var(--text)] mt-3 tracking-[0.15em] uppercase animate-fadeIn">
+            <p className="text-sm md:text-base text-[var(--text)] mt-3 tracking-[0.15em] uppercase animate-fadeIn z-10">
                 Revive • Restore • Rejuvenate
             </p>
 
