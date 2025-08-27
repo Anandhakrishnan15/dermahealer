@@ -15,6 +15,7 @@ export default function Footer() {
                         <img
                             src="/logo2.png"
                             alt="DermaHealer Logo"
+                            loading="eager"
                             className="h-10 w-auto object-contain"
                         />
                         <span className="font-bold text-xl">DermaHealer</span>
