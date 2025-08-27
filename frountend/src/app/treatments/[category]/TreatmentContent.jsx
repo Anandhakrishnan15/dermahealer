@@ -178,7 +178,7 @@ export default function TreatmentContent({ treatment }) {
                     </p>
                 </motion.section>
             )}
-
+            
         </main>
     );
 }
