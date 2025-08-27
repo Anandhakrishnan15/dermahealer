@@ -63,7 +63,7 @@ export default function NavBar() {
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-red-500 to-red-600">
                         Derma
                     </span>
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-green-500 to-green-600">
+                    <span className=" ml-1 text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-green-500 to-green-600">
                         Healer
                     </span>
                 </h1>
