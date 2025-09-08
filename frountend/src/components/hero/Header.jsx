@@ -143,7 +143,7 @@ export const Header = ({ onAnimationComplete }) => {
                     initial="hidden"
                     animate="visible"
                     variants={imageVariants}
-                    key={heroImg} // re-trigger animation
+                    // key={heroImg} // re-trigger animation
                 />
             </div>
 
