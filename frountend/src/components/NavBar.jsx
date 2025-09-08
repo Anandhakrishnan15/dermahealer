@@ -59,7 +59,7 @@ export default function NavBar() {
                         loading="eager"
                     />
                 </Link>
-                <h1 className="text-2xl font-bold flex items-center">
+                <h1 className="text-3xl font-bold flex items-center">
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-red-500 to-red-600">
                         Derma
                     </span>
@@ -89,16 +89,16 @@ export default function NavBar() {
             </div>
 
             {/* RIGHT: Theme + Mobile Button */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center relative z-[110] space-x-3">
                 <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="md:hidden p-2 rounded focus:outline-none"
-                    style={{ backgroundColor: "var(--toggle-bg)", color: "var(--toggle-text)" }}
+                    className="md:hidden p-2 rounded  hover:text-[var(--primary-color)] focus:outline-none z-[120]"
                 >
-                    {isOpen ? <X size={20} /> : <Menu size={20} />}
+                    {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
             </div>
+
 
             {/* MOBILE MENU */}
             {isOpen && (
@@ -257,11 +257,16 @@ function LinkItem({ href, label, onClick, active }) {
     return (
         <Link
             href={href}
-            className={`block px-4 py-2 rounded-md transition-colors hover:underline hover:bg-[var(--primary-color)] text-left ${active ? "bg-[var(--primary-color)]" : "text-[var(--navbar-link)]"}`}
+            className={`block px-4 sm:px-3 py-2 rounded-lg  transition-colors 
+    ${active
+                    ? "bg-[var(--primary-color)] text-white shadow-sm"
+                    : "text-[var(--navbar-link)] hover:bg-[var(--primary-color)] hover:text-white"
+                }`}
             onClick={onClick}
         >
             {label}
         </Link>
+
     );
 }
 
