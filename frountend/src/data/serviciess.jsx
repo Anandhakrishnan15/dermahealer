@@ -144,6 +144,15 @@ const products = [
         description:
             "Our dermatologists provide painless and effective wart removal using advanced cryotherapy, electrosurgery, and laser treatments for smooth, clear skin.",
     },
+    {
+        title: "Melasma",
+        subtitle: "Brighten & Even Your Skin Tone",
+        category: "skin",
+        slug: "melasma",
+        thumbnail: "https://www.epilium-paris.com/wp-content/uploads/2024/06/melasma.jpg",
+        description: "Treatment for brownish facial patches using creams, chemical peels, and laser therapy for even skin tone."
+    }
+
 
 ];
 

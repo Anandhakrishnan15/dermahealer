@@ -38,11 +38,11 @@ const navbarDropdownData = [
                 items: [
                     {
                         label: "Melasma Treatment",
-                        href: "/treatments/skin/pigmentation",
+                        href: "/treatments/skin/melasma",
                     },
                     {
                         label: "Freckle Remove",
-                        href: "/treatments/skin/pigmentation",
+                        href: "/treatments/skin/freckles-removal",
                     },
 
                 ],
@@ -96,7 +96,7 @@ const navbarDropdownData = [
                         href: "/treatments/skin/mole-removal",
                     },
                     {
-                        label: "wart Removal",
+                        label: "Wart Removal",
                         href: "/treatments/skin/wart-removal",
                     },
                 ],

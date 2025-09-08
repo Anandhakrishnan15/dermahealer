@@ -634,7 +634,7 @@ export const treatmentsData = [
       }, 
       {
         label: "Melasma Treatment",
-        image: "/images/melasma.jpg",
+        image: "https://www.epilium-paris.com/wp-content/uploads/2024/06/melasma.jpg",
         href: "/treatments/skin/melasma",
         description: `Treatment for brownish facial patches caused by sun exposure, hormones, or genetics using creams, chemical peels, and laser therapy.`,
         benefits: [
@@ -651,7 +651,7 @@ export const treatmentsData = [
       },
       {
         label: "Freckles Removal",
-        image: "/images/freckles.jpg",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSv6BAMX4BbTiDvTMh4ldMahkTMbpKDpjP7oA&s",
         href: "/treatments/skin/freckles-removal",
         description: `Removal of freckles caused by sun exposure and genetics using laser, chemical peels, or topical brightening agents.`,
         benefits: [
