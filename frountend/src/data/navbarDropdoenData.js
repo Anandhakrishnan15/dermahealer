@@ -41,7 +41,7 @@ const navbarDropdownData = [
                         href: "/treatments/skin/melasma",
                     },
                     {
-                        label: "Freckle Remove",
+                        label: "Freckle Removal",
                         href: "/treatments/skin/freckles-removal",
                     },
 
@@ -113,7 +113,7 @@ const navbarDropdownData = [
         items: [
             {
                 label: "HIFU Body",
-                href: "/treatments/face/hifu",
+                href: "/treatments/body/body-hifu",
             },
             {
                 label: "Emshape",
