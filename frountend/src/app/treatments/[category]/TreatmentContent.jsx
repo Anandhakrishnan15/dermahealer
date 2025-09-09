@@ -4,10 +4,24 @@
 import { motion } from "framer-motion";
 import { CheckCircle, Clock, Calendar, UserCheck, Star } from "lucide-react";
 
+// Animation Variants
+const fadeUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 },
+};
+
+const containerStagger = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.2,
+        },
+    },
+};
+
 export default function TreatmentContent({ treatment }) {
     return (
         <main className="max-w-6xl mx-auto p-6 space-y-12">
-
             {/* Hero Section */}
             <section className="relative h-[500px] rounded-3xl overflow-hidden shadow-lg">
                 {treatment.image && (
@@ -19,24 +33,27 @@ export default function TreatmentContent({ treatment }) {
                 )}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/40 flex flex-col justify-center items-center text-center p-6">
                     <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        variants={fadeUp}
+                        initial="hidden"
+                        animate="visible"
                         transition={{ duration: 0.6 }}
                         className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white drop-shadow-lg mb-4"
                     >
                         {treatment.label}
                     </motion.h1>
                     <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        variants={fadeUp}
+                        initial="hidden"
+                        animate="visible"
                         transition={{ delay: 0.2, duration: 0.6 }}
                         className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 max-w-2xl"
                     >
                         {treatment.description}
                     </motion.p>
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
+                        variants={fadeUp}
+                        initial="hidden"
+                        animate="visible"
                         transition={{ delay: 0.4, duration: 0.6 }}
                         className="mt-6 flex gap-4"
                     >
@@ -57,12 +74,17 @@ export default function TreatmentContent({ treatment }) {
             </section>
 
             {/* Procedure & Aftercare */}
-            <div className="flex flex-wrap gap-6">
+            <motion.div
+                variants={containerStagger}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                className="flex flex-wrap gap-6"
+            >
                 {treatment.procedure && (
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
+                        variants={fadeUp}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
                         className="flex-1 min-w-[300px] p-6 bg-[var(--card-bg)] rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
                     >
                         <h2 className="text-3xl font-bold mb-4 flex items-center gap-2 text-[var(--text)]">
@@ -77,9 +99,8 @@ export default function TreatmentContent({ treatment }) {
 
                 {treatment.aftercare && (
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
+                        variants={fadeUp}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
                         className="flex-1 min-w-[300px] p-6 bg-[var(--card-bg)] rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
                     >
                         <h2 className="text-3xl font-bold mb-4 flex items-center gap-2 text-[var(--text)]">
@@ -91,54 +112,73 @@ export default function TreatmentContent({ treatment }) {
                         </p>
                     </motion.div>
                 )}
-            </div>
+            </motion.div>
 
             {/* Key Info */}
-            <section className="grid md:grid-cols-3 gap-6">
+            <motion.section
+                variants={containerStagger}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                className="grid md:grid-cols-3 gap-6"
+            >
                 {treatment.duration && (
                     <motion.div
-                        className="p-6 rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3"
+                        variants={fadeUp}
+                        className="p-6 rounded-2xl shadow-lg hover:scale-105 hover:shadow-lg transition flex items-start gap-3"
                         style={{ background: "var(--form-bg)" }}
                     >
-                        <Clock className="w-6 h-6 text-[var(--primary-color)]" />
+                        <Clock className="w-7 h-7 text-[var(--primary-color)] mt-1" />
                         <div>
-                            <h3 className="text-xl font-semibold mb-1 text-[var(--text)]">Duration</h3>
+                            <h3 className="text-lg font-semibold text-[var(--text)]">
+                                Duration
+                            </h3>
                             <p className="text-[var(--text)]">{treatment.duration}</p>
                         </div>
                     </motion.div>
                 )}
                 {treatment.sessionsRequired && (
                     <motion.div
-                        className="p-6 rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3"
+                        variants={fadeUp}
+                        className="p-6 rounded-2xl shadow-lg hover:scale-105 hover:shadow-lg transition flex items-start gap-3"
                         style={{ background: "var(--form-bg)" }}
                     >
-                        <Calendar className="w-6 h-6 text-[var(--primary-color)]" />
+                        <Calendar className="w-7 h-7 text-[var(--primary-color)] mt-1" />
                         <div>
-                            <h3 className="text-xl font-semibold mb-1 text-[var(--text)]">Sessions Required</h3>
-                            <p className="text-[var(--text)]">{treatment.sessionsRequired}</p>
+                            <h3 className="text-lg font-semibold text-[var(--text)]">
+                                Sessions Required
+                            </h3>
+                            <p className="text-[var(--text)]">
+                                {treatment.sessionsRequired}
+                            </p>
                         </div>
                     </motion.div>
                 )}
                 {treatment.suitableFor && (
                     <motion.div
-                        className="p-6 rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-3"
+                        variants={fadeUp}
+                        className="p-6 rounded-2xl shadow-lg hover:scale-105 hover:shadow-lg transition flex items-start gap-3"
                         style={{ background: "var(--form-bg)" }}
                     >
-                        <Star className="w-6 h-6 text-[var(--primary-color)]" />
+                        <Star className="w-7 h-7 text-[var(--primary-color)] mt-1" />
                         <div>
-                            <h3 className="text-xl font-semibold mb-1 text-[var(--text)]">Suitable For</h3>
+                            <h3 className="text-lg font-semibold text-[var(--text)]">
+                                Suitable For
+                            </h3>
                             <p className="text-[var(--text)]">{treatment.suitableFor}</p>
                         </div>
                     </motion.div>
                 )}
-            </section>
+            </motion.section>
 
             {/* Benefits */}
             {treatment.benefits && (
                 <motion.section
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.6 }}
                     className="p-8 rounded-3xl shadow-lg"
                     style={{ background: "var(--card-bg)" }}
                 >
@@ -146,26 +186,35 @@ export default function TreatmentContent({ treatment }) {
                         <CheckCircle className="w-8 h-8 text-[var(--primary-color)]" />
                         Benefits
                     </h2>
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <motion.div
+                        variants={containerStagger}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        className="grid md:grid-cols-2 gap-4"
+                    >
                         {treatment.benefits.map((b, i) => (
-                            <div
+                            <motion.div
                                 key={i}
-                                className="flex items-center gap-3 p-4 bg-[var(--form-bg)]  rounded-xl shadow hover:scale-105 transition-transform"
+                                variants={fadeUp}
+                                className="flex items-center gap-3 p-4 bg-[var(--form-bg)] rounded-xl shadow hover:scale-105 transition-transform"
                             >
                                 <CheckCircle className="w-6 h-6 text-[var(--primary-color)]" />
                                 <p className="text-[var(--text)]">{b}</p>
-                            </div>
+                            </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
                 </motion.section>
             )}
 
             {/* Expected Results */}
             {treatment.expectedResults && (
                 <motion.section
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.6 }}
                     className="p-8 rounded-3xl shadow-lg"
                     style={{ background: "var(--card-bg)" }}
                 >
@@ -178,7 +227,6 @@ export default function TreatmentContent({ treatment }) {
                     </p>
                 </motion.section>
             )}
-            
         </main>
     );
 }

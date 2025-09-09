@@ -239,7 +239,7 @@ export const treatmentsData = [
   `,
         duration: "15–25 minutes per session",
         sessionsRequired:
-          "6–8 sessions every 2–4 weeks; maintenance often needed for melasma",
+          "6–8 sessions every 3–6 weeks; maintenance often needed for melasma",
         suitableFor:
           "People with melasma, tanning, post-inflammatory hyperpigmentation (PIH), or uneven skin tone",
         aftercare: `
@@ -252,6 +252,7 @@ export const treatmentsData = [
     results after multiple sessions. Works best as part of a holistic pigmentation protocol.  
   `,
       },
+      // Carbon Laser Toning
       {
         label: "Carbon Laser Toning",
         href: "/treatments/face/carbon-laser-toning",
@@ -275,7 +276,7 @@ export const treatmentsData = [
   `,
         duration: "20–30 minutes per session",
         sessionsRequired:
-          "4–6 sessions every 2–3 weeks; visible brightness even after first session",
+          "4–6 sessions every 3–6 weeks; visible brightness even after first session",
         suitableFor:
           "Individuals with oily skin, enlarged pores, blackheads, tanning, or textural dullness",
         aftercare: `
@@ -314,7 +315,7 @@ export const treatmentsData = [
   `,
         duration: "45–90 minutes depending on areas",
         sessionsRequired:
-          "Usually single-session treatment; touch-ups may be advised yearly",
+          "Usually 1–2 sessions; touch-ups/maintenance once yearly ",
         suitableFor:
           "People with mild to moderate skin laxity, soft jowls, early neck laxity, or seeking a brow lift",
         aftercare: `
@@ -326,6 +327,47 @@ export const treatmentsData = [
     Subtle tightening felt within 2–4 weeks, with gradual lift visible over 2–3 months. 
     Full results are seen at 3–6 months and typically last 12–18 months, varying by age, 
     skin biology, and lifestyle.  
+  `,
+      },
+      
+      {
+        label: "Body HIFU",
+        href: "/treatments/body/body-hifu",
+        image:
+          "https://malaaesthetics.co.uk/wp-content/uploads/2023/07/hifu-body-tightening-london.webp",
+        description: `
+  Body HIFU (High-Intensity Focused Ultrasound) is a non-invasive body contouring 
+  and fat reduction treatment. It targets stubborn fat cells beneath the skin with 
+  focused ultrasound energy, destroying them while also tightening surrounding tissue. 
+  It’s ideal for reducing localized fat pockets and improving body shape without surgery.
+  `,
+        benefits: [
+          "Non-surgical fat reduction",
+          "Contours and sculpts abdomen, thighs, arms, and flanks",
+          "Stimulates collagen for skin tightening",
+          "Minimal downtime with long-lasting results",
+        ],
+        procedure: `
+  1. Marking and cleansing the target body area  
+  2. Application of ultrasound gel  
+  3. Delivery of focused ultrasound energy at deeper fat layers (6–13 mm)  
+  4. Gentle massage or cooling for comfort post-treatment  
+  `,
+        duration: "45–120 minutes depending on treatment area",
+        sessionsRequired:
+          "Typically 1–3 sessions per area, spaced 8–12 weeks apart",
+        suitableFor:
+          "Individuals with stubborn localized fat, mild skin laxity, and those seeking non-surgical body shaping",
+        aftercare: `
+  - Resume normal activities immediately  
+  - Temporary redness, swelling, or tenderness may occur  
+  - Drink plenty of water to support fat cell clearance  
+  - Maintain healthy diet and exercise for best results  
+  `,
+        expectedResults: `
+  Noticeable fat reduction and skin tightening appear gradually within 4–8 weeks. 
+  Optimal results are seen at 8–12 weeks, with continued improvement up to 6 months. 
+  Results are long-lasting, especially with healthy lifestyle maintenance.  
   `,
       },
 
@@ -438,7 +480,8 @@ export const treatmentsData = [
         `,
         duration: "15-60 minutes per session depending on area",
         sessionsRequired:
-          "6-8 sessions spaced 4-6 weeks apart for optimal results",
+          "6–8 sessions spaced 4–6 weeks apart for optimal results (may vary in cases of hormonal hair growth such as PCOS, thyroid, etc.)",
+
         suitableFor:
           "Individuals seeking permanent hair reduction or managing excess hair growth due to hormonal causes",
         aftercare: `

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
 const stats = [
     { label: "Years of Dermatology Expertise", value: 30 },
@@ -11,8 +11,12 @@ const stats = [
 
 function AnimatedCounter({ value, duration = 2000 }) {
     const [count, setCount] = useState(0);
+    const ref = useRef(null);
+    const inView = useInView(ref, { once: true, margin: "-50px" }); // trigger when ~50px visible
 
     useEffect(() => {
+        if (!inView) return;
+
         let startTime = performance.now();
 
         const updateCounter = (currentTime) => {
@@ -26,9 +30,9 @@ function AnimatedCounter({ value, duration = 2000 }) {
         };
 
         requestAnimationFrame(updateCounter);
-    }, [value, duration]);
+    }, [inView, value, duration]);
 
-    return <span>{count.toLocaleString()}</span>;
+    return <span ref={ref}>{count.toLocaleString()}</span>;
 }
 
 export default function OurExperts() {

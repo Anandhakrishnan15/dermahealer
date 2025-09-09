@@ -7,8 +7,9 @@ import { Testimonials } from "../components/Testimonials.jsx";
 import { BlogTips } from "../components/BlogTips.jsx";
 import { CTASection } from "../components/CTASection.jsx";
 import CertificateCarousel from "../components/Certifications.jsx";
-import BeforeAfterSlideshow from "@/components/BeforeAfter.jsx";
+import BeforeAfterSlideshow from "../components/BeforeAfter.jsx";
 import treatments from "@/data/BeforAndAfter.jsx";
+import OurExperts from "../components/AnimatedCounter.jsx";
 
 export default function Home() {
  
@@ -20,6 +21,7 @@ export default function Home() {
       <Testimonials />
       <CertificateCarousel />
       <BlogTips />
+      <OurExperts/>
       <CTASection />
     </div>
   );
