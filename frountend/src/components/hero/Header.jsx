@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { CheckCircle2, Star } from "lucide-react";
 
 export const Header = ({ onAnimationComplete }) => {
     const [heroImg, setHeroImg] = useState(0);
@@ -64,8 +65,9 @@ export const Header = ({ onAnimationComplete }) => {
     }, [images.length]);
 
     return (
-        <div className="relative top-8 z-50 max-w-7xl mb-10 mx-auto py-0 md:py-10 px-4">
+        <div className="relative top-0 z-50  mb-10 mx-auto py-0 md:py-10 px-1">
             {/* Desktop */}
+
             <div className="hidden md:flex items-center">
                 <motion.div
                     className="md:flex-1 pr-8"
@@ -113,6 +115,32 @@ export const Header = ({ onAnimationComplete }) => {
                         </span>
                     </motion.p>
 
+                    {/* ✅ Ratings & Reviews */}
+                    <div className="mt-3 flex items-center flex-wrap gap-3">
+                        {/* ⭐ Stars */}
+                        <div className="flex items-center text-yellow-400">
+                            {Array(5)
+                                .fill(0)
+                                .map((_, i) => (
+                                    <Star key={i} size={18} className="fill-yellow-400" />
+                                ))}
+                        </div>
+
+                        {/* 🔢 Score + Reviews */}
+                        <span className="text-gray-500 font-medium">
+                            4.9{" "}
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                                (241+ reviews)
+                            </span>
+                        </span>
+
+                        {/* ✅ USFDA Badge */}
+                        <span className="inline-flex items-center text-sm font-semibold bg-[#3ed0ca]/10 text-[#3ed0ca] px-3 py-1 rounded-full shadow-sm">
+                            <CheckCircle2 size={16} className="mr-1" /> USFDA Approved
+                        </span>
+                    </div>
+
+                  
                     {/* ✅ CTA Buttons */}
                     <motion.div
                         className="mt-6 flex gap-4"
@@ -143,9 +171,9 @@ export const Header = ({ onAnimationComplete }) => {
                     initial="hidden"
                     animate="visible"
                     variants={imageVariants}
-                    // key={heroImg} // re-trigger animation
                 />
             </div>
+
 
             {/* Mobile */}
             <div className="relative md:hidden w-full h-full rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
