@@ -18,7 +18,7 @@ export const HeroParallax = ({ products }) => {
     });
 
     return (
-        <div className="overflow-hidden antialiased relative flex flex-col h-full">
+        <div className="overflow-hidden antialiased w-full relative flex flex-col h-full">
             {/* Header */}
             <Header />
             <ResponsiveImageGallery />

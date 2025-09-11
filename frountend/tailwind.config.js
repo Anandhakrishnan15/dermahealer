@@ -8,7 +8,7 @@ module.exports = {
     theme: {
         extend: {
             screens: {
-                custommd: "814px", // new breakpoint
+                nav: "946px", // ✅ custom breakpoint for navbar
             },
             fontFamily: {
                 elegant: ['"Playfair Display"', 'serif'],

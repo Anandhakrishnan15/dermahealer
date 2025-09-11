@@ -70,30 +70,41 @@ export default function NavBar() {
             </div>
 
             {/* CENTER: Desktop Nav */}
-            <div className="hidden md:flex space-x-6 items-center">
-                <NavLinks
-                    dropdownOpen={dropdownOpen}
-                    setDropdownOpen={(val) => {
-                        setDropdownOpen(val);
-                        setNestedOpenPath(null);
-                    }}
-                    nestedOpenPath={nestedOpenPath}
-                    setNestedOpenPath={setNestedOpenPath}
-                    onLinkClick={() => {
-                        setIsOpen(false);
-                        setDropdownOpen(null);
-                        setNestedOpenPath(null);
-                    }}
-                    pathname={pathname}
-                />
-            </div>
+           
 
             {/* RIGHT: Theme + Mobile Button */}
-            <div className="flex items-center relative z-[110] space-x-3">
-                <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+            <div className="flex items-center relative z-[110] ">
+                {/* Book Now Button */}
+                <div className="hidden [@media(min-width:1000px)]:flex space-x-6 items-center ">
+                    <NavLinks
+                        dropdownOpen={dropdownOpen}
+                        setDropdownOpen={(val) => {
+                            setDropdownOpen(val);
+                            setNestedOpenPath(null);
+                        }}
+                        nestedOpenPath={nestedOpenPath}
+                        setNestedOpenPath={setNestedOpenPath}
+                        onLinkClick={() => {
+                            setIsOpen(false);
+                            setDropdownOpen(null);
+                            setNestedOpenPath(null);
+                        }}
+                        pathname={pathname}
+                    />
+                    <Link
+                        href="/book-now"
+                        className="hidden [@media(min-width:1000px)]:inline-block px-2 py-2 rounded-lg bg-[var(--primary-color)] text-white font-semibold shadow hover:opacity-90 transition"
+                        onClick={() => setIsOpen(false)}
+                    >
+                        Book appointment
+                    </Link>
+                    <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+
+                   
+                </div>
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="md:hidden p-2 rounded  hover:text-[var(--primary-color)] focus:outline-none z-[120]"
+                    className="[@media(min-width:1000px)]:hidden p-2 rounded hover:text-[var(--primary-color)] focus:outline-none z-[120]"
                 >
                     {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
@@ -103,7 +114,7 @@ export default function NavBar() {
             {/* MOBILE MENU */}
             {isOpen && (
                 <div
-                    className="fixed top-0 right-0 h-full w-78 flex flex-col items-start space-y-2 py-6 px-4 md:hidden overflow-y-clip"
+                    className="fixed top-0 right-0 h-full w-78 flex flex-col items-start space-y-2 py-6 px-4 [@media(min-width:1000px)]:hidden overflow-y-clip"
                     style={{
                         backgroundColor: "var(--bg)",
                         color: "var(--navbar-text)",
@@ -126,6 +137,14 @@ export default function NavBar() {
                         }}
                         pathname={pathname}
                     />
+                    {/* Book Now button for Mobile */}
+                    <Link
+                        href="/book-now"
+                        className="mt-4 w-full text-center px-4 py-2 rounded-lg bg-[var(--primary-color)] text-white font-semibold shadow hover:opacity-90 transition [@media(min-width:1000px)]:hidden"
+                        onClick={() => setIsOpen(false)}
+                    >Book appointment
+                        
+                    </Link>
                 </div>
             )}
         </nav>
@@ -138,6 +157,7 @@ export default function NavBar() {
 function NavLinks({ dropdownOpen, setDropdownOpen, nestedOpenPath, setNestedOpenPath, mobile, onLinkClick, pathname }) {
     const links = [
         { href: "/", label: "Home" },
+        { href: "/treatments", label: "Services" },
         { dropdown: true, label: "Treatments" },
         { href: "/blog", label: "Blog" },
         { href: "/about-us", label: "About Us" },
@@ -257,9 +277,9 @@ function LinkItem({ href, label, onClick, active }) {
     return (
         <Link
             href={href}
-            className={`block px-4 sm:px-3 py-2 rounded-lg  transition-colors 
+            className={`block px-4 sm:px-2 py-2 rounded-lg  transition-colors 
     ${active
-                    ? "bg-[var(--primary-color)] text-white shadow-sm"
+                    ? "text-[var(--primary-color)]"
                     : "text-[var(--navbar-link)] hover:bg-[var(--primary-color)] hover:text-white"
                 }`}
             onClick={onClick}
