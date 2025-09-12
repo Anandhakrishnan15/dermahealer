@@ -234,7 +234,7 @@ function DropdownItem({ item, mobile, pathname, onLinkClick, path, nestedOpenPat
             <div className="relative w-full">
                 <button
                     onClick={toggle}
-                    className={`flex items-center rounded-md justify-between w-full px-4 py-2 text-left  ${isOpen ? " bg-[var(--primary-color)]" : "hover:bg-[var(--primary-color)]"}`}
+                    className={`flex items-center rounded-md justify-between w-full px-2 py-2 text-left  ${isOpen ? " bg-[var(--primary-color)]" : "hover:bg-[var(--primary-color)]"}`}
                 >
                     <span className="truncate">{item.label}</span>
                     <ChevronRight size={14} className={`${isOpen ? "rotate-90" : ""} transition-transform`} />
