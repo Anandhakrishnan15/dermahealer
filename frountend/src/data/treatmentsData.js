@@ -737,7 +737,7 @@ export const treatmentsData = [
           "Minimal recurrence",
           "Scar-free healing",
           "Safe and hygienic",
-          "Painless procedure with minimal downtime"
+          "Mild discomfort might be there. Done under local anaesthesia."
         ],
         procedure: `Depending on the type and location of the wart, treatments include:
   - Laser removal: Uses focused laser energy to remove warts without damaging surrounding tissue.
@@ -982,7 +982,7 @@ export const treatmentsData = [
     benefits: [
       "Minimal pain",
       "Scar-free healing",
-      "No damage to surrounding skin"
+      "No/Minimal damage to surrounding skin"
     ],
     procedure: `Laser sessions break down tattoo pigment gradually; number of sessions depends on size, color, and depth.`,
     duration: "30-60 minutes per session",

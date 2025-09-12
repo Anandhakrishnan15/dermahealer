@@ -1,10 +1,10 @@
 "use client";
-import { MapPin, Mail, Phone, Clock, MessageCircle } from "lucide-react";
+import { MapPin, Mail, Phone, Clock } from "lucide-react";
 
 export default function ContactInfo() {
     return (
         <div
-            className="w-full border m-auto p-8 rounded-2xl shadow-md max-w-3xl "
+            className="w-full border m-auto p-4 rounded-2xl shadow-md max-w-3xl"
             style={{ background: "var(--card-bg)" }}
         >
             {/* Quote */}
@@ -17,13 +17,12 @@ export default function ContactInfo() {
                 Contact Information
             </h2>
 
-
             {/* Row 1: Address + Email/Phone */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-[var(--text)]">
-                {/* Address */}
-                <div className="flex items-start gap-3">
+            <div className="flex flex-col lg:flex-row  text-[var(--text)]">
+                {/* Right Column: Address */}
+                <div className="flex flex-col sm:flex-row sm:items-start flex-1 p-2">
                     <MapPin className="text-teal-600 mt-1 flex-shrink-0" size={22} />
-                    <div>
+                    <div className="break-words">
                         <h3 className="font-semibold text-lg text-[var(--heading)]">Address</h3>
                         <address className="not-italic leading-relaxed">
                             North of Gandhi Maidan <br />
@@ -40,16 +39,16 @@ export default function ContactInfo() {
                     </div>
                 </div>
 
-                {/* Email + Phone + WhatsApp */}
-                <div className="space-y-4">
+                {/* Left Column: Email + Phone */}
+                <div className="flex flex-col flex-1 p-2">
                     {/* Email */}
-                    <div className="flex items-start gap-3">
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-1">
                         <Mail className="text-teal-600 mt-1 flex-shrink-0" size={22} />
-                        <div>
+                        <div className="break-words">
                             <h3 className="font-semibold text-lg text-[var(--heading)]">Email</h3>
                             <a
                                 href="mailto:support@dermahealerindia.com"
-                                className="text-teal-600 hover:underline"
+                                className="text-teal-600 hover:underline break-words px-2 inline-block"
                             >
                                 support@dermahealerindia.com
                             </a>
@@ -57,52 +56,35 @@ export default function ContactInfo() {
                     </div>
 
                     {/* Phone */}
-                    <div className="flex items-start gap-3">
+                    <div className="flex flex-col sm:flex-row sm:items-start gap-3 mt-4">
                         <Phone className="text-teal-600 mt-1 flex-shrink-0" size={22} />
-                        <div>
+                        <div className="break-words">
                             <h3 className="font-semibold text-lg text-[var(--heading)]">Phone</h3>
-                            <a
-                                href="tel:+919931766933"
-                                className="text-teal-600 hover:underline"
-                            >
-                                +91 9931766933
-                            </a>
-                            <br/>
-                        
-                            <a
-                                href="tel:+919693601499"
-                                className="text-teal-600 hover:underline"
-                            >
-                                +91 9693601499
-                            </a>
+                            <div className="flex flex-wrap sm:flex-row sm:gap-4">
+                                <a
+                                    href="tel:+919931766933"
+                                    className="text-teal-600 hover:underline px-2 inline-block"
+                                >
+                                    +91 9931766933
+                                </a>
+                                <a
+                                    href="tel:+919693601499"
+                                    className="text-teal-600 hover:underline px-2 inline-block"
+                                >
+                                    +91 9693601499
+                                </a>
+                            </div>
                         </div>
                     </div>
-
-                    {/* WhatsApp (optional) */}
-                    {/* <div className="flex items-start gap-3">
-                        <Phone className="text-green-600 mt-1 flex-shrink-0" size={22} />
-                        <div>
-                            <h3 className="font-semibold text-lg text-[var(--heading)]">
-                                WhatsApp
-                            </h3>
-                            <a
-                                href="https://wa.me/919876543210"
-                                target="_blank"
-                                className="text-green-600 hover:underline"
-                            >
-                                Chat with us
-                            </a>
-                        </div>
-                    </div> */}
                 </div>
             </div>
+
 
             {/* Row 2: Office Hours */}
             <div className="mt-10 flex items-start gap-3">
                 <Clock className="text-teal-600 mt-1 flex-shrink-0" size={22} />
                 <div>
                     <h3 className="font-semibold text-lg text-[var(--heading)] flex items-center gap-2">
-                       
                         We’re Here For You
                     </h3>
 
@@ -116,12 +98,8 @@ export default function ContactInfo() {
                         <li className="col-span-1 font-medium">Sunday</li>
                         <li className="col-span-1 text-right text-red-500 font-medium">Closed</li>
                     </ul>
-
                 </div>
             </div>
         </div>
-
-
-
     );
 }

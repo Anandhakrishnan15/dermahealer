@@ -65,7 +65,7 @@ export const Header = ({ onAnimationComplete }) => {
     }, [images.length]);
 
     return (
-        <div className="relative top-0 z-50  mb-10 mx-auto py-0 md:py-10 px-1">
+        <div className="relative top-0 z-50   mb-10 mx-auto py-0 md:py-10 px-1">
             {/* Desktop */}
 
             <div className="hidden md:flex items-center">
@@ -176,7 +176,7 @@ export const Header = ({ onAnimationComplete }) => {
 
 
             {/* Mobile */}
-            <div className="relative md:hidden w-full h-full rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
+            <div className="relative md:hidden w-full h-full mt-4 rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
                 {/* ✅ Auto-changing Mobile Hero Image */}
                 <motion.img
                     src={mobileImages[heroImg % mobileImages.length]}

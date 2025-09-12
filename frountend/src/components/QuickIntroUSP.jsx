@@ -17,7 +17,7 @@ const doctors = [
     },
     {
         name: "Dr. Neha Rani, MBBS, Aesthetic Physician",
-        img: "https://media.licdn.com/dms/image/v2/D5603AQGAtIi2spihSA/profile-displayphoto-shrink_800_800/B56ZiKLVkjHUAc-/0/1754664907584?e=1757548800&v=beta&t=YklSdZ1iRxbPkrrDpfj_oLmr4MQKrJk15WRLEX9_0_c",
+        img: "/1754664907584.jpg",
         qualification: "5+ years of clinical experience.",
         specialization:
             "Laser treatments, acne & scar management, pigmentation correction, vitiligo, anti-aging therapies, and hair loss treatments.",
