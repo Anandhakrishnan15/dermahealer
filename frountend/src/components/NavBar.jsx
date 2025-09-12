@@ -171,7 +171,7 @@ function NavLinks({ dropdownOpen, setDropdownOpen, nestedOpenPath, setNestedOpen
                     <div key={idx} className="relative">
                         <button
                             onClick={() => setDropdownOpen(dropdownOpen === link.label ? null : link.label)}
-                            className={`flex items-center justify-between ${mobile ? "w-68" : ""} px-3 py-2 hover:underline `}
+                            className={`flex items-center justify-between ${mobile ? "w-68" : ""} px-2 py-2 hover:underline `}
                             style={{ color: "var(--navbar-link)" }}
                         >
                             {link.label}

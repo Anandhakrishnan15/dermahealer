@@ -10,7 +10,7 @@ export const TopServicesPreview = ({ limit = null }) => {
     return (
         <section className="py-0 mb-20 bg-[var(--bg)]">
             {/* ✅ Heading + Subheading grouped */}
-            <div className="text-center mb-12">
+            <div className="text-center mt-5 mb-12">
                 <h2 className="text-3xl font-bold text-[var(--text)]">
                     Our Signature Services
                 </h2>
