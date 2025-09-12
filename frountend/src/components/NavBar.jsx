@@ -277,7 +277,7 @@ function LinkItem({ href, label, onClick, active }) {
     return (
         <Link
             href={href}
-            className={`block px-4 sm:px-2 py-2 rounded-lg  transition-colors 
+            className={`block px-2 sm:px-2 py-2 rounded-lg  transition-colors 
     ${active
                     ? "text-[var(--primary-color)]"
                     : "text-[var(--navbar-link)] hover:bg-[var(--primary-color)] hover:text-white"
