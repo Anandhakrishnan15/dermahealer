@@ -165,7 +165,7 @@ export const Header = ({ onAnimationComplete }) => {
                 <motion.img
                     src={images[heroImg].imgurl}
                     alt="Hero Image Large"
-                    className="w-1/2 h-100 object-cover rounded-lg shadow-lg"
+                    className="w-100 h-100 object-contain rounded-lg "
                     loading="eager"
                     draggable={false}
                     initial="hidden"
