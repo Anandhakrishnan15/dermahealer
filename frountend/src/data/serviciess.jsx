@@ -38,16 +38,16 @@ const products = [
         description:
             "A globally loved facial that detoxifies, exfoliates, hydrates, and nourishes your skin—all in one session. Ideal for dull, dry, and sensitive skin types.",
     },
-    {
-        title: "Hyperpigmentation Treatment",
-        subtitle: "Melasma, Sun Spots & Uneven Tone",
-        category: "face",
-        slug: "pigmentation",
-        thumbnail:
-            "https://drnerinawilkinson.co.za/wp-content/uploads/2024/03/Newsletter-images-5-scaled.jpg",
-        description:
-            "We treat melasma, sun spots, freckles and uneven skin tone with customized peels, lasers, and serums that target the pigmentation.",
-    },
+        {
+            title: "Hyperpigmentation Treatment",
+            subtitle: "Melasma, Sun Spots & Uneven Tone",
+            category: "face",
+            slug: "pigmentation",
+            thumbnail:
+                "https://drnerinawilkinson.co.za/wp-content/uploads/2024/03/Newsletter-images-5-scaled.jpg",
+            description:
+                "We treat melasma, sun spots, freckles and uneven skin tone with customized peels, lasers, and serums that target the pigmentation.",
+        },
     {
         title: "Hair Loss Treatment",
         subtitle: "PRP, Mesotherapy & Growth Factors",
@@ -151,7 +151,28 @@ const products = [
         slug: "melasma",
         thumbnail: "https://www.epilium-paris.com/wp-content/uploads/2024/06/melasma.jpg",
         description: "Treatment for brownish facial patches using creams, chemical peels, and laser therapy for even skin tone."
+    },
+    {
+        title: "Chemical Peel",
+        subtitle: "Exfoliation & Skin Renewal",
+        category: "skin",
+        slug: "chemical-peel",
+        thumbnail:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSJpCAeJ9-q8rd0ryRO37OG3NQQSY4ZhhGYw&s",
+        description:
+            "A cosmetic treatment where a chemical solution exfoliates the outer skin layers, improving pigmentation, acne, fine lines, and overall glow.",
+    },
+    {
+        title: "Skin Boosters / Profhilo",
+        subtitle: "Deep Hydration & Collagen Stimulation",
+        category: "skin",
+        slug: "skin-boosters-profhilo",
+        thumbnail:
+            "https://skinandshape.com/wp-content/uploads/2025/01/Picture6.png",
+        description:
+            "Injectable hyaluronic acid–based treatments that deeply hydrate, improve elasticity, smooth fine lines, and restore natural skin radiance.",
     }
+
 
 
 ];
