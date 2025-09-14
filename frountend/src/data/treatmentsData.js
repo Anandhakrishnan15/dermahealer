@@ -449,6 +449,107 @@ export const treatmentsData = [
     Noticeable freshness after initial sessions, with cumulative results over time.  
   `,
       },
+      {
+        label: "Skin Boosters / Profhilo Treatment",
+        href: "/treatments/skin/skin-boosters-profhilo",
+        image:
+          "https://skinandshape.com/wp-content/uploads/2025/01/Picture6.png",
+        description: `
+  Skin boosters are injectable treatments (often hyaluronic acid–based or with additional bioactive ingredients) 
+  designed to deeply hydrate, improve elasticity, even out skin texture, and restore glow—without adding volume 
+  in the way fillers do. Profhilo is a premium bio-remodeling HA (hyaluronic acid) product that spreads under the 
+  skin to stimulate collagen and elastin for natural rejuvenation.
+  `,
+        benefits: [
+          "Improved hydration and skin plumpness",
+          "Better elasticity and firmness due to collagen & elastin stimulation",
+          "Smoother texture, reduced fine lines, healthier glow",
+          "Minimal downtime — only mild swelling or redness possible",
+        ],
+        procedure: `
+  1. Consultation to assess skin type, concerns, and treatment areas  
+  2. Cleanse skin and apply numbing cream if required  
+  3. Micro-injections using very fine needles across face/neck/hands as per plan  
+  4. For Profhilo, a specific '5-point technique' per side of face is often used  
+  5. Session duration: around 20–30 minutes  
+  `,
+        duration: "20–30 minutes per session",
+        sessionsRequired: `
+  - Profhilo: 2 sessions spaced ~4 weeks apart  
+  - Other boosters: 2–3 sessions depending on skin needs  
+  - Results last 6–12 months, maintenance recommended thereafter  
+  `,
+        suitableFor: `
+  Individuals with dull, dry, or dehydrated skin, early skin laxity, mild fine lines, 
+  uneven skin texture/tone, or those seeking a natural glow without volumizing fillers.
+  `,
+        aftercare: `
+  - Keep injection sites clean  
+  - Avoid strenuous activity or sweating heavily for 24–48 hours  
+  - Avoid extended sun exposure; use sunscreen  
+  - Refrain from makeup temporarily if advised  
+  - Follow dermatologist’s specific aftercare instructions  
+  `,
+        expectedResults: `
+  Noticeable skin hydration, plumpness, and radiance within weeks. 
+  Fine lines and laxity improve gradually as collagen and elastin are stimulated. 
+  Results typically last 6–12 months with proper maintenance.  
+  `,
+      },
+      {
+        label: "Chemical Peel",
+        href: "/treatments/skin/chemical-peel",
+        image:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSJpCAeJ9-q8rd0ryRO37OG3NQQSY4ZhhGYw&s",
+        description: `
+  A chemical peel is a cosmetic procedure in which a chemical solution is applied to the skin 
+  (face, neck, or hands) to exfoliate and remove damaged outer layers. This controlled resurfacing 
+  stimulates regeneration, allowing new skin to grow back smoother, clearer, and healthier.  
+  `,
+        benefits: [
+          "Evens out skin tone and reduces pigmentation or melasma",
+          "Improves acne breakouts, blackheads, and acne scars",
+          "Reduces fine lines, wrinkles, and rough texture",
+          "Restores glow to dull, tired-looking skin",
+        ],
+        procedure: `
+  1. Dermatologist consultation to assess skin type, concerns, and medical history  
+  2. Cleansing and possible pre-treatment with creams (e.g., retinoids, bleaching agents)  
+  3. Application of the peel solution for a controlled duration, sometimes in layers  
+  4. Neutralisation or removal of the solution, followed by cooling/soothing mask  
+  5. Essential aftercare: moisturising, sun protection, avoiding irritants  
+  `,
+        duration: "30–45 minutes depending on peel strength",
+        sessionsRequired: `
+  Noticeable results may appear after 1 session, but multiple sessions (every few weeks) 
+  are usually recommended for optimal results. Maintenance peels help sustain benefits.  
+  `,
+        suitableFor: `
+  Individuals with pigmentation, melasma, acne, acne scars, fine lines, uneven texture, 
+  sun damage, or dull skin seeking smoother and brighter skin.  
+  `,
+        aftercare: `
+  - Keep skin moisturised and protected from the sun  
+  - Avoid direct sun exposure and harsh products  
+  - Expect peeling/flaking for several days (varies with peel depth)  
+  - Follow dermatologist’s aftercare instructions strictly  
+  `,
+        expectedResults: `
+  - Smoother, brighter, more even-toned skin  
+  - Reduced appearance of fine lines and dark spots  
+  - Minimized pores and improved acne/acne marks  
+  - Results become more noticeable once peeling completes, usually within a week  
+  `,
+        risks: [
+          "Redness, stinging, or burning sensation shortly after treatment",
+          "Peeling and flaking of the skin",
+          "Temporary hyperpigmentation or hypopigmentation (especially in darker skin types)",
+          "Risk of infection if aftercare is not followed",
+          "Longer downtime required for medium and deep peels"
+        ]
+      }
+
+
     ],
   },
 
