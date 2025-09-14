@@ -8,12 +8,12 @@ export const TopServicesPreview = ({ limit = null }) => {
     const displayedServices = limit ? products.slice(0, limit) : products;
 
     return (
-        <section className="py-0 mb-20 bg-[var(--bg)]">
+        <section className="py-8 bg-[var(--bg)]">
             {/* ✅ Heading + Subheading grouped */}
             <div className="text-center mt-5 mb-12">
-                <h2 className="text-3xl font-bold text-[var(--text)]">
+                <h className="text-4xl font-bold bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">
                     Our Signature Services
-                </h2>
+                </h>
                 <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">
                     Explore our advanced dermatology treatments and specialized skincare services,
                     designed to enhance your natural beauty and address a wide range of skin concerns.
