@@ -74,17 +74,14 @@ export default function TreatmentContent({ treatment }) {
             </section>
 
             {/* Procedure & Aftercare */}
-            <motion.div
-                variants={containerStagger}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                className="flex flex-wrap gap-6"
-            >
+            <div className="flex flex-wrap gap-6">
                 {treatment.procedure && (
                     <motion.div
                         variants={fadeUp}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
                         className="flex-1 min-w-[300px] p-6 bg-[var(--card-bg)] rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
                     >
                         <h2 className="text-3xl font-bold mb-4 flex items-center gap-2 text-[var(--text)]">
@@ -100,7 +97,10 @@ export default function TreatmentContent({ treatment }) {
                 {treatment.aftercare && (
                     <motion.div
                         variants={fadeUp}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
                         className="flex-1 min-w-[300px] p-6 bg-[var(--card-bg)] rounded-3xl shadow-lg transition-shadow duration-300 hover:shadow-[0_10px_25px_rgba(14,165,233,0.5)]"
                     >
                         <h2 className="text-3xl font-bold mb-4 flex items-center gap-2 text-[var(--text)]">
@@ -112,7 +112,9 @@ export default function TreatmentContent({ treatment }) {
                         </p>
                     </motion.div>
                 )}
-            </motion.div>
+            </div>
+
+
 
             {/* Key Info */}
             <motion.section
@@ -225,6 +227,41 @@ export default function TreatmentContent({ treatment }) {
                     <p className="text-[var(--text)] whitespace-pre-line">
                         {treatment.expectedResults}
                     </p>
+                </motion.section>
+            )}
+            {/* Rishk Results */}
+            {treatment.risks && (
+                <motion.section
+                    variants={fadeUp}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.6 }}
+                    className="p-8 rounded-3xl shadow-lg"
+                    style={{ background: "var(--card-bg)" }}
+                >
+                    <h2 className="text-4xl font-extrabold mb-6 text-center text-[var(--text)] flex justify-center items-center gap-3">
+                        <CheckCircle className="w-8 h-8 text-[var(--primary-color)]" />
+                        Risks
+                    </h2>
+                    <motion.div
+                        variants={containerStagger}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        className="grid md:grid-cols-2 gap-4"
+                    >
+                        {treatment.risks.map((b, i) => (
+                            <motion.div
+                                key={i}
+                                variants={fadeUp}
+                                className="flex items-center gap-3 p-4 bg-[var(--form-bg)] rounded-xl shadow hover:scale-105 transition-transform"
+                            >
+                                <CheckCircle className="w-6 h-6 text-[var(--primary-color)]" />
+                                <p className="text-[var(--text)]">{b}</p>
+                            </motion.div>
+                        ))}
+                    </motion.div>
                 </motion.section>
             )}
         </main>
