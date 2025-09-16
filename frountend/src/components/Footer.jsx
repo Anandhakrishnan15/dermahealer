@@ -148,6 +148,9 @@ export default function Footer() {
                             { name: "Laser Hair Removal", href: "/treatments/hair/laser-hair-removal", popular: true },
                             { name: "Vitiligo Surgery", href: "/treatments/skin/vitiligo" },
                             { name: "Xanthelasma Removal", href: "/treatments/face/xanthelasma-removal" },
+                            { name: "Chemical Peel", href: "/treatments/skin/chemical-peel" },
+                            { name: "Skin Boosters / Profhilo", href: "/treatments/skin/skin-boosters-profhilo" },
+
                         ].map((item, i) => (
                             <li key={i} className="flex items-center gap-2 hover:translate-x-1 transition">
                                 <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">{">"}</span>
