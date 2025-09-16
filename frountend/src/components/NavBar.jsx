@@ -171,7 +171,7 @@ function NavLinks({ dropdownOpen, setDropdownOpen, nestedOpenPath, setNestedOpen
                     <div key={idx} className="relative">
                         <button
                             onClick={() => setDropdownOpen(dropdownOpen === link.label ? null : link.label)}
-                            className={`flex items-center justify-between ${mobile ? "w-68" : ""} px-2 py-2 hover:underline `}
+                            className={`flex items-center justify-between ${mobile ? "w-68" : ""} px-4 py-2 hover:underline `}
                             style={{ color: "var(--navbar-link)" }}
                         >
                             {link.label}
@@ -234,7 +234,7 @@ function DropdownItem({ item, mobile, pathname, onLinkClick, path, nestedOpenPat
             <div className="relative w-full">
                 <button
                     onClick={toggle}
-                    className={`flex items-center rounded-md justify-between w-full px-2 py-2 text-left  ${isOpen ? " bg-[var(--primary-color)]" : "hover:bg-[var(--primary-color)]"}`}
+                    className={`flex items-center rounded-md justify-between w-full px-4 py-2 text-left  ${isOpen ? " bg-[var(--primary-color)]" : "hover:bg-[var(--primary-color)]"}`}
                 >
                     <span className="truncate">{item.label}</span>
                     <ChevronRight size={14} className={`${isOpen ? "rotate-90" : ""} transition-transform`} />
@@ -277,7 +277,7 @@ function LinkItem({ href, label, onClick, active }) {
     return (
         <Link
             href={href}
-            className={`block px-2 sm:px-2 py-2 rounded-lg  transition-colors 
+            className={`block px-4 sm:px-3 py-2 rounded-lg  transition-colors 
     ${active
                     ? "text-[var(--primary-color)]"
                     : "text-[var(--navbar-link)] hover:bg-[var(--primary-color)] hover:text-white"
