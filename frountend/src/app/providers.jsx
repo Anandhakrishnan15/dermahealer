@@ -12,7 +12,7 @@ function AnalyticsTracker() {
         if (!pathname) return;
 
         const url = pathname + (searchParams?.toString() ? `?${searchParams}` : "");
-        window.gtag?.("config", process.env.NEXT_PUBLIC_GA_ID, { page_path: url });
+        window.gtag?.("config", process.env.GA_ID, { page_path: url });
     }, [pathname, searchParams]);
 
     return null;
