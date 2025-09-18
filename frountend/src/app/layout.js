@@ -4,6 +4,8 @@ import "./globals.css";
 import ClientWrapper from "./ClientWrapper";
 import LayoutClient from "./LayoutClient";
 import Script from "next/script";
+import AnalyticsProvider from "./providers";
+import GoogleAnalytics from "./GoogleAnalytics";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -120,12 +122,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <head>
-        {/* ✅ Structured Data Schema for SEO */}
+        <AnalyticsProvider />
         <Script
           id="schema-org"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
         />
+        {/* Google Analytics */}
+        <GoogleAnalytics gaId={process.env.GA_ID} />
+        
         <meta name="apple-mobile-web-app-title" content="Derma Healer" />
       </head>
       <body
