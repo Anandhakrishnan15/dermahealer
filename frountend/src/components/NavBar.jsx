@@ -162,6 +162,8 @@ function NavLinks({ dropdownOpen, setDropdownOpen, nestedOpenPath, setNestedOpen
         { href: "/blog", label: "Blog" },
         { href: "/about-us", label: "About Us" },
         { href: "/contact-us", label: "Contact Us" },
+        // { href: "/admin", label: "admin" },
+
     ];
 
     return (
