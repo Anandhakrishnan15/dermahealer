@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 import { CheckCircle2, Star } from "lucide-react";
 
-export const Header = ({ onAnimationComplete }) => {
+export const Header = () => {
     const [heroImg, setHeroImg] = useState(0);
 
     // ✅ Desktop images
@@ -28,33 +28,6 @@ export const Header = ({ onAnimationComplete }) => {
         "Dr. B.K. Sharma, MBBS, MD (Skin & VD)",
     ];
 
-    // Animation variants
-    const containerVariants = {
-        hidden: { opacity: 0, y: 40 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { staggerChildren: 0.3, ease: "easeOut", duration: 0.8 },
-        },
-    };
-
-    const textVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { ease: "easeOut", duration: 0.8 },
-        },
-    };
-
-    const imageVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { ease: "easeOut", duration: 0.8 },
-        },
-    };
 
     // ✅ Auto-change hero image every 10 seconds
     useEffect(() => {
@@ -63,57 +36,46 @@ export const Header = ({ onAnimationComplete }) => {
         }, 10000);
         return () => clearInterval(interval);
     }, [images.length]);
+    const [rating, setRating] = useState({ score: 4.9, reviews: 400 });
+
+    useEffect(() => {
+        fetch("/api/rating")
+            .then((res) => res.json())
+            .then((data) => setRating(data));
+    }, []);
 
     return (
         <div className="relative top-0 z-50   mb-10 mx-auto py-0 md:py-10 px-1">
             {/* Desktop */}
 
             <div className="hidden md:flex items-center">
-                <motion.div
-                    className="md:flex-1 pr-8"
-                    initial="hidden"
-                    animate="visible"
-                    variants={containerVariants}
-                    onAnimationComplete={onAnimationComplete}
-                >
+                <div className="md:flex-1 pr-8">
                     {/* ✅ Heading */}
-                    <motion.h1 className="text-6xl font-bold" variants={textVariants}>
+                    <h1 className="text-6xl font-bold">
                         Glow <span className="text-[#3ed0ca]">Confidently</span>{" "}
                         <span className="inline-flex items-center gap-1">
                             with
-                            <motion.span
-                                className="text-4xl"
-                                initial={{ y: -5, rotate: 0, opacity: 0 }}
-                                animate={{
-                                    y: [-5, 0, -5],
-                                    rotate: [0, 15, -15, 0],
-                                    opacity: 1,
-                                }}
-                                transition={{
-                                    y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                                    rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                                    opacity: { delay: 0.5, duration: 0.5 },
-                                }}
+                            <span
+                                className="text-4xl inline-block animate-bounce-slow"
+                                role="img"
+                                aria-label="sparkles"
                             >
                                 ✨
-                            </motion.span>
+                            </span>
                         </span>
                         <br />
                         <span className="text-7xl font-bold text-[#5563ff]">
                             Derma Healer
                         </span>
-                    </motion.h1>
+                    </h1>
 
                     {/* ✅ Tagline */}
-                    <motion.p
-                        className="mt-4 text-xl text-gray-600 dark:text-gray-400"
-                        variants={textVariants}
-                    >
+                    <p className="mt-4 text-xl text-gray-600 dark:text-gray-400">
                         Leading Skin & Laser Clinic in Bihar Using{" "}
                         <span className="font-semibold text-[#3ed0ca]">
                             USFDA-Approved Technologies
                         </span>
-                    </motion.p>
+                    </p>
 
                     {/* ✅ Ratings & Reviews */}
                     <div className="mt-3 flex items-center flex-wrap gap-3">
@@ -128,9 +90,9 @@ export const Header = ({ onAnimationComplete }) => {
 
                         {/* 🔢 Score + Reviews */}
                         <span className="text-gray-500 font-medium">
-                            4.9{" "}
+                            {rating.score}{" "}
                             <span className="text-sm text-gray-500 dark:text-gray-400">
-                                (241+ reviews)
+                                ({rating.reviews}+ reviews)
                             </span>
                         </span>
 
@@ -140,12 +102,8 @@ export const Header = ({ onAnimationComplete }) => {
                         </span>
                     </div>
 
-                  
                     {/* ✅ CTA Buttons */}
-                    <motion.div
-                        className="mt-6 flex gap-4"
-                        variants={textVariants}
-                    >
+                    <div className="mt-6 flex gap-4">
                         <a
                             href="/contact-us"
                             className="bg-[#3ed0ca] text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-teal-600 transition"
@@ -158,119 +116,81 @@ export const Header = ({ onAnimationComplete }) => {
                         >
                             Our Treatments
                         </a>
-                    </motion.div>
-                </motion.div>
+                    </div>
+                </div>
 
                 {/* ✅ Hero Image */}
-                <motion.img
+                <img
                     src={images[heroImg].imgurl}
                     alt="Hero Image Large"
-                    className="w-100 h-100 object-contain rounded-lg "
+                    className="w-100 h-100 object-contain rounded-lg"
                     loading="eager"
                     draggable={false}
-                    initial="hidden"
-                    animate="visible"
-                    variants={imageVariants}
                 />
             </div>
+
 
 
             {/* Mobile */}
             <div className="relative md:hidden w-full h-full mt-4 rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
                 {/* ✅ Auto-changing Mobile Hero Image */}
-                <motion.img
+                <img
                     src={mobileImages[heroImg % mobileImages.length]}
                     alt="Hero Image Mobile"
-                    className="relative z-10 object-cover h-72 sm:h-80 w-full"
+                    className="relative z-10 object-cover h-72 sm:h-80 w-full transition-opacity duration-700 ease-in-out"
                     loading="eager"
                     draggable={false}
-                    initial="hidden"
-                    animate="visible"
-                    variants={imageVariants}
-                    key={heroImg} // 👈 ensures re-animation on change
+                    key={heroImg} // 👈 still forces React to reload on change
                 />
 
                 {/* ✅ Doctor Name Overlay */}
-                <div className="absolute w-50 bottom-10 right-0 rounded-l-sm  bg-gray-100 text-teal-600 text-center py-2 z-20 [@media(max-width:495px)]:hidden
-">
+                <div
+                    className="absolute w-50 bottom-10 right-0 rounded-l-sm bg-gray-100 text-teal-600 text-center py-2 z-20 [@media(max-width:495px)]:hidden"
+                >
                     <p className="text-sm font-semibold">
                         {doctorNames[heroImg % doctorNames.length]}
                     </p>
                 </div>
 
-                <motion.div
-                    initial="hidden"
-                    animate="visible"
-                    variants={{
-                        hidden: { opacity: 0 },
-                        visible: {
-                            opacity: 1,
-                            transition: { staggerChildren: 0.3 },
-                        },
-                    }}
-                    className="absolute flex flex-col justify-center inset-0 px-2 z-30"
-                >
+                {/* ✅ Content Overlay */}
+                <div className="absolute flex flex-col justify-center inset-0 px-2 z-30 animate-fade-in">
                     {/* ✅ Heading */}
-                    <motion.h1
-                        variants={{
-                            hidden: { opacity: 0, y: 40 },
-                            visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
-                        }}
+                    <h1
                         className="
-                            text-3xl sm:text-4xl font-extrabold text-white mb-4 drop-shadow-xl 
-                            px-2 w-60 responmobilheading
-                            [@media(max-width:495px)]:px-0
-                            [@media(max-width:495px)]:w-50
-                            [@media(max-width:495px)]:text-3xl
-                        "
+        text-3xl sm:text-4xl font-extrabold text-white mb-4 drop-shadow-xl 
+        px-2 w-60 responmobilheading
+        [@media(max-width:495px)]:px-0
+        [@media(max-width:495px)]:w-50
+        [@media(max-width:495px)]:text-3xl
+        animate-slide-up
+      "
                     >
-                        Glow<span className="inline-flex items-center gap-1">
+                        Glow
+                        <span className="inline-flex items-center gap-1">
                             {/* ✨ Sparkle animation */}
-                            <motion.span
-                                className="text-2xl sm:text-3xl"
-                                initial={{ y: -5, rotate: 0, opacity: 0 }}
-                                animate={{
-                                    y: [-5, 0, -5],
-                                    rotate: [0, 15, -15, 0],
-                                    opacity: 1,
-                                }}
-                                transition={{
-                                    y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                                    rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                                    opacity: { delay: 0.5, duration: 0.5 },
-                                }}
+                            <span
+                                className="text-2xl sm:text-3xl inline-block animate-bounce-slow"
+                                role="img"
+                                aria-label="sparkles"
                             >
                                 ✨
-                            </motion.span>
+                            </span>
                         </span>{" "}
-                        <span className="text-[#242c2c]">Confidently</span>{" "}
-                        with{" "}
+                        <span className="text-[#242c2c]">Confidently</span> with{" "}
                         <span className="text-[#5563ff]">Derma Healer</span>
-                    </motion.h1>
+                    </h1>
 
                     {/* ✅ Tagline */}
-                    <motion.p
-                        variants={{
-                            hidden: { opacity: 0, y: 30 },
-                            visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut", delay: 0.2 } },
-                        }}
-                        className="text-sm sm:text-base text-white max-w-md drop-shadow-md mb-4"
-                    >
+                    <p className="text-sm sm:text-base text-white max-w-md drop-shadow-md mb-4 animate-slide-up delay-200">
                         Leading Skin & Laser Clinic in Bihar <br />
                         Using<br />
                         <span className="font-semibold bg-[#ffe680] text-[#161615] px-1 rounded">
                             USFDA-Approved Technologies
                         </span>
-                    </motion.p>
+                    </p>
 
                     {/* ✅ CTA Buttons */}
-                    <motion.div
-                        variants={{
-                            hidden: { opacity: 0, y: 20 },
-                            visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut", delay: 0.4 } },
-                        }}
-                        className="flex gap-3"
-                    >
+                    <div className="flex gap-3 animate-slide-up delay-400">
                         <a
                             href="/contact"
                             className="bg-white text-[#3ed0ca] font-semibold px-4 py-2 rounded-full text-sm shadow hover:bg-gray-100 transition"
@@ -283,9 +203,10 @@ export const Header = ({ onAnimationComplete }) => {
                         >
                             Our Treatments
                         </a>
-                    </motion.div>
-                </motion.div>
+                    </div>
+                </div>
             </div>
+
         </div>
     );
 };
