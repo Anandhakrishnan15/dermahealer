@@ -30,7 +30,7 @@ export async function GET(req) {
 
         return NextResponse.json({ user: safeUser });
     } catch (err) {
-        console.error("Auth/me error:", err.message);
+        console.error("auth/me error:", err.message);
         return NextResponse.json(
             { error: err.message || "Unauthorized" },
             { status: 401 }
