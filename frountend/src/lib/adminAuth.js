@@ -12,7 +12,7 @@ export async function requireAdmin(req) {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (decoded.role !== "admin") {
-            return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+            return NextResponse.json({ error: "Forbidden token"  }, { status: 403 });
         }
         return decoded; // contains id, role, etc.
     } catch (err) {
