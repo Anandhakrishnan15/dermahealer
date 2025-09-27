@@ -86,8 +86,8 @@ export const Testimonials = () => {
                                         <Star
                                             key={i}
                                             className={`h-5 w-5 ${i < t.rating
-                                                    ? "text-yellow-400 fill-yellow-400"
-                                                    : "text-gray-300 dark:text-gray-600"
+                                                ? "text-yellow-400 fill-yellow-400"
+                                                : "text-gray-300 dark:text-gray-600"
                                                 }`}
                                         />
                                     ))}

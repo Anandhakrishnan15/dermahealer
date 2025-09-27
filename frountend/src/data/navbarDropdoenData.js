@@ -50,6 +50,14 @@ const navbarDropdownData = [
             {
                 label: "Xanthelasma Removal",
                 href: "/treatments/face/xanthelasma-removal",
+            },
+            {
+                label: "Skin Boosters / Profhilo Treatment",
+                href: "/treatments/skin/skin-boosters-profhilo",
+            },
+            {
+                label: "Chemical Peel",
+                href: "/treatments/skin/chemical-peel",
             }
 
 

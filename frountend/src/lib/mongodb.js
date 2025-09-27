@@ -28,16 +28,16 @@ export async function connectDB() {
       maxPoolSize: 10,
     };
 
-    cached.promise = mongoose
-      .connect(MONGODB_URI, opts)
-      .then((mongoose) => {
+    cached.promise = (async () => {
+      try {
+        const conn = await mongoose.connect(MONGODB_URI, opts);
         console.log("✅ MongoDB connected successfully (new connection)");
-        return mongoose;
-      })
-      .catch((err) => {
+        return conn;
+      } catch (err) {
         console.error("❌ MongoDB connection error:", err);
-        process.exit(1);
-      });
+        throw err; // safer than process.exit(1)
+      }
+    })();
   } else {
     console.log("⏳ MongoDB connection already in progress...");
   }

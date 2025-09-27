@@ -148,6 +148,9 @@ export default function Footer() {
                             { name: "Laser Hair Removal", href: "/treatments/hair/laser-hair-removal", popular: true },
                             { name: "Vitiligo Surgery", href: "/treatments/skin/vitiligo" },
                             { name: "Xanthelasma Removal", href: "/treatments/face/xanthelasma-removal" },
+                            { name: "Chemical Peel", href: "/treatments/skin/chemical-peel" },
+                            { name: "Skin Boosters / Profhilo", href: "/treatments/skin/skin-boosters-profhilo" },
+
                         ].map((item, i) => (
                             <li key={i} className="flex items-center gap-2 hover:translate-x-1 transition">
                                 <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">{">"}</span>
@@ -200,7 +203,16 @@ export default function Footer() {
 
             {/* Bottom Bar */}
             <div className="mt-12 border-t border-gray-600 pt-6 flex flex-col md:flex-row items-center justify-between text-sm opacity-80 gap-4">
-                <p className="animate-fadeIn">&copy; {new Date().getFullYear()} DermaHealer. All rights reserved.</p>
+                <p className="animate-fadeIn">
+                    &copy; {new Date().getFullYear()} DermaHealer. All rights reserved.{" "}
+                    <a
+                        href="/privacy"
+                        className="underline hover:text-teal-400 transition"
+                    >
+                        Privacy Policy
+                    </a>
+                </p>
+
                 <div className="flex items-center gap-2 animate-fadeIn delay-200">
                     <p>
                         Built by{" "}
@@ -221,6 +233,7 @@ export default function Footer() {
                     />
                 </div>
             </div>
+
         </footer>
     );
 }

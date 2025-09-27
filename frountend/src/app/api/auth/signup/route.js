@@ -6,16 +6,16 @@ import bcrypt from "bcryptjs";
 export async function POST(req) {
     try {
         await connectDB();
-        const { username, email, password } = await req.json();
+        const { username, email, phone, password, role } = await req.json();
 
-        if (!username || !email || !password) {
+        if (!username || !email || !password || !phone) {
             return NextResponse.json({ error: "All fields required" }, { status: 400 });
         }
 
-        // check if user exists
-        const existingUser = await User.findOne({ email });
+        // check if email or phone exists
+        const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
         if (existingUser) {
-            return NextResponse.json({ error: "User already exists" }, { status: 400 });
+            return NextResponse.json({ error: "Email or phone already exists" }, { status: 400 });
         }
 
         // hash password
@@ -24,14 +24,17 @@ export async function POST(req) {
         const newUser = new User({
             username,
             email,
+            phone,
             password: hashedPassword,
+            role: role || "staff", // default to staff
+            blocked: true, // blocked by default
         });
 
         await newUser.save();
 
-        return NextResponse.json({ message: "User registered successfully 🚀" }, { status: 201 });
+        return NextResponse.json({ message: "Staff account created successfully" }, { status: 201 });
     } catch (err) {
-        console.error("Signup error:", err);
-        return NextResponse.json({ error: "Signup failed", details: err.message }, { status: 500 });
+        console.error("Create staff error:", err);
+        return NextResponse.json({ error: "Failed to create staff", details: err.message }, { status: 500 });
     }
 }
