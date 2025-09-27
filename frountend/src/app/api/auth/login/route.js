@@ -33,9 +33,11 @@ export async function POST(req) {
         );
 
         return NextResponse.json({
-            message: "Login successful 🚀",
+            
+            
+            message: "Login successful",
             token,
-            user: { id: user._id, username: user.username, email: user.email },
+            user: { id: user._id, username: user.username, email: user.email ,role: user.role },
         });
     } catch (err) {
         console.error("Login error:", err);
