@@ -35,7 +35,7 @@ export default function AdminHome() {
 
     const updateRating = async () => {
         await fetch("/api/rating", {
-            method: "POST",
+            method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ score: Number(score), reviews: Number(reviews) }),
         });

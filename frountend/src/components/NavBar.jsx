@@ -159,7 +159,7 @@ function NavLinks({ dropdownOpen, setDropdownOpen, nestedOpenPath, setNestedOpen
         { href: "/", label: "Home" },
         { href: "/treatments", label: "Services" },
         { dropdown: true, label: "Treatments" },
-        { href: "/blog", label: "Blog" },
+        { href: "/blogs", label: "Blog" },
         { href: "/about-us", label: "About Us" },
         { href: "/contact-us", label: "Contact Us" },
         // { href: "/admin", label: "admin" },
