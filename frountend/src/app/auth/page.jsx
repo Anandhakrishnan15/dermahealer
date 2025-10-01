@@ -34,6 +34,12 @@ export default function AuthPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!form.email || !form.password) {
+            toast.error("Please fill in all required fields.");
+            return;
+        }
+
         setSubmitLoading(true);
 
         try {
@@ -43,26 +49,38 @@ export default function AuthPage() {
                 body: JSON.stringify(form),
             });
 
-            const data = await res.json();
+            let data;
+            try {
+                data = await res.json();
+            } catch {
+                throw new Error("Invalid server response.");
+            }
 
-            if (res.ok && data.token) {
+            if (!res.ok) {
+                const message = data?.error || `Error ${res.status}: ${res.statusText}`;
+                toast.error(message);
+                return;
+            }
+
+            if (data.token && data.user) {
                 login(data.token, data.user);
 
-                if (data.user.role === "admin") {
-                    router.push("/admin");
-                } else {
-                    router.push("/admin/appointments");
-                }
+                const redirectPath =
+                    data.user.role === "admin" ? "/admin" : "/admin/appointments";
+                router.push(redirectPath);
+
                 toast.success("Login successful!");
             } else {
-                toast.error(data.error || "Invalid credentials.");
+                toast.error("Unexpected response from server.");
             }
-        } catch {
-            toast.error("Network error.");
+        } catch (err) {
+            console.error("Login error:", err);
+            toast.error(err.message || "Network error. Please try again.");
         } finally {
             setSubmitLoading(false);
         }
     };
+
 
     // prevent flicker before auth check
     if (!checked) return null;

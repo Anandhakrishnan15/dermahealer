@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function QuickActions({ onAddBlog, onBookAppointment }) {
     return (
         <div className="p-6 rounded-lg shadow" style={{ background: "var(--bg)" }}>
@@ -14,12 +16,17 @@ export default function QuickActions({ onAddBlog, onBookAppointment }) {
                 >
                     ➕ Add Blog
                 </button>
-                <button
-                    className="px-4 py-2 bg-[var(--btn-bg)] text-[var(--text)] rounded-lg hover:bg-[var(--btn-hover)] transition"
-                    onClick={() => window.location.href = "/auth/create-staff"}
-                >
-                    ➕ Add Staff
-                </button>
+                <Link href="/auth/create-staff">
+                    <button className="px-4 py-2 bg-[var(--btn-bg)] text-[var(--text)] rounded-lg hover:bg-[var(--btn-hover)] transition">
+                        ➕ Add Staff
+                    </button>
+                </Link>
+
+                <Link href="/admin/TreatmentsEditor">
+                    <button className="px-4 py-2 bg-[var(--btn-bg)] text-[var(--text)] rounded-lg hover:bg-[var(--btn-hover)] transition">
+                        ➕ Update the B&F
+                    </button>
+                </Link>
                 <button
                     className="px-4 py-2 bg-[var(--btn-bg)] text-[var(--text)] rounded-lg hover:bg-[var(--btn-hover)] transition"
                     onClick={onBookAppointment}

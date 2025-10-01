@@ -1,30 +1,54 @@
-import { promises as fs } from "fs";
-import path from "path";
+// app/api/rating/route.js
+import { connectDB } from "@/lib/mongodb";
+import Rating from "@/models/Rating";
 import { NextResponse } from "next/server";
-import { log } from "console";
 
-const filePath = path.join(process.cwd(), "src", "data", "rating.json");
-
-console.log(filePath);
-
-
-// ✅ GET current rating
+// GET the current rating
 export async function GET() {
     try {
-        const data = await fs.readFile(filePath, "utf-8");
-        return NextResponse.json(JSON.parse(data));
+        await connectDB();
+
+        const rating = await Rating.findOne();
+        if (!rating) {
+            return NextResponse.json({ score: 0, reviews: 0 });
+        }
+
+        return NextResponse.json(rating);
     } catch (err) {
-        return NextResponse.json({ error: "Failed to read rating.json" }, { status: 500 });
+        console.error("Failed to fetch rating:", err);
+        return NextResponse.json(
+            { error: "Failed to fetch rating" },
+            { status: 500 }
+        );
     }
 }
 
-// ✅ POST update rating (use from Admin Dashboard)
-export async function POST(req) {
+// POST update rating
+export async function PATCH(req) {
     try {
-        const body = await req.json();
-        await fs.writeFile(filePath, JSON.stringify(body, null, 2));
-        return NextResponse.json({ success: true, rating: body });
+        await connectDB();
+
+        const { score, reviews } = await req.json();
+
+        if (score === undefined || reviews === undefined) {
+            return NextResponse.json(
+                { error: "score and reviews are required" },
+                { status: 400 }
+            );
+        }
+
+        const updated = await Rating.findOneAndUpdate(
+            {},
+            { score, reviews, updatedAt: new Date() },
+            { new: true, upsert: true }
+        );
+
+        return NextResponse.json(updated);
     } catch (err) {
-        return NextResponse.json({ error: "Failed to update rating.json" }, { status: 500 });
+        console.error("Failed to update rating:", err);
+        return NextResponse.json(
+            { error: "Failed to update rating" },
+            { status: 500 }
+        );
     }
 }

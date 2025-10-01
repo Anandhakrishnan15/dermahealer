@@ -45,7 +45,7 @@ export const metadata = {
     siteName: "Derma Healer India",
     images: [
       {
-        url: "/logo.jpg", // should be 1200x630
+        url: "/home.png", // should be 1200x630
         width: 1200,
         height: 630,
         alt: "Derma Healer Clinic Banner",
@@ -60,7 +60,7 @@ export const metadata = {
     title: "Derma Healer - Your Siwan Dermatology Clinic",
     description:
       "Expert dermatology and cosmetic treatments in Siwan, Bihar. Find solutions for acne, pigmentation, hair loss, and more.",
-    images: ["/logo2.png"],
+    images: ["/home.png"],
   },
 };
 
@@ -69,7 +69,7 @@ export default function RootLayout({ children }) {
     "@context": "https://schema.org",
     "@type": "MedicalClinic",
     name: "Derma Healer India",
-    image: "https://dermahealerindia.com/logo2.png",
+    image: "home.png",
     "@id": "https://dermahealerindia.com",
     url: "https://dermahealerindia.com",
     telephone: "+91-919931766933",

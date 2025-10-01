@@ -1,12 +1,11 @@
-const treatments = [
-  
+[
   {
     "images": [
       "https://ik.imagekit.io/iwky7g0ee/1.jpeg?updatedAt=1755864391644",
       "https://ik.imagekit.io/iwky7g0ee/18.jpeg?updatedAt=1755864437516",
       "https://ik.imagekit.io/iwky7g0ee/21.jpeg?updatedAt=1755864437701"
     ],
-    "heading": "Vitiligo Treatment ",
+    "heading": "Vitiligo Treatment",
     "description": "Our Vitiligo treatment helps restore skin pigmentation gradually and safely. Using advanced therapies, we target affected areas to improve skin tone and minimize depigmented patches. Visible results are typically seen after a few sessions, promoting confidence and healthy skin."
   },
   {
@@ -45,6 +44,4 @@ const treatments = [
     "heading": "Acne Scar Treatment",
     "description": "Acne scar treatment targets both old and new scars using laser resurfacing, microneedling, and chemical peels. This approach smoothens the skin, improves texture, and minimizes pitted or raised scars, restoring a clear and even complexion over time."
   }
-];
-
-export default treatments;
+]
