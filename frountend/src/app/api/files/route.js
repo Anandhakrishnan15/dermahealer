@@ -13,7 +13,6 @@ export async function GET(req) {
 
         // 3️⃣ Fetch all documents
         const files = await File.find().select("-__v"); // exclude version key
-
         return NextResponse.json({ files });
     } catch (err) {
         console.error("Files API error:", err.message);
