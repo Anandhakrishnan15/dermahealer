@@ -1,5 +1,7 @@
 "use client";
 
+import VisitorStats from "./components/VisitorStats";
+
 export default function UserCard({ user, onEditRating }) {
     const isLoading = !user || Object.keys(user).length === 0;
 
@@ -44,6 +46,7 @@ export default function UserCard({ user, onEditRating }) {
                     )}
                 </div>
             </div>
+            <VisitorStats/>
 
             {/* Edit button */}
             {!isLoading && user?.role !== "staff" && (
