@@ -52,8 +52,6 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
         setIsLoggedIn(true);
         setStaff(userData.role === "staff"); // ✅ set staff true on login
-        console.log(staff);
-        
     };
 
     const logout = () => {
