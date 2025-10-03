@@ -36,12 +36,27 @@ export const Header = () => {
         }, 10000);
         return () => clearInterval(interval);
     }, [images.length]);
-    const [rating, setRating] = useState({ score: 4.9, reviews: 400 });
+    const [rating, setRating] = useState(null); // start as null to show skeleton
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch("/api/rating")
-            .then((res) => res.json())
-            .then((data) => setRating(data));
+        const fetchRating = async () => {
+            try {
+                const res = await fetch("/api/rating");
+                const data = await res.json();
+
+                setRating({
+                    score: data.score,
+                    reviews: data.reviews,
+                });
+                setLoading(false); // data loaded
+            } catch (error) {
+                console.error("Failed to fetch rating:", error);
+                setLoading(false);
+            }
+        };
+
+        fetchRating();
     }, []);
 
     return (
@@ -79,22 +94,41 @@ export const Header = () => {
 
                     {/* ✅ Ratings & Reviews */}
                     <div className="mt-3 flex items-center flex-wrap gap-3">
-                        {/* ⭐ Stars */}
-                        <div className="flex items-center text-yellow-400">
-                            {Array(5)
-                                .fill(0)
-                                .map((_, i) => (
-                                    <Star key={i} size={18} className="fill-yellow-400" />
-                                ))}
-                        </div>
+                        {loading ? (
+                            // Skeleton loader
+                            <>
+                                <div className="flex gap-1">
+                                    {Array(5)
+                                        .fill(0)
+                                        .map((_, i) => (
+                                            <div
+                                                key={i}
+                                                className="h-4 w-4 bg-gray-300 rounded-full animate-pulse"
+                                            />
+                                        ))}
+                                </div>
+                                <div className="h-4 w-16 bg-gray-300 rounded animate-pulse"></div>
+                            </>
+                        ) : (
+                            <>
+                                {/* ⭐ Stars */}
+                                <div className="flex items-center text-yellow-400">
+                                    {Array(5)
+                                        .fill(0)
+                                        .map((_, i) => (
+                                            <Star key={i} size={18} className="fill-yellow-400" />
+                                        ))}
+                                </div>
 
-                        {/* 🔢 Score + Reviews */}
-                        <span className="text-gray-500 font-medium">
-                            {rating.score}{" "}
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
-                                ({rating.reviews}+ reviews)
-                            </span>
-                        </span>
+                                {/* 🔢 Score + Reviews */}
+                                <span className="text-gray-500 font-medium">
+                                    {rating.score}{" "}
+                                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                                        ({rating.reviews}+ reviews)
+                                    </span>
+                                </span>
+                            </>
+                        )}
 
                         {/* ✅ USFDA Badge */}
                         <span className="inline-flex items-center text-sm font-semibold bg-[#3ed0ca]/10 text-[#3ed0ca] px-3 py-1 rounded-full shadow-sm">
