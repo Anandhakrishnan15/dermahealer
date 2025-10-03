@@ -63,12 +63,14 @@ export default function AuthPage() {
             }
 
             if (data.token && data.user) {
-                login(data.token, data.user);
-
                 const redirectPath =
                     data.user.role === "admin" ? "/admin" : "/admin/appointments";
+                    
                 router.push(redirectPath);
 
+                login(data.token, data.user);
+
+               
                 toast.success("Login successful!");
             } else {
                 toast.error("Unexpected response from server.");

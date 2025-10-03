@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
 
 export default function CreateStaffPage() {
     const [form, setForm] = useState({
@@ -76,6 +77,7 @@ export default function CreateStaffPage() {
 
                         {/* INFO PANEL */}
                         <div className="hidden md:flex md:w-1/2 justify-center items-center p-10 bg-gradient-to-br from-teal-600 via-teal-500 to-blue-600 text-white rounded-r-3xl shadow-2xl relative transition-transform duration-700 ease-out transform translate-x-0 opacity-100">
+
                             <div className="absolute -top-0 -left-10 w-60 h-60 bg-white/20 rounded-full animate-floaty shadow-xl"></div>
                             <div className="absolute -bottom-20 -left-0 w-60 h-60 bg-white/10 rounded-full animate-pulse shadow-xl"></div>
 
@@ -87,6 +89,14 @@ export default function CreateStaffPage() {
                                 <p className="text-lg text-gray-100">
                                     Add new staff members with secure credentials and assign their role.
                                 </p>
+
+                                {/* ✅ Dashboard Link */}
+                                <Link
+                                    href="/admin"
+                                    className="inline-block px-6 py-3 bg-white text-teal-600 font-semibold rounded-xl shadow-md hover:bg-gray-200 transition"
+                                >
+                                    Go to Dashboard
+                                </Link>
                             </div>
                         </div>
 

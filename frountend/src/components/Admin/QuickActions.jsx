@@ -27,12 +27,12 @@ export default function QuickActions({ onAddBlog, onBookAppointment }) {
                         ➕ Update the B&F
                     </button>
                 </Link>
-                <button
+                {/* <button
                     className="px-4 py-2 bg-[var(--btn-bg)] text-[var(--text)] rounded-lg hover:bg-[var(--btn-hover)] transition"
                     onClick={onBookAppointment}
                 >
                     📅 New Appointment
-                </button>
+                </button> */}
             </div>
         </div>
     );

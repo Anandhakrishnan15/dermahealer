@@ -10,6 +10,7 @@ import RatingModal from "@/components/Admin/RatingModal";
 import BlogModal from "@/components/Admin/BlogModal";
 import AppointmentModal from "@/components/Admin/AppointmentModal";
 import BlogsTable from "@/components/Admin/AdminDashboard";
+import VisitorStats from "@/components/Admin/components/VisitorStats";
 
 export default function AdminHome() {
     const { user } = useAuth();
@@ -48,6 +49,7 @@ export default function AdminHome() {
     return (
         <div className="space-y-8 p-6">
             <UserCard user={user} onEditRating={() => setShowRatingModal(true)} />
+            {/* <VisitorStats /> */}
             <StatsGrid stats={stats} />
             <QuickActions onAddBlog={() => setShowBlogModal(true)} onBookAppointment={() => setShowAppointmentModal(true)} />
             <RecentAppointments appointments={recentAppointments} />
