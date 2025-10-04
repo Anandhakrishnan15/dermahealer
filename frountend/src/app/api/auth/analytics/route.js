@@ -4,6 +4,8 @@ import { google } from "googleapis";
 export async function GET() {
     try {
         const key = JSON.parse(process.env.GA4_SERVICE_ACCOUNT_KEY);
+        key.private_key = key.private_key.replace(/\\n/g, "\n"); // <-- critical!
+
         const propertyId = process.env.GA4_PROPERTY_ID;
 
         // ✅ Use JWT constructor instead of deprecated credentials
