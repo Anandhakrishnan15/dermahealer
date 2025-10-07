@@ -7,19 +7,15 @@ import StatsGrid from "@/components/Admin/StatsGrid";
 import QuickActions from "@/components/Admin/QuickActions";
 import RecentAppointments from "@/components/Admin/RecentAppointments";
 import RatingModal from "@/components/Admin/RatingModal";
-import BlogModal from "@/components/Admin/BlogModal";
-import AppointmentModal from "@/components/Admin/AppointmentModal";
 import BlogsTable from "@/components/Admin/AdminDashboard";
-import VisitorStats from "@/components/Admin/components/VisitorStats";
 
 export default function AdminHome() {
     const { user } = useAuth();
-    const [showBlogModal, setShowBlogModal] = useState(false);
-    const [showAppointmentModal, setShowAppointmentModal] = useState(false);
     const [showRatingModal, setShowRatingModal] = useState(false);
-
     const [score, setScore] = useState("");
     const [reviews, setReviews] = useState("");
+
+    const isAdmin = user?.role === "admin";
 
     const stats = [
         { label: "Total Appointments", value: 124 },
@@ -49,18 +45,30 @@ export default function AdminHome() {
     return (
         <div className="space-y-8 p-6">
             <UserCard user={user} onEditRating={() => setShowRatingModal(true)} />
-            {/* <VisitorStats /> */}
+
+            {/* Admin-only QuickActions */}
+            {isAdmin && (
+                <QuickActions
+                    onAddBlog={() => setShowBlogModal(true)}
+                    onBookAppointment={() => setShowAppointmentModal(true)}
+                />
+            )}
+
+            {/* Stats - visible to all */}
             <StatsGrid stats={stats} />
-            <QuickActions onAddBlog={() => setShowBlogModal(true)} onBookAppointment={() => setShowAppointmentModal(true)} />
+
+            {/* Recent Appointments - visible to all */}
             <RecentAppointments appointments={recentAppointments} />
 
-            {/* Blogs Section */}
-            <div className="p-6 rounded-lg shadow" style={{ background: "var(--bg)" }}>
-                <h2 className="text-lg font-semibold mb-4">Recent Blogs</h2>
-                <BlogsTable />
-            </div>
+            {/* Admin-only Blogs Table */}
+            {isAdmin && (
+                <div className="p-6 rounded-lg shadow" style={{ background: "var(--bg)" }}>
+                    <h2 className="text-lg font-semibold mb-4">Recent Blogs</h2>
+                    <BlogsTable />
+                </div>
+            )}
 
-            {/* Modals */}
+            {/* Rating Modal */}
             <RatingModal
                 isOpen={showRatingModal}
                 onClose={() => setShowRatingModal(false)}
@@ -70,8 +78,6 @@ export default function AdminHome() {
                 setReviews={setReviews}
                 onSave={updateRating}
             />
-            <BlogModal isOpen={showBlogModal} onClose={() => setShowBlogModal(false)} />
-            <AppointmentModal isOpen={showAppointmentModal} onClose={() => setShowAppointmentModal(false)} />
         </div>
     );
 }
