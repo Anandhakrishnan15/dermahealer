@@ -49,14 +49,24 @@ export default function BlogsPage() {
     };
 
     const handleEdit = (id) => {
-        alert(`Edit blog with ID: ${id}`);
+        window.open(`https://blog.dermahealerindia.com/wp-admin/post.php?post=${id}&action=edit`, "_blank");
     };
 
-    const handleDelete = (id) => {
-        if (confirm(`Are you sure you want to delete blog ID: ${id}?`)) {
-            alert(`Deleted blog with ID: ${id}`);
+    const handleDelete = async (id) => {
+        if (!confirm(`Are you sure you want to delete blog ID: ${id}?`)) return;
+
+        try {
+            const res = await fetch(`/api/wp/posts/${id}`, { method: "DELETE" });
+            const data = await res.json();
+
+            if (data.error) throw new Error(data.error);
+            alert(`✅ Deleted blog ${id}`);
+            setBlogs(blogs.filter((b) => b.id !== id));
+        } catch (err) {
+            alert(`❌ ${err.message}`);
         }
     };
+
 
     if (loading) {
         return <div className="p-6 text-gray-500">Loading blogs...</div>;
