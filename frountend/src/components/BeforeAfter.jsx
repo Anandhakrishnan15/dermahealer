@@ -66,7 +66,7 @@ export default function MultiImageSlideshow() {
 
     return (
         <div className="relative w-full max-w-6xl mx-auto py-12 px-4 flex flex-col items-center gap-6">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold [var(--text)] mb-8 text-center">
                 BEFORE & AFTER<br /> <span className="text-blue-600">OUR TREATMENTS</span>
             </h2>
 
@@ -87,8 +87,8 @@ export default function MultiImageSlideshow() {
 
             {/* Text Section */}
             <div className="text-center max-w-3xl transition-opacity duration-500 ease-in-out mt-6">
-                <h3 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-2">{currentSlide.heading}</h3>
-                <p className="text-gray-600 text-sm md:text-base">{currentSlide.description}</p>
+                <h3 className="text-2xl md:text-3xl font-semibold [var(--text)] mb-2">{currentSlide.heading}</h3>
+                <p className="[var(--text)] text-sm md:text-base">{currentSlide.description}</p>
 
                 <div className="flex gap-4 justify-center mt-4">
                     <button
