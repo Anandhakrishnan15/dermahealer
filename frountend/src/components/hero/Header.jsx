@@ -71,7 +71,7 @@ export const Header = () => {
                         <span className="inline-flex items-center gap-1">
                             with
                             <span
-                                className="text-4xl inline-block animate-bounce-slow"
+                                className="text-4xl inline-block animate-floaty"
                                 role="img"
                                 aria-label="sparkles"
                             >
