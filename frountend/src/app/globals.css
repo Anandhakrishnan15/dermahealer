@@ -240,17 +240,7 @@ animation: scroll-left 5s linear infinite;
 }
 
 
-@layer utilities {
-  @keyframes bounce-slow {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    25% { transform: translateY(-5px) rotate(15deg); }
-    75% { transform: translateY(-5px) rotate(-15deg); }
-  }
 
-  .animate-bounce-slow {
-    animation: bounce-slow 1s infinite ease-in;
-  }
-}
 @layer utilities {
   @keyframes fade-slide-up {
     from {
