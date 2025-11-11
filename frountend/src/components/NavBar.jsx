@@ -95,7 +95,7 @@ export default function NavBar() {
             <div className="flex items-center relative z-[110] ">
                 {/* Book Now Button */}
                 <Link
-                    href="/book-now"
+                    href="/book-appointment"
                     className="hidden [@media(min-width:1000px)]:inline-block px-2 py-2 mr-2 rounded-lg bg-[var(--primary-color)] text-white font-semibold shadow hover:opacity-90 transition"
                     onClick={() => setIsOpen(false)}
                 >
