@@ -90,74 +90,57 @@ export default function AuthPage() {
     return (
         <div className="flex min-h-screen bg-gradient-to-br from-teal-200 via-white to-teal-100 overflow-hidden">
             <div className="flex w-full">
-                <AnimatePresence mode="wait">
-                    {/* LOGIN LAYOUT */}
-                    <motion.div
-                        key="login-form"
-                        initial={{ x: -100, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: -100, opacity: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="flex w-full md:w-1/2 justify-center items-center p-8"
-                    >
-                        <div className="backdrop-blur-lg bg-white/80 w-full max-w-md rounded-2xl shadow-2xl p-8 border border-white/40">
-                            <h2 className="text-2xl font-bold text-gray-800 mb-6">Sign in</h2>
-                            <form onSubmit={handleSubmit} className="space-y-5">
-                                <input
-                                    type="email"
-                                    placeholder="Email address"
-                                    value={form.email}
-                                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                    className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-teal-400 outline-none"
-                                    required
-                                />
-                                <input
-                                    type="password"
-                                    placeholder="Password"
-                                    value={form.password}
-                                    onChange={(e) => setForm({ ...form, password: e.target.value })}
-                                    className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-teal-400 outline-none"
-                                    required
-                                />
+                {/* LOGIN FORM */}
+                <div className="flex w-full md:w-1/2 justify-center items-center p-8">
+                    <div className="backdrop-blur-lg bg-white/80 w-full max-w-md rounded-2xl shadow-2xl p-8 border border-white/40">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-6">Sign in</h2>
 
-                                <button
-                                    type="submit"
-                                    disabled={submitLoading}
-                                    className="w-full bg-gradient-to-r from-teal-500 to-green-400 text-white py-3 rounded-lg hover:opacity-90 transition disabled:opacity-50"
-                                >
-                                    {submitLoading ? "Processing..." : "Sign in →"}
-                                </button>
-                            </form>
-                        </div>
-                    </motion.div>
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            <input
+                                type="email"
+                                placeholder="Email address"
+                                value={form.email}
+                                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                                className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-teal-400 outline-none"
+                                required
+                            />
+                            <input
+                                type="password"
+                                placeholder="Password"
+                                value={form.password}
+                                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                                className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-teal-400 outline-none"
+                                required
+                            />
 
-                    {/* INFO PANEL */}
-                    <motion.div
-                        key="login-info"
-                        initial={{ x: 100, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: 100, opacity: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="hidden md:flex md:w-1/2 justify-center items-center p-10 bg-gradient-to-br from-teal-600 via-teal-500 to-blue-600 text-white rounded-l-3xl shadow-2xl relative overflow-hidden"
-                    >
-                        {/* Floating gradient blobs */}
-                        <div className="absolute -top-20 -left-20 w-40 h-40 bg-white/20 rounded-full animate-pulse"></div>
-                        <div className="absolute -bottom-20 -right-20 w-60 h-60 bg-white/10 rounded-full animate-pulse"></div>
-                        <div className="absolute -bottom-20 -left-0 w-80 h-80 bg-white/10 rounded-full animate-pulse"></div>
+                            <button
+                                type="submit"
+                                disabled={submitLoading}
+                                className="w-full bg-gradient-to-r from-teal-500 to-green-400 text-white py-3 rounded-lg hover:opacity-90 transition disabled:opacity-50"
+                            >
+                                {submitLoading ? "Processing..." : "Sign in →"}
+                            </button>
+                        </form>
+                    </div>
+                </div>
 
-                        {/* Content */}
-                        <div className="max-w-md space-y-6 relative z-10">
-                            <h2 className="text-2xl font-bold uppercase tracking-wide">Welcome Back</h2>
-                            <h1 className="text-3xl font-extrabold leading-snug">Let’s Get You Logged In</h1>
-                            <p className="text-lg text-gray-100">
-                                Enter your credentials to access the network.
-                            </p>
-                        </div>
-                    </motion.div>
-                </AnimatePresence>
+                {/* INFO PANEL */}
+                <div className="hidden md:flex md:w-1/2 justify-center items-center p-10 bg-gradient-to-br from-teal-600 via-teal-500 to-blue-600 text-white rounded-l-3xl shadow-2xl relative overflow-hidden">
+                    {/* Floating gradient blobs */}
+                    <div className="absolute -top-20 -left-20 w-40 h-40 bg-white/20 rounded-full animate-pulse"></div>
+                    <div className="absolute -bottom-20 -right-20 w-60 h-60 bg-white/10 rounded-full animate-pulse"></div>
+                    <div className="absolute -bottom-20 left-0 w-80 h-80 bg-white/10 rounded-full animate-pulse"></div>
+
+                    {/* Text content */}
+                    <div className="max-w-md space-y-6 relative z-10">
+                        <h2 className="text-2xl font-bold uppercase tracking-wide">Welcome Back</h2>
+                        <h1 className="text-3xl font-extrabold leading-snug">Let’s Get You Logged In</h1>
+                        <p className="text-lg text-gray-100">
+                            Enter your credentials to access the network.
+                        </p>
+                    </div>
+                </div>
             </div>
-
-            {/* <ToastContainer position="top-right" autoClose={3000} /> */}
         </div>
     );
 }
