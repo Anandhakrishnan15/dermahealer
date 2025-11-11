@@ -36,13 +36,13 @@ export const Header = () => {
         }, 10000);
         return () => clearInterval(interval);
     }, [images.length]);
-    const [rating, setRating] = useState(null); // start as null to show skeleton
+   const [rating, setRating] = useState(null); // start as null to show skeleton
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchRating = async () => {
             try {
-                const res = await fetch("/api/rating");
+                const res = await fetch("/api/rating"); 
                 const data = await res.json();
 
                 setRating({
