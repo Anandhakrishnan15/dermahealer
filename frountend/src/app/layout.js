@@ -129,12 +129,14 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+          crossOrigin="anonymous"
         />
 
         {/* Google Analytics */}
         <GoogleAnalytics gaId={process.env.GA_ID} />
         
         <meta name="apple-mobile-web-app-title" content="Derma Healer" />
+        {/* <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" /> */}
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
