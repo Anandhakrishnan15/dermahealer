@@ -62,6 +62,8 @@ export default function BookAppointment() {
       setSdkLoading(false);
       return;
     }
+    console.log("MID:", process.env.NEXT_PUBLIC_PAYTM_MID);
+    console.log("KEY:", process.env.PAYTM_MERCHANT_KEY ? "Loaded" : "Missing");
 
     const script = document.createElement("script");
     script.src = sdkUrl;
