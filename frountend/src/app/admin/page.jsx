@@ -5,9 +5,9 @@ import { useAuth } from "@/context/AuthContext";
 import UserCard from "@/components/Admin/UserCard";
 import StatsGrid from "@/components/Admin/StatsGrid";
 import QuickActions from "@/components/Admin/QuickActions";
-import RecentAppointments from "@/components/Admin/RecentAppointments";
 import RatingModal from "@/components/Admin/RatingModal";
 import BlogsTable from "@/components/Admin/AdminDashboard";
+import AppointmentsPage from "./appointments/AppointmentsPage";
 
 export default function AdminHome() {
     const { user } = useAuth();
@@ -58,7 +58,8 @@ export default function AdminHome() {
             <StatsGrid stats={stats} />
 
             {/* Recent Appointments - visible to all */}
-            <RecentAppointments appointments={recentAppointments} />
+            {/* <RecentAppointments appointments={recentAppointments} /> */}
+            <AppointmentsPage/>
 
             {/* Admin-only Blogs Table */}
             {isAdmin && (

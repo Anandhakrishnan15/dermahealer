@@ -14,6 +14,9 @@ export default function PaymentSuccess() {
     const [showBill, setShowBill] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    // ✅ NEW — Prevent sending email twice
+    const [emailSent, setEmailSent] = useState(false);
+
     useEffect(() => {
         if (!orderId) return;
         (async () => {
@@ -30,6 +33,35 @@ export default function PaymentSuccess() {
     }, [orderId]);
 
     const isPaid = booking?.paid === true;
+
+    // ✅ NEW — Send confirmation email once booking is loaded & paid
+    useEffect(() => {
+        if (booking && booking.paid && !emailSent) {
+            (async () => {
+                try {
+                    await fetch("/api/send-confirmation-email", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            email: booking.email,
+                            name: booking.name,
+                            doctor: booking.doctor,
+                            date: booking.date,
+                            time: booking.time,
+                            orderId: booking.orderId,
+                            amount: booking.amount
+                        })
+                    });
+
+                    console.log("📧 Email sent to:", booking.email);
+                    setEmailSent(true); // prevent repeat
+                } catch (err) {
+                    console.error("Email sending failed:", err);
+                }
+            })();
+        }
+    }, [booking, emailSent]);
+    // ✅ END NEW CODE
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 p-6 relative overflow-hidden">
