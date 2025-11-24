@@ -4,6 +4,7 @@ const BookingSchema = new mongoose.Schema(
     {
         // 👤 Basic booking info
         name: { type: String, required: true, trim: true },
+        email: { type: String, required: true, trim: true },
         phone: { type: String, required: true, trim: true },
         doctor: { type: String, required: true, trim: true },
         date: { type: String, required: true },
