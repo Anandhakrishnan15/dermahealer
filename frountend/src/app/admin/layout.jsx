@@ -32,6 +32,10 @@ export default function AdminLayout({ children }) {
         { href: "/admin/appointments", label: "Appointments" },
         { href: "/admin/members", label: "Members", adminOnly: true },
         { href: "/admin/add-blog", label: "Blogs", adminOnly: true },
+        { href: "/admin/holidays", label: "Holidays", adminOnly: true },
+        { href: "/admin/Members", label: "Members", adminOnly: true },
+
+        // Members
     ];
 
     return (

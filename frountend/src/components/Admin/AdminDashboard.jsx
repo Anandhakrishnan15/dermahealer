@@ -1,11 +1,13 @@
 "use client";
 
+import { useStats } from "@/context/StatsContext";
 import { useEffect, useState } from "react";
 
 export default function BlogsPage() {
     const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedBlog, setSelectedBlog] = useState(null);
+    const { setTotalBlog } = useStats();
 
     // ✅ Fetch WordPress posts
     useEffect(() => {
@@ -15,7 +17,9 @@ export default function BlogsPage() {
                     "https://blog.dermahealerindia.com/wp-json/wp/v2/posts?_embed"
                 );
                 const data = await res.json();
-
+                console.log("this are the total Blogs", data);
+                
+                setTotalBlog(data.length)  
                 const formatted = data.map((post) => ({
                     id: post.id,
                     title: post.title.rendered,
@@ -29,7 +33,7 @@ export default function BlogsPage() {
                 setBlogs(formatted);
             } catch (err) {
                 console.error("Error fetching blogs:", err);
-            } finally {
+            } finally {              
                 setLoading(false);
             }
         };

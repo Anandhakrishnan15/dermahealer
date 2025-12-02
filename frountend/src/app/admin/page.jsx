@@ -8,28 +8,24 @@ import QuickActions from "@/components/Admin/QuickActions";
 import RatingModal from "@/components/Admin/RatingModal";
 import BlogsTable from "@/components/Admin/AdminDashboard";
 import AppointmentsPage from "./appointments/AppointmentsPage";
+import { useStats } from "@/context/StatsContext";
+import MembersPage from "./members/page";
 
 export default function AdminHome() {
     const { user } = useAuth();
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [score, setScore] = useState("");
     const [reviews, setReviews] = useState("");
+    const { totalAppointments, todayAppointments, totalBlog, totalMenbers } = useStats();
 
     const isAdmin = user?.role === "admin";
 
     const stats = [
-        { label: "Total Appointments", value: 124 },
-        { label: "Today's Appointments", value: 8 },
-        { label: "New Members", value: 15 },
-        { label: "Total Blogs", value: 42 },
+        { label: "Total Appointments", value: totalAppointments },
+        { label: "Today's Appointments", value: todayAppointments },
+        { label: "New Members", value: totalMenbers },
+        { label: "Total Blogs", value: totalBlog },
     ];
-
-    const recentAppointments = [
-        { id: 1, name: "John Doe", date: "2025-08-12", service: "Laser Treatment" },
-        { id: 2, name: "Jane Smith", date: "2025-08-12", service: "Acne Treatment" },
-        { id: 3, name: "Michael Brown", date: "2025-08-11", service: "Hair Removal" },
-    ];
-
     const updateRating = async () => {
         await fetch("/api/rating", {
             method: "PATCH",
@@ -68,7 +64,7 @@ export default function AdminHome() {
                     <BlogsTable />
                 </div>
             )}
-
+            {isAdmin &&<MembersPage/>}
             {/* Rating Modal */}
             <RatingModal
                 isOpen={showRatingModal}
@@ -80,5 +76,6 @@ export default function AdminHome() {
                 onSave={updateRating}
             />
         </div>
+        
     );
 }

@@ -1,5 +1,6 @@
 "use client";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
 const doctors = [
@@ -29,6 +30,7 @@ const doctors = [
 
 export const QuickIntroUSP = () => {
     const [index, setIndex] = useState(0);
+    const router = useRouter();
 
     // Auto switch every 8s
     useEffect(() => {
@@ -112,6 +114,7 @@ export const QuickIntroUSP = () => {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.3, duration: 0.6 }}
                                 className="mt-6 inline-block px-5 py-2.5 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-500 transition"
+                                onClick={() => router.push("/book-appointment")}
                             >
                                 Get an Appointment
                             </motion.a>

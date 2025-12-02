@@ -3,11 +3,14 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
+import { useStats } from "@/context/StatsContext";
 
 export default function MembersPage() {
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const { setTotalMenbers } = useStats();
+    
 
     const fetchMembers = async () => {
         try {
@@ -17,12 +20,16 @@ export default function MembersPage() {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
-
+            
             if (!res.ok) setError(data.error || "Failed to fetch members");
             else setMembers(data.files || []);
+            setTotalMenbers(data.files.length)
+            // console.log("the total number of members", data.files.length);
+            
         } catch (err) {
             setError("Network error");
         } finally {
+            // setTotalBlog()
             setLoading(false);
         }
     };
