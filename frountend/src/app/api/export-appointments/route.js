@@ -3,6 +3,13 @@ import Booking from "@/models/Bookings";
 import { NextResponse } from "next/server";
 
 export async function GET() {
+    const AUTH_KEY = process.env.EXPORT_SECRET;
+
+    const incomingKey = req.headers.get("authorization")?.replace("Bearer ", "");
+
+    if (incomingKey !== AUTH_KEY) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     await connectDB();
 
     const today = new Date();
