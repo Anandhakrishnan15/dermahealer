@@ -16,10 +16,20 @@ export default function PaymentFailed() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-red-50 to-rose-100 text-center px-6">
             <XCircle className="w-20 h-20 text-red-500 mb-4 animate-bounce" />
+
             <h1 className="text-2xl font-semibold text-red-700 mb-2">
                 Payment Failed
             </h1>
-            <p className="text-gray-700 mb-6">{reason}</p>
+
+            <p className="text-gray-700 mb-4">{reason}</p>
+
+            {/* Added Information */}
+            <p className="text-sm text-gray-600 max-w-md mb-6">
+                If any amount has been debited from your account, please contact
+                your payment gateway provider or bank. Refunds may take{" "}
+                <span className="font-medium">7–14 working days</span> to reflect
+                back in your account.
+            </p>
 
             <div className="flex gap-4">
                 <button

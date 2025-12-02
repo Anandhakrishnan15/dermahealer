@@ -27,6 +27,11 @@ export default function QuickActions({ onAddBlog, onBookAppointment }) {
                         ➕ Update the B&F
                     </button>
                 </Link>
+                <Link href="/admin/holidays">
+                    <button className="px-4 py-2 bg-[var(--btn-bg)] text-[var(--text)] rounded-lg hover:bg-[var(--btn-hover)] transition">
+                        ➕ Add Holidays
+                    </button>
+                </Link>
                 {/* <button
                     className="px-4 py-2 bg-[var(--btn-bg)] text-[var(--text)] rounded-lg hover:bg-[var(--btn-hover)] transition"
                     onClick={onBookAppointment}

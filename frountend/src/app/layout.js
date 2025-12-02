@@ -7,6 +7,7 @@ import Script from "next/script";
 import AnalyticsProvider from "./providers";
 import GoogleAnalytics from "./GoogleAnalytics";
 import ToastProvider from "@/components/ToastProvider";
+import { StatsProvider } from "@/context/StatsContext";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -143,8 +144,10 @@ export default function RootLayout({ children }) {
         suppressHydrationWarning
       >
         <LayoutClient>
+          <StatsProvider>
           <ClientWrapper>{children}
             <ToastProvider /> {/* ✅ client-only */}</ClientWrapper>
+          </StatsProvider>
         </LayoutClient>
       </body>
     </html>

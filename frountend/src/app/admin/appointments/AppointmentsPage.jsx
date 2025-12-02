@@ -10,11 +10,12 @@ import {
     parseISO,
 } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
+import { useStats } from "@/context/StatsContext";
 
 export default function AppointmentsPage() {
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const { setTotalAppointments, setTodayAppointments } = useStats();
     const [search, setSearch] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
     const [filter, setFilter] = useState("last7");
@@ -43,6 +44,14 @@ export default function AppointmentsPage() {
                 }));
 
                 setAppointments(mapped);
+                // 🔥 Update Global Stats
+                setTotalAppointments(mapped.length);
+
+                const today = mapped.filter((a) =>
+                    isToday(parseISO(a.date))
+                );
+
+                setTodayAppointments(today.length);
             } catch (err) {
                 console.log("Error loading bookings:", err);
             } finally {

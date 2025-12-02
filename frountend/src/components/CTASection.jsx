@@ -1,9 +1,11 @@
 "use client"
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Confetti from "react-confetti";
 
 export const CTASection = () => {
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+    const router = useRouter();
 
     useEffect(() => {
         const handleResize = () => {
@@ -39,6 +41,7 @@ export const CTASection = () => {
             <button
                 aria-label="Book your appointment now"
                 className="mt-6 px-8 py-3 bg-white text-indigo-600 font-bold rounded-full hover:bg-gray-100 transition"
+                onClick={() => router.push("/book-appointment")}
             >
                 Book Now
             </button>
