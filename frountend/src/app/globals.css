@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+@import "tailwindcss";
 
 /* Light mode variables */
 :root {
@@ -187,14 +187,6 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
-
-animation: scroll-left 5s linear infinite;
-@keyframes scroll-left {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-
 
 @keyframes float {
   0% { transform: translateY(0px); }
