@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Block sensitive areas
+Disallow: /admin
+Disallow: /api
+
+# Allow important public pages
+Allow: /about
+Allow: /services
+Allow: /blog
+Allow: /contact
+Allow: /treatments
+
+# Sitemap for Google & other crawlers
+Sitemap: https://www.dermahealerindia.com/sitemap.xml
