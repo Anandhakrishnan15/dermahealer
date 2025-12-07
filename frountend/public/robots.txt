@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin
+Disallow: /api
+Allow: /
+
+# Sitemap for better crawling
+Sitemap: https://www.dermahealerindia.com/sitemap.xml
