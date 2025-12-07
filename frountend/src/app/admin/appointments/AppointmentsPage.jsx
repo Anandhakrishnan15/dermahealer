@@ -23,44 +23,43 @@ export default function AppointmentsPage() {
     // ---------------------------------------------------------
     // 🔥 Fetch REAL DATA from your Bookings API
     // ---------------------------------------------------------
+    const loadBookings = async () => {
+        try {
+            setLoading(true);
+
+            // Fetch ONLY 30
+            const res = await fetch("/api/bookings?limit=30");
+            const data = await res.json();
+
+            if (!data.success) return;
+
+            const mapped = data.bookings.map((b) => ({
+                id: b.orderId,
+                name: b.name,
+                phone: b.phone,
+                email: b.email,
+                paymentDone: b.paid,
+                date: b.date,
+            }));
+
+            const limited = mapped.slice(0, 30);
+            setAppointments(limited);
+
+            // Stats
+            setTotalAppointments(limited.length);
+            const today = limited.filter((a) => isToday(parseISO(a.date)));
+            setTodayAppointments(today.length);
+
+        } catch (error) {
+            console.error("Error loading bookings:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-        const loadBookings = async () => {
-            try {
-                const res = await fetch("/api/bookings");
-                const data = await res.json();
-
-                if (!data.success) return;
-
-                // FIXED: correct mapping
-                const mapped = data.bookings.map((b) => ({
-                    id: b.orderId,
-                    name: b.name,
-                    // age: b.age || "---",
-                    phone: b.phone,
-                    // address: b.address || "---",
-                    email: b.email,
-                    paymentDone: b.paid,
-                    date: b.date, // must be an ISO date in DB
-                }));
-
-                setAppointments(mapped);
-                // 🔥 Update Global Stats
-                setTotalAppointments(mapped.length);
-
-                const today = mapped.filter((a) =>
-                    isToday(parseISO(a.date))
-                );
-
-                setTodayAppointments(today.length);
-            } catch (err) {
-                console.log("Error loading bookings:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         loadBookings();
     }, []);
+
 
     // ---------------------------------------------------------
     // 🔎 Search + Filter Logic
@@ -128,6 +127,12 @@ export default function AppointmentsPage() {
                     }}
                     className="border p-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
                 />
+                <button
+                    onClick={loadBookings}  
+                    className="px-3 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+                >
+                    Reload
+                </button>
             </div>
 
             {/* Table */}
