@@ -146,7 +146,8 @@ export default function RootLayout({ children }) {
         <LayoutClient>
           <StatsProvider>
           <ClientWrapper>{children}
-            <ToastProvider /> {/* ✅ client-only */}</ClientWrapper>
+            <ToastProvider /> {/* ✅ client-only */}
+            </ClientWrapper>
           </StatsProvider>
         </LayoutClient>
       </body>
