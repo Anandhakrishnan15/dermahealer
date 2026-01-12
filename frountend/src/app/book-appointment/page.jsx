@@ -49,7 +49,7 @@ export default function BookAppointment() {
   useEffect(() => {
     const mid = process.env.NEXT_PUBLIC_PAYTM_MID;
     if (!mid) {
-      toast.error("Paytm MID not set (NEXT_PUBLIC_PAYTM_MID).");
+      toast.error("Paytm MID not set.");
       setSdkLoading(false);
       setPaytmReady(false);
       return;
@@ -62,8 +62,8 @@ export default function BookAppointment() {
       setSdkLoading(false);
       return;
     }
-    console.log("MID:", process.env.NEXT_PUBLIC_PAYTM_MID);
-    console.log("KEY:", process.env.PAYTM_MERCHANT_KEY ? "Loaded" : "Missing");
+    // console.log("MID:", process.env.NEXT_PUBLIC_PAYTM_MID);
+    // console.log("KEY:", process.env.PAYTM_MERCHANT_KEY ? "Loaded" : "Missing");
 
     const script = document.createElement("script");
     script.src = sdkUrl;
@@ -144,12 +144,6 @@ export default function BookAppointment() {
       setLoadingAvailability(false);
     }
   }
-
-  const getSlotColor = (slotsLeft) => {
-    if (slotsLeft === 0) return "bg-red-100 text-red-700 border-red-200";
-    if (slotsLeft <= 3) return "bg-amber-50 text-amber-700 border-amber-200";
-    return "bg-emerald-50 text-emerald-700 border-emerald-200";
-  };
 
   /* ---------------- Submit handler — Zod validation runs ONLY here ---------------- */
   const handleSubmit = async (e) => {
@@ -240,8 +234,8 @@ export default function BookAppointment() {
     <>
       {/* <ToastContainer position="top-right" autoClose={2500} /> */}
 
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-10 px-4">
-        <div className="w-full max-w-3xl bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--navbar-bg)] py-10 px-4">
+        <div className="w-full max-w-3xl bg-[var(--bg)] rounded-2xl p-8 shadow-lg border border-gray-100">
           {/* SDK loading banner */}
           {sdkLoading && (
             <div className="mb-4 px-4 py-2 text-sm text-yellow-800 bg-yellow-50 rounded-md text-center">
@@ -249,7 +243,7 @@ export default function BookAppointment() {
             </div>
           )}
 
-          <h1 className="text-2xl font-semibold text-gray-800 mb-4">Book Doctor Appointment</h1>
+          <h1 className="text-2xl font-semibold text-[var(--text)] mb-4">Book Doctor Appointment</h1>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Name */}
@@ -319,7 +313,7 @@ export default function BookAppointment() {
                   return (
                     <label
                       key={doc.value}
-                      className={`flex items-center gap-3 p-3 rounded-xl border transition ${active ? "border-blue-200 bg-blue-50 shadow-sm" : "border-gray-100 bg-white"
+                      className={`flex items-center gap-3 p-3 rounded-xl border transition ${active ? "border-blue-200 bg-blue-50 shadow-sm" : "border-gray-100 bg-[var(--card-shadow)]"
                         } ${disabledAll ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
                     >
                       <input
@@ -332,8 +326,8 @@ export default function BookAppointment() {
                         className="sr-only"
                       />
                       <div>
-                        <div className="font-medium text-gray-800">{doc.name}</div>
-                        <div className="text-xs text-gray-500">{doc.desc}</div>
+                        <div className="font-medium text-gray-600">{doc.name}</div>
+                        <div className="text-xs text-gray-400">{doc.desc}</div>
                       </div>
                     </label>
                   );
@@ -376,7 +370,7 @@ export default function BookAppointment() {
                           (slotsLeft === 0 && slotsLeft !== undefined)
                         }
                         className={`
-    min-w-[120px] p-2 rounded-lg text-center border transition duration-200
+    min-w-[120px] p-2 rounded-lg text-center border transition duration-200 text-[var(--sbg)]
 
     /* Selected */
     ${selected ? "bg-blue-100 border-blue-400 shadow-md" : ""}
@@ -447,7 +441,7 @@ export default function BookAppointment() {
                           setErrors((prev) => ({ ...prev, time: undefined }));
                         }}
                         disabled={disabledAll}
-                        className={`px-4 py-2 rounded-full border transition ${selected ? "bg-gray-100 border-gray-300" : "bg-white border-gray-100"
+                        className={`px-4 py-2 rounded-full border text-[var(--sbg)] transition ${selected ? "bg-gray-400 border-gray-300" : "bg-white border-gray-100"
                           } ${disabledAll ? "opacity-60 cursor-not-allowed" : ""}`}
                       >
                         {t}
@@ -500,7 +494,7 @@ export default function BookAppointment() {
               <button
                 type="submit"
                 disabled={disabledAll || loading}
-                className={`w-full py-3 rounded-lg text-white font-medium transition ${disabledAll || loading ? "bg-gray-300 cursor-not-allowed" : "bg-gray-800 hover:bg-black"
+                className={`w-full py-3 rounded-lg text-white font-medium transition ${disabledAll || loading ? "bg-gray-300 cursor-not-allowed" : "bg-gray-800 hover:bg-[var(--primary-color)]"
                   }`}
               >
                 {sdkLoading ? "Initializing payment..." : loading ? "Processing..." : "Book & Pay ₹100"}

@@ -1,6 +1,5 @@
 // app/api/rating/route.js
 export const runtime = "nodejs";
-
 import { connectDB } from "@/lib/mongodb";
 import Rating from "@/models/Rating";
 import { NextResponse } from "next/server";
