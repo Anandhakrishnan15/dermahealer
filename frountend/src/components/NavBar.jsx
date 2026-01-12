@@ -139,7 +139,7 @@ export default function NavBar() {
                     />
                     {/* Book Now button for Mobile */}
                     <Link
-                        href="/book-now"
+                        href="/book-appointment"
                         className="mt-4 w-full text-center px-4 py-2 rounded-lg bg-[var(--primary-color)] text-white font-semibold shadow hover:opacity-90 transition [@media(min-width:1000px)]:hidden"
                         onClick={() => setIsOpen(false)}
                     >Book appointment
