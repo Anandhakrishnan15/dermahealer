@@ -15,7 +15,7 @@ const products = [
         category: "face",
         slug: "acne-scar",
         thumbnail:
-            "https://www.theclinicoregon.com/content/uploads/2023/05/bna1-scar-revision-1024x545.jpg",
+            "https://plymouthmeetingdermatology.com/wp-content/uploads/2023/02/AdobeStock_318562606-1024x683.jpeg",
         description:
             "Our advanced laser technology helps reduce acne scars, injury marks, and post-surgical scars by stimulating new skin regeneration with minimal downtime.",
     },
@@ -34,7 +34,7 @@ const products = [
         subtitle: "Instant Glow & Deep Cleansing",
         category: "face",
         slug: "hydrafacial",
-        thumbnail: "https://zazzlesalon.com/wp-content/uploads/2023/04/Hydra-Facial.jpg",
+        thumbnail: "https://vlcc.com/_next/image?url=https%3A%2F%2Fd146hunxuupfmg.cloudfront.net%2Fblog_images%2Fjpeg-optimizer_AdobeStock_862270035.webp&w=3840&q=75",
         description:
             "A globally loved facial that detoxifies, exfoliates, hydrates, and nourishes your skin—all in one session. Ideal for dull, dry, and sensitive skin types.",
     },
