@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { z } from "zod";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 /* ---------------- ZOD SCHEMA (used only on submit) ---------------- */
 const FormSchema = z.object({
@@ -231,7 +232,7 @@ export default function BookAppointment() {
 
   /* ---------------- UI ---------------- */
   return (
-    <>
+    <ProtectedRoute>
       {/* <ToastContainer position="top-right" autoClose={2500} /> */}
 
       <div className="min-h-screen flex items-center justify-center bg-[var(--navbar-bg)] py-10 px-4">
@@ -509,6 +510,6 @@ export default function BookAppointment() {
           </form>
         </div>
       </div>
-    </>
+    </ProtectedRoute>
   );
 }
