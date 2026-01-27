@@ -12,12 +12,13 @@ async function fetchBlogPosts(page = 1, postsPerPage = 6) {
 
     const totalPages = Number(res.headers.get("X-WP-TotalPages"));
     const data = await res.json();
+    
 
     const formattedPosts = data.map((post) => {
         const tagNames = post._embedded?.["wp:term"]?.[1]?.map((tag) => tag.name) || [];
         return {
             id: post.id,
-            title: post.title.rendered,
+            title: decodeHtml(post.title.rendered),
             excerpt: post.excerpt.rendered,
             image: post._embedded?.["wp:featuredmedia"]?.[0]?.source_url || null,
             author: post._embedded?.author?.[0]?.name || "Unknown",
@@ -77,6 +78,17 @@ export async function generateMetadata({ searchParams }) {
     };
 }
 
+function decodeHtml(html) {
+    return html.replace(/&#(\d+);/g, (_, dec) =>
+        String.fromCharCode(dec)
+    ).replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'");
+}
+
+
 export default async function BlogPage({ searchParams }) {
     const resolvedSearchParams = await searchParams; // FIX ✅
     const currentPage = Number(resolvedSearchParams?.page) || 1;
@@ -125,7 +137,9 @@ export default async function BlogPage({ searchParams }) {
                                         ))}
                                     </div>
                                     <h2 className="text-2xl text-white font-semibold mb-2 hover:text-blue-600">
-                                        {title.length > 60 ? title.slice(0, 60) + "..." : title}
+                                        {decodeHtml(title).length > 60
+                                            ? decodeHtml(title).slice(0, 60) + "..."
+                                            : decodeHtml(title)}
                                     </h2>
                                     {/* Render WordPress HTML safely on client */}
                                     <ClientOnly>
