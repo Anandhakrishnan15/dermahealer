@@ -9,7 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function AuthPage() {
     const { login, isLoggedIn, loading, user } = useAuth();
-    const [form, setForm] = useState({ email: "anandh@gmail.com", password: "123456" });
+    // const [form, setForm] = useState({ email: "anandh@gmail.com", password: "123456" });
+    const [form, setForm] = useState({ email: "", password: "" });
     const [submitLoading, setSubmitLoading] = useState(false);
     const [checked, setChecked] = useState(false); // for auth check
     const router = useRouter();
