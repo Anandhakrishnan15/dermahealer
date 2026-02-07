@@ -1,48 +1,85 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import blogPosts from "../../data/blogPosts"; // your blog data
+import { useStats } from "@/context/StatsContext";
+import { useEffect, useState } from "react";
 
-export default function BlogsTable() {
+export default function BlogsPage() {
+    const [blogs, setBlogs] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [selectedBlog, setSelectedBlog] = useState(null);
+    const { setTotalBlog } = useStats();
 
-    // Dummy summary data for table (lightweight for listing)
-    const blogs = blogPosts.map(({ id, title, author, date, status }) => ({
-        id,
-        title,
-        author,
-        date,
-        status,
-    }));
+    // ✅ Fetch WordPress posts
+    useEffect(() => {
+        const fetchBlogs = async () => {
+            try {
+                const res = await fetch(
+                    "https://blog.dermahealerindia.com/wp-json/wp/v2/posts?_embed"
+                );
+                const data = await res.json();
+                console.log("this are the total Blogs", data);
+                
+                setTotalBlog(data.length)  
+                const formatted = data.map((post) => ({
+                    id: post.id,
+                    title: post.title.rendered,
+                    author: post._embedded?.author?.[0]?.name || "Unknown",
+                    date: new Date(post.date).toLocaleDateString(),
+                    status: post.status === "publish" ? "Published" : "Draft",
+                    content: post.content.rendered,
+                    views: post.views || 0,
+                }));
+
+                setBlogs(formatted);
+            } catch (err) {
+                console.error("Error fetching blogs:", err);
+            } finally {              
+                setLoading(false);
+            }
+        };
+
+        fetchBlogs();
+    }, []);
 
     const handleRowClick = (id) => {
-        if (selectedBlog?.id === id) {
-            setSelectedBlog(null);
-        } else {
-            const blogData = blogPosts.find((b) => b.id === id);
-            setSelectedBlog(blogData);
-        }
+        setSelectedBlog((prev) =>
+            prev?.id === id ? null : blogs.find((b) => b.id === id)
+        );
     };
 
     const handleEdit = (id) => {
-        alert(`Edit blog with ID: ${id}`);
+        window.open(
+            `https://blog.dermahealerindia.com/wp-admin/post.php?post=${id}&action=edit`,
+            "_blank"
+        );
     };
 
-    const handleDelete = (id) => {
-        if (confirm(`Are you sure you want to delete blog ID: ${id}?`)) {
-            alert(`Deleted blog with ID: ${id}`);
+    const handleDelete = async (id) => {
+        if (!confirm(`Are you sure you want to delete blog ID: ${id}?`)) return;
+        try {
+            const res = await fetch(`/api/wp/posts/${id}`, { method: "DELETE" });
+            const data = await res.json();
+
+            if (data.error) throw new Error(data.error);
+            alert(`✅ Deleted blog ${id}`);
+            setBlogs((prev) => prev.filter((b) => b.id !== id));
+        } catch (err) {
+            alert(`❌ ${err.message}`);
         }
     };
 
+    if (loading) {
+        return <div className="p-6 text-gray-500">Loading blogs...</div>;
+    }
+
     return (
-        <div className="p-6 bg-[var(--card-bg)] rounded-lg shadow">
-            <h2 className="text-lg font-bold mb-4">Manage Blogs</h2>
+        <div className="p-6">
+            <h2 className="mb-4 text-xl font-bold">Blogs</h2>
 
             <div className="overflow-x-auto rounded-lg shadow">
-                <table className="min-w-full text-sm text-left border-collapse">
+                <table className="min-w-full border-collapse text-left text-sm">
                     <thead>
-                        <tr className="bg-[var(--navbar-bg)] text-[var(--text-color)]">
+                        <tr className="bg-gradient-to-r from-gray-300 to-gray-200 text-[var(--sbg)]">
                             <th className="p-3">ID</th>
                             <th className="p-3">Title</th>
                             <th className="p-3">Author</th>
@@ -52,72 +89,64 @@ export default function BlogsTable() {
                         </tr>
                     </thead>
 
-                    <AnimatePresence>
-                        <tbody>
-                            {blogs.map((blog) => (
-                                <motion.tr
-                                    key={blog.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="odd:bg-[var(--bg)] even:bg-[var(--form-bg)] hover:bg-[var(--link-hover)] transition-colors cursor-pointer"
-                                    onClick={() => handleRowClick(blog.id)}
+                    <tbody>
+                        {blogs.map((blog) => (
+                            <tr
+                                key={blog.id}
+                                className="cursor-pointer transition-colors odd:bg-[var(--bg)] even:bg-[var(--form-bg)] hover:bg-[var(--link-hover)]"
+                                onClick={() => handleRowClick(blog.id)}
+                            >
+                                <td className="p-3 font-medium text-gray-700">{blog.id}</td>
+                                <td className="p-3">{blog.title}</td>
+                                <td className="p-3">{blog.author}</td>
+                                <td className="p-3">{blog.date}</td>
+                                <td
+                                    className={`p-3 font-semibold ${blog.status === "Published"
+                                            ? "text-green-600"
+                                            : "text-yellow-600"
+                                        }`}
                                 >
-                                    <td className="p-3 font-medium">{blog.id}</td>
-                                    <td className="p-3">{blog.title}</td>
-                                    <td className="p-3">{blog.author}</td>
-                                    <td className="p-3">{blog.date}</td>
-                                    <td
-                                        className={`p-3 font-semibold ${blog.status === "Published"
-                                                ? "text-green-600"
-                                                : "text-yellow-600"
-                                            }`}
+                                    {blog.status}
+                                </td>
+                                <td
+                                    className="flex justify-center gap-2 p-3"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <button
+                                        onClick={() => handleEdit(blog.id)}
+                                        className="rounded bg-blue-500 px-3 py-1 text-xs text-white hover:bg-blue-600"
                                     >
-                                        {blog.status}
-                                    </td>
-                                    <td
-                                        className="p-3 flex justify-center gap-2"
-                                        onClick={(e) => e.stopPropagation()}
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(blog.id)}
+                                        className="rounded bg-red-500 px-3 py-1 text-xs text-white hover:bg-red-600"
                                     >
-                                        <button
-                                            onClick={() => handleEdit(blog.id)}
-                                            className="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(blog.id)}
-                                            className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
-                                </motion.tr>
-                            ))}
-                        </tbody>
-                    </AnimatePresence>
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
                 </table>
             </div>
 
-            <AnimatePresence>
-                {selectedBlog && (
-                    <motion.div
-                        key="blog-details"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3 }}
-                        className="mt-6 p-6 rounded-lg shadow bg-[var(--bg)]"
-                    >
-                        <h3 className="text-lg font-bold mb-2">{selectedBlog.title}</h3>
-                        <p className="text-sm text-gray-500 mb-4">
-                            By {selectedBlog.author} — {selectedBlog.date}
-                        </p>
-                        <div className="text-gray-700 leading-relaxed">{selectedBlog.content}</div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {/* Blog details */}
+            {selectedBlog && (
+                <div className="mt-6 rounded-lg bg-[var(--card-bg)] p-6 shadow">
+                    <h3 className="mb-2 text-lg font-bold">{selectedBlog.title}</h3>
+                    <p className="mb-4 text-sm text-gray-500">
+                        By {selectedBlog.author} — {selectedBlog.date} • 👁{" "}
+                        {selectedBlog.views} views
+                    </p>
+
+                    {/* WordPress HTML content */}
+                    <div
+                        className="prose max-w-none leading-relaxed text-gray-700"
+                        dangerouslySetInnerHTML={{ __html: selectedBlog.content }}
+                    />
+                </div>
+            )}
         </div>
     );
 }

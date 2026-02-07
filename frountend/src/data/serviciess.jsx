@@ -15,7 +15,9 @@ const products = [
         category: "face",
         slug: "acne-scar",
         thumbnail:
+            // "https://www.theclinicoregon.com/content/uploads/2023/05/bna1-scar-revision-1024x545.jpg",
             "https://plymouthmeetingdermatology.com/wp-content/uploads/2023/02/AdobeStock_318562606-1024x683.jpeg",
+
         description:
             "Our advanced laser technology helps reduce acne scars, injury marks, and post-surgical scars by stimulating new skin regeneration with minimal downtime.",
     },

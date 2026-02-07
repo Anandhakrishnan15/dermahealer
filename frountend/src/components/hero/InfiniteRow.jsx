@@ -1,9 +1,9 @@
 "use client";
 import React, { useRef, useLayoutEffect, useState } from "react";
 
-export const InfiniteRow = ({ children, reverse = false, speed = 50 }) => {
+export const InfiniteRow = ({ children, reverse = false, speed = 0}) => {
     const containerRef = useRef(null);
-    const [duration, setDuration] = useState("20s"); // default
+    const [duration, setDuration] = useState("0s"); // default
 
     useLayoutEffect(() => {
         if (!containerRef.current) return;

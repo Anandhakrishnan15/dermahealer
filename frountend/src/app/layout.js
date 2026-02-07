@@ -6,6 +6,8 @@ import LayoutClient from "./LayoutClient";
 import Script from "next/script";
 import AnalyticsProvider from "./providers";
 import GoogleAnalytics from "./GoogleAnalytics";
+import ToastProvider from "@/components/ToastProvider";
+import { StatsProvider } from "@/context/StatsContext";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -44,7 +46,7 @@ export const metadata = {
     siteName: "Derma Healer India",
     images: [
       {
-        url: "/logo.jpg", // should be 1200x630
+        url: "/home.png", // should be 1200x630
         width: 1200,
         height: 630,
         alt: "Derma Healer Clinic Banner",
@@ -59,7 +61,7 @@ export const metadata = {
     title: "Derma Healer - Your Siwan Dermatology Clinic",
     description:
       "Expert dermatology and cosmetic treatments in Siwan, Bihar. Find solutions for acne, pigmentation, hair loss, and more.",
-    images: ["/logo2.png"],
+    images: ["/home.png"],
   },
 };
 
@@ -68,7 +70,7 @@ export default function RootLayout({ children }) {
     "@context": "https://schema.org",
     "@type": "MedicalClinic",
     name: "Derma Healer India",
-    image: "https://dermahealerindia.com/logo2.png",
+    image: "home.png",
     "@id": "https://dermahealerindia.com",
     url: "https://dermahealerindia.com",
     telephone: "+91-919931766933",
@@ -126,19 +128,27 @@ export default function RootLayout({ children }) {
         <Script
           id="schema-org"
           type="application/ld+json"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+          crossOrigin="anonymous"
         />
+
         {/* Google Analytics */}
         <GoogleAnalytics gaId={process.env.GA_ID} />
         
         <meta name="apple-mobile-web-app-title" content="Derma Healer" />
+        {/* <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" /> */}
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
         suppressHydrationWarning
       >
         <LayoutClient>
-          <ClientWrapper>{children}</ClientWrapper>
+          <StatsProvider>
+          <ClientWrapper>{children}
+            <ToastProvider /> {/* ✅ client-only */}
+            </ClientWrapper>
+          </StatsProvider>
         </LayoutClient>
       </body>
     </html>

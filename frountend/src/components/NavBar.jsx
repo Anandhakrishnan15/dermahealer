@@ -95,7 +95,7 @@ export default function NavBar() {
             <div className="flex items-center relative z-[110] ">
                 {/* Book Now Button */}
                 <Link
-                    href="/book-now"
+                    href="/book-appointment"
                     className="hidden [@media(min-width:1000px)]:inline-block px-2 py-2 mr-2 rounded-lg bg-[var(--primary-color)] text-white font-semibold shadow hover:opacity-90 transition"
                     onClick={() => setIsOpen(false)}
                 >
@@ -139,8 +139,8 @@ export default function NavBar() {
                     />
                     {/* Book Now button for Mobile */}
                     <Link
-                        href="/book-now"
-                        className="mt-4 w-full text-center px-4 py-2 rounded-lg bg-[var(--primary-color)] text-white font-semibold shadow hover:opacity-90 transition [@media(min-width:1000px)]:hidden"
+                        href="/book-appointment"
+                        className="mt-4 w-full text-center px-4 py-2 rounded-lg bg-(--primary-color) text-white font-semibold shadow hover:opacity-90 transition [@media(min-width:1000px)]:hidden"
                         onClick={() => setIsOpen(false)}
                     >Book appointment
                         
@@ -159,9 +159,11 @@ function NavLinks({ dropdownOpen, setDropdownOpen, nestedOpenPath, setNestedOpen
         { href: "/", label: "Home" },
         { href: "/treatments", label: "Services" },
         { dropdown: true, label: "Treatments" },
-        { href: "/blog", label: "Blog" },
+        { href: "/blogs", label: "Blog" },
         { href: "/about-us", label: "About Us" },
         { href: "/contact-us", label: "Contact Us" },
+        // { href: "/admin", label: "admin" },
+
     ];
 
     return (
