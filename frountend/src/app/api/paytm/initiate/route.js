@@ -5,19 +5,19 @@ export async function POST(req) {
     try {
         const { orderId, amount } = await req.json();
 
-        console.log("🔹 Incoming Request:");
-        console.log("➡️ Order ID:", orderId);
-        console.log("➡️ Amount:", amount);
+        // console.log("🔹 Incoming Request:");
+        // console.log("➡️ Order ID:", orderId);
+        // console.log("➡️ Amount:", amount);
 
         const mid = process.env.NEXT_PUBLIC_PAYTM_MID;
         const merchantKey = process.env.PAYTM_MERCHANT_KEY;
 
-        console.log("🔑 Paytm Credentials:");
-        console.log("➡️ MID:", mid);
-        console.log("➡️ Merchant Key (hidden):", merchantKey ? "✅ Loaded" : "❌ Missing");
+        // console.log("🔑 Paytm Credentials:");
+        // console.log("➡️ MID:", mid);
+        // console.log("➡️ Merchant Key (hidden):", merchantKey ? "✅ Loaded" : "❌ Missing");
 
         if (!mid || !merchantKey) {
-            console.error("❌ Missing Paytm credentials!");
+            // console.error("❌ Missing Paytm credentials!");
             return Response.json({ error: "Missing Paytm credentials" }, { status: 400 });
         }
 
@@ -40,7 +40,7 @@ export async function POST(req) {
             },
         };
 
-        console.log("📦 Paytm Request Body:", JSON.stringify(paytmParams.body, null, 2));
+        // console.log("📦 Paytm Request Body:", JSON.stringify(paytmParams.body, null, 2));
 
         // Generate checksum
         const checksum = await PaytmChecksum.generateSignature(
@@ -48,13 +48,13 @@ export async function POST(req) {
             merchantKey
         );
 
-        console.log("✅ Checksum Generated:", checksum);
+        // console.log("✅ Checksum Generated:", checksum);
 
         paytmParams.head = { signature: checksum };
 
         const post_data = JSON.stringify(paytmParams);
 
-        console.log("📤 Final Payload to Paytm:", post_data);
+        // console.log("📤 Final Payload to Paytm:", post_data);
 
         // Await HTTPS request properly
         const paytmResponse = await new Promise((resolve, reject) => {
