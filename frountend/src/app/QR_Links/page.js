@@ -2,26 +2,23 @@
 
 import { useEffect, useState } from "react";
 import { Instagram, Facebook, Globe, MapPin, Youtube } from "lucide-react";
+import Image from "next/image";
 
-export default function QRLinksPage() {
-    const [icons, setIcons] = useState([]);
+    export default function QRLinksPage() {
+        const [icons] = useState(() =>
+            Array.from({ length: 12 }, (_, i) => ({
+                id: i,
+                left: `${Math.random() * 100}%`,
+                duration: `${5 + Math.random() * 5}s`,
+                delay: `${Math.random() * 5}s`,
+                type: i % 3,
+            }))
+        );
 
-    useEffect(() => {
-        // Generate once on client
-        const generated = [...Array(12)].map((_, i) => ({
-            id: i,
-            left: `${Math.random() * 100}%`,
-            duration: `${5 + Math.random() * 5}s`,
-            delay: `${Math.random() * 5}s`,
-            type: i % 3,
-        }));
-        setIcons(generated);
-    }, []);
-
-    return (
-        <main className="relative overflow-hidden min-h-screen flex flex-col items-center justify-center 
-                         bg-gradient-to-br from-[#2b80ff] via-[#1b5bd9] to-[#0a2a6c] 
-                         text-white px-6">
+        return (
+            <main className="relative overflow-hidden min-h-screen flex flex-col items-center justify-center 
+                     bg-gradient-to-br from-[#2b80ff] via-[#1b5bd9] to-[#0a2a6c] 
+                     text-white px-6">
 
             {/* Floating falling icons background */}
             <div className="absolute inset-0 pointer-events-none">
@@ -44,7 +41,7 @@ export default function QRLinksPage() {
 
             {/* Logo in glass card with float animation */}
             <div className="p-3 rounded-full bg-white/20 backdrop-blur-md shadow-xl mb-4 animate-float z-10">
-                <img
+                <Image
                     src="/logo2.png"
                     alt="Derma Healer Logo"
                     className="w-28 h-28 rounded-full object-cover drop-shadow-[0_4px_10px_rgba(0,0,0,0.35)]"
@@ -147,6 +144,6 @@ export default function QRLinksPage() {
                     <Youtube size={36} className="text-red-500 drop-shadow-lg hover:drop-shadow-[0_0_12px_rgba(239,68,68,0.7)]" />
                 </a>
             </div>
-        </main>
-    );
-}
+            </main>
+        );
+    }
