@@ -206,11 +206,14 @@ export default function Footer() {
                 <p className="animate-fadeIn">
                     &copy; {new Date().getFullYear()} DermaHealer. All rights reserved.{" "}
                     <a
-                        href="/privacy"
-                        className="underline hover:text-teal-400 transition"
+                        href="/privacy-policy"
+                        className="underline hover:text-teal-400 transition mr-1"
                     >
                         Privacy Policy
                     </a>
+                    <a className="underline hover:text-teal-400 transition mr-1" href="/terms-and-conditions">Terms & Conditions</a>
+                    <Link href="/refund-and-cancellation">Refund & Cancellation</Link>
+
                 </p>
 
                 <div className="flex items-center gap-2 animate-fadeIn delay-200">

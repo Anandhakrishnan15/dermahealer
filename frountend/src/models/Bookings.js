@@ -12,7 +12,7 @@ const BookingSchema = new mongoose.Schema(
         notes: { type: String, default: "" },
 
         // 💰 Payment info
-        amount: { type: Number, default: 100 },
+        amount: { type: Number, default: 1 },
         paid: { type: Boolean, default: false },
         orderId: { type: String, trim: true },
 

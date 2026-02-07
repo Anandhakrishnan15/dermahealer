@@ -193,6 +193,8 @@ export default function BookAppointment() {
       });
       if (!res.ok) throw new Error("Booking failed");
       const bookingData = await res.json();
+      console.log("this booking  data",bookingData);
+      
       if (!bookingData?.booking) throw new Error("Booking failed");
 
       // INITIATE PAYTM
@@ -232,8 +234,18 @@ export default function BookAppointment() {
 
   /* ---------------- UI ---------------- */
   return (
-    <ProtectedRoute>
+    <>
       {/* <ToastContainer position="top-right" autoClose={2500} /> */}
+      <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
+        <span className="text-[80px] md:text-[120px] font-extrabold text-red-500/10 rotate-[-30deg] select-none">
+          TESTING
+        </span>
+      </div>
+      <div className="fixed top-20 right-4 z-50">
+        <span className="px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800 rounded-full shadow">
+          SANDBOX MODE
+        </span>
+      </div>
 
       <div className="min-h-screen flex items-center justify-center bg-[var(--navbar-bg)] py-10 px-4">
         <div className="w-full max-w-3xl bg-[var(--bg)] rounded-2xl p-8 shadow-lg border border-gray-100">
@@ -244,7 +256,7 @@ export default function BookAppointment() {
             </div>
           )}
 
-          <h1 className="text-2xl font-semibold text-[var(--text)] mb-4">Book Doctor Appointment</h1>
+          <h1 className="text-2xl font-semibold text-[var(--text)] mb-4">Test Book Doctor Appointment</h1>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Name */}
@@ -480,10 +492,43 @@ export default function BookAppointment() {
                 className="mt-1 w-4 h-4 rounded border-gray-300 text-gray-800 focus:ring-gray-500"
               />
 
-              <label htmlFor="terms" className="text-sm text-gray-600">
-                I agree to the clinic’s booking terms & conditions and understand that appointment time may vary depending on doctor availability.
-                <span className="text-red-500">*</span>
-              </label>
+              <div className="flex items-start gap-2">
+
+
+                <label htmlFor="terms" className="text-sm text-gray-600">
+                  I agree to the clinic’s{" "}
+                  <a
+                    href="/terms-and-conditions"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline hover:text-blue-700 font-medium"
+                  >
+                    Terms & Conditions
+                  </a>
+                  ,{" "}
+                  <a
+                    href="/privacy-policy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline hover:text-blue-700 font-medium"
+                  >
+                    Privacy Policy
+                  </a>{" "}
+                  and{" "}
+                  <a
+                    href="/refund-and-cancellation"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline hover:text-blue-700 font-medium"
+                  >
+                    Refund & Cancellation Policy
+                  </a>
+                  . I understand that appointment time may vary depending on doctor availability.
+                  <span className="text-red-500"> *</span>
+                </label>
+              </div>
+
+
             </div>
 
             {errors.terms && (
@@ -498,7 +543,8 @@ export default function BookAppointment() {
                 className={`w-full py-3 rounded-lg text-white font-medium transition ${disabledAll || loading ? "bg-gray-300 cursor-not-allowed" : "bg-gray-800 hover:bg-[var(--primary-color)]"
                   }`}
               >
-                {sdkLoading ? "Initializing payment..." : loading ? "Processing..." : "Book & Pay ₹100"}
+                {sdkLoading ? "Initializing payment..." : loading ? "Processing..." : "Confirm Booking & Pay ₹1"}
+
               </button>
 
               {!paytmReady && !sdkLoading && (
@@ -510,6 +556,6 @@ export default function BookAppointment() {
           </form>
         </div>
       </div>
-    </ProtectedRoute>
+    </>
   );
 }
