@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Instagram, Facebook, Globe, MapPin, Youtube } from "lucide-react";
 import Image from "next/image";
 

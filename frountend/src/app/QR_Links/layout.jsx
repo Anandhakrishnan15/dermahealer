@@ -34,8 +34,6 @@ export default function QRLinksLayout({ children }) {
             {children}
 
       </>
-          
-           
-       
+                 
     );
 }
