@@ -319,15 +319,29 @@ export default function BookAppointment() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
                 {[
-                  { name: "Dr. B.K. Sharma", value: "Dr. B.K. Sharma", desc: "MBBS, MD (Skin & VD)" },
-                  { name: "Dr. Neha Rani", value: "Dr. Neha Rani", desc: "MBBS, Aesthetic Physician" },
+                  {
+                    name: "Dr. B.K. Sharma",
+                    value: "Dr. B.K. Sharma",
+                    desc: "MBBS, MD (Skin & VD)",
+                    fee: 600,
+                  },
+                  {
+                    name: "Dr. Neha Rani",
+                    value: "Dr. Neha Rani",
+                    desc: "MBBS, Aesthetic Physician",
+                    fee: 350,
+                  },
                 ].map((doc) => {
                   const active = form.doctor === doc.value;
+
                   return (
                     <label
                       key={doc.value}
-                      className={`flex items-center gap-3 p-3 rounded-xl border transition ${active ? "border-blue-200 bg-blue-50 shadow-sm" : "border-gray-100 bg-[var(--card-shadow)]"
-                        } ${disabledAll ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
+                      className={`flex items-center justify-between gap-3 p-3 rounded-xl border transition ${active
+                          ? "border-blue-200 bg-blue-50 shadow-sm"
+                          : "border-gray-100 bg-[var(--card-shadow)]"
+                        } ${disabledAll ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
+                        }`}
                     >
                       <input
                         type="radio"
@@ -338,14 +352,28 @@ export default function BookAppointment() {
                         disabled={disabledAll}
                         className="sr-only"
                       />
+
+                      {/* Left Side */}
                       <div>
                         <div className="font-medium text-gray-600">{doc.name}</div>
                         <div className="text-xs text-gray-400">{doc.desc}</div>
                       </div>
+
+                      {/* Right Side - Fee */}
+                      <div className="text-sm font-semibold text-gray-700 text-center">
+                        ₹{doc.fee}
+                        <div className="text-xs text-gray-400">
+                          (Payable at clinic)
+                        </div>
+                      </div>
+
+                     
+
                     </label>
                   );
                 })}
               </div>
+
               {errors.doctor && <p className="text-red-500 text-xs mt-2">{errors.doctor[0]}</p>}
             </div>
 
@@ -543,9 +571,13 @@ export default function BookAppointment() {
                 className={`w-full py-3 rounded-lg text-white font-medium transition ${disabledAll || loading ? "bg-gray-300 cursor-not-allowed" : "bg-gray-800 hover:bg-[var(--primary-color)]"
                   }`}
               >
-                {sdkLoading ? "Initializing payment..." : loading ? "Processing..." : "Confirm Booking & Pay ₹1"}
+                {sdkLoading ? "Initializing payment..." : loading ? "Processing..." : "Confirm Booking & Pay ₹50"}
 
               </button>
+              {/* Small Note */}
+              <p className="text-xs text-gray-500 text-center mt-2">
+                * ₹50 is charged only as an online booking fee. Doctor consultation fees are payable separately at the clinic.
+              </p>
 
               {!paytmReady && !sdkLoading && (
                 <p className="text-xs text-red-500 text-center mt-2">
