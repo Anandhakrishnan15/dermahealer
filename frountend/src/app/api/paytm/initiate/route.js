@@ -69,25 +69,25 @@ export async function POST(req) {
                 },
             };
 
-            console.log("🌍 HTTPS Request Options:", options);
+            // console.log("🌍 HTTPS Request Options:", options);
 
             const req = https.request(options, (res) => {
                 let data = "";
-                console.log("🟡 Sending request to Paytm...");
+                // console.log("🟡 Sending request to Paytm...");
                 res.on("data", (chunk) => (data += chunk));
                 res.on("end", () => {
-                    console.log("✅ Raw Response from Paytm:", data);
+                    // console.log("✅ Raw Response from Paytm:", data);
                     try {
                         resolve(JSON.parse(data));
                     } catch (err) {
-                        console.error("⚠️ Failed to parse Paytm response:", err);
+                        // console.error("⚠️ Failed to parse Paytm response:", err);
                         reject(err);
                     }
                 });
             });
 
             req.on("error", (err) => {
-                console.error("❌ HTTPS Request Error:", err);
+                // console.error("❌ HTTPS Request Error:", err);
                 reject(err);
             });
 
@@ -95,12 +95,12 @@ export async function POST(req) {
             req.end();
         });
 
-        console.log("💬 Parsed Paytm Response:", JSON.stringify(paytmResponse, null, 2));
+        // console.log("💬 Parsed Paytm Response:", JSON.stringify(paytmResponse, null, 2));
 
         // Validate response
         const result = paytmResponse.body?.resultInfo;
 
-        console.log("📊 Paytm Result Info:", result);
+        // console.log("📊 Paytm Result Info:", result);
 
         if (result?.resultStatus !== "S") {
             console.error("❌ Paytm initiate failed:", result);
@@ -110,7 +110,7 @@ export async function POST(req) {
             );
         }
 
-        console.log("✅ Paytm Transaction Token:", paytmResponse.body.txnToken);
+        // console.log("✅ Paytm Transaction Token:", paytmResponse.body.txnToken);
 
         // Success response
         return Response.json({
@@ -120,7 +120,7 @@ export async function POST(req) {
             amount,
         });
     } catch (err) {
-        console.error("🔥 Paytm initiate error:", err);
+        // console.error("🔥 Paytm initiate error:", err);
         return Response.json({ error: err.message }, { status: 500 });
     }
 }

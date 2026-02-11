@@ -4,7 +4,7 @@ let tokenExpiry = 0;
 export async function getCachedWPToken() {
     // 1. Return cached token if valid
     if (cachedToken && Date.now() < tokenExpiry) {
-        console.log("✅ Using cached WP token.");
+        // console.log("✅ Using cached WP token.");
         return cachedToken;
     }
 
@@ -40,7 +40,7 @@ export async function getCachedWPToken() {
     // 4. Cache and return the new token
     cachedToken = data.token;
     tokenExpiry = Date.now() + 1000 * 60 * 10; // 10 min
-    console.log("🔑 Successfully fetched and cached new WP token.");
+    // console.log("🔑 Successfully fetched and cached new WP token.");
 
     return cachedToken;
 }
