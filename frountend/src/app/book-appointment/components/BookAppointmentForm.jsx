@@ -192,7 +192,6 @@ export default function BookAppointmentForm() {
          });
          if (!res.ok) throw new Error("Booking failed");
          const bookingData = await res.json();
-         console.log("this booking  data",bookingData);
          
          if (!bookingData?.booking) throw new Error("Booking failed");
    
@@ -236,9 +235,9 @@ export default function BookAppointmentForm() {
        <>
          {/* <ToastContainer position="top-right" autoClose={2500} /> */}
          <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
-           {/* <span className="text-[80px] md:text-[120px] font-extrabold text-red-500/10 rotate-[-30deg] select-none">
+           <span className="text-[80px] md:text-[120px] font-extrabold text-red-500/10 rotate-[-30deg] select-none">
              TESTING
-           </span> */}
+           </span>
          </div>
          <div className="fixed top-20 right-4 z-50">
            {/* <span className="px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800 rounded-full shadow">
