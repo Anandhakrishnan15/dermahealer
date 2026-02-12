@@ -4,29 +4,19 @@ import https from "https";
 export async function POST(req) {
     try {
         const { orderId, amount } = await req.json();
-
-        // console.log("🔹 Incoming Request:");
-        // console.log("➡️ Order ID:", orderId);
-        // console.log("➡️ Amount:", amount);
-
-        const mid = process.env.NEXT_PUBLIC_PAYTM_MID;
+        const mid = process.env.PAYTM_MID;
         const merchantKey = process.env.PAYTM_MERCHANT_KEY;
-
-        // console.log("🔑 Paytm Credentials:");
-        // console.log("➡️ MID:", mid);
-        // console.log("➡️ Merchant Key (hidden):", merchantKey ? "✅ Loaded" : "❌ Missing");
 
         if (!mid || !merchantKey) {
             // console.error("❌ Missing Paytm credentials!");
             return Response.json({ error: "Missing Paytm credentials" }, { status: 400 });
         }
-
         // Build request body
         const paytmParams = {
             body: {
                 requestType: "Payment",
                 mid,
-                websiteName: "WEBSTAGING",
+                websiteName: "DEFAULT",
                 orderId,
                 // callbackUrl: `https://securestage.paytmpayments.com/theia/paytmCallback?ORDER_ID=${orderId}`,
                 callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/paytm/callback`,
@@ -59,7 +49,7 @@ export async function POST(req) {
         // Await HTTPS request properly
         const paytmResponse = await new Promise((resolve, reject) => {
             const options = {
-                hostname: "securestage.paytmpayments.com",
+                hostname: "secure.paytmpayments.com",
                 port: 443,
                 path: `/theia/api/v1/initiateTransaction?mid=${mid}&orderId=${orderId}`,
                 method: "POST",
