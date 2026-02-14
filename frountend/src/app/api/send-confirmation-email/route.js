@@ -1,9 +1,9 @@
 import nodemailer from "nodemailer";
 
 export async function POST(req) {
+   
     try {
         const { email, name, doctor, date, time, orderId, amount } = await req.json();
-
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -11,7 +11,22 @@ export async function POST(req) {
                 pass: process.env.EMAIL_PASS,
             },
         });
+        // Advance fee message
+        let advanceMessage = "";
 
+        if (doctor === "Dr. Neha Rani") {
+            advanceMessage = `
+                <p style="color:#b45309; font-weight:bold; margin-top:10px;">
+                    This amount is the advance booking fee. You have to pay ₹350 on arrival at the clinic.
+                </p>
+            `;
+        } else if (doctor === "Dr. B.K. Sharma") {
+            advanceMessage = `
+                <p style="color:#b45309; font-weight:bold; margin-top:10px;">
+                    This amount is the advance booking fee. You have to pay ₹600 on arrival at the clinic.
+                </p>
+            `;
+        }
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
@@ -39,7 +54,7 @@ export async function POST(req) {
                 <tr>
                     <td><strong>Order ID</strong></td>
                     <td style="padding-left:12px;">${orderId}</td>
-                </tr>
+                </tr>a
                 <tr>
                     <td><strong>Amount Paid</strong></td>
                     <td style="padding-left:12px;">₹${amount}</td>
@@ -53,6 +68,7 @@ export async function POST(req) {
                 <li>Please arrive at least <strong>10–15 minutes early</strong> for your appointment.</li>
                 <li>Carry any relevant medical reports or prescriptions.</li>
             </ul>
+            ${advanceMessage}
 
             <h3>Terms & Conditions</h3>
             <ul>
