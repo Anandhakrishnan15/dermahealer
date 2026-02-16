@@ -38,7 +38,7 @@ export default function ResponsiveImageGallery({
   ];
 
   return (
-    <section className={`w-full px-2 py-3 ${className}`}>
+    <section className={`w-full px-2 py-3 -mt-15 `}>
       {/* ✅ Big screen layout */}
       <div className="hidden md:flex flex-wrap justify-center gap-4">
         {bigImages.map((src, idx) => (
