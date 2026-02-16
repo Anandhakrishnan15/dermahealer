@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
+
 // import { motion } from "framer-motion";
 import { CheckCircle2, Star } from "lucide-react";
 import Rating from "@/components/hero/Rating"
@@ -31,6 +33,13 @@ export const Header = () => {
     ];
 
 
+    const router = useRouter();
+
+    const handleBooking = () => {
+        // This will redirect the user to /book-appointment
+        router.push('/book-appointment');
+    };
+
     // ✅ Auto-change hero image every 10 seconds
     useEffect(() => {
         const interval = setInterval(() => {
@@ -38,8 +47,8 @@ export const Header = () => {
         }, 10000);
         return () => clearInterval(interval);
     }, [images.length]);
-//    const [rating, setRating] = useState(null); // start as null to show skeleton
-//     const [loading, setLoading] = useState(true);
+    //    const [rating, setRating] = useState(null); // start as null to show skeleton
+    //     const [loading, setLoading] = useState(true);
 
     // useEffect(() => {
     //     const fetchRating = async () => {
@@ -62,11 +71,11 @@ export const Header = () => {
     // }, []);
 
     return (
-        <div className="relative top-0 z-50   mb-10 mx-auto py-0 md:py-10 px-1">
+        <div className="relative top-0 z-50  mb-10 mx-auto py-0 md:py-0 px-1">
             {/* Desktop */}
 
             <div className="hidden md:flex items-center">
-                <div className="md:flex-1 pr-8">
+                <div className="md:flex-1 pr-8 ml-1">
                     {/* ✅ Heading */}
                     <h1 className="text-6xl font-bold">
                         Glow <span className="text-[#3ed0ca]">Confidently</span>{" "}
@@ -104,17 +113,21 @@ export const Header = () => {
                         </span>
                     </div>
 
-                    {/* ✅ CTA Buttons */}
-                    <div className="mt-6 flex gap-4">
+                    {/* 📱 Mobile: Vertical Stack | 💻 Desktop: Horizontal Row */}
+                    <div className="mt-8 ml-2 flex flex-wrap items-center justify-center sm:justify-start gap-4 w-full">
+
+                        {/* Contact Us */}
                         <a
                             href="/contact-us"
-                            className="bg-[#3ed0ca] text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-teal-600 transition"
+                            className="flex-grow sm:flex-grow-0 basis-full sm:basis-[calc(50%-8px)] md:basis-auto text-center bg-[#3ed0ca] text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-teal-600 transition active:scale-95"
                         >
                             Contact Us
                         </a>
+
+                        {/* Our Treatments */}
                         <a
                             href="/treatments"
-                            className="bg-[#5563ff] text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-[#3a4343] transition"
+                            className="flex-grow sm:flex-grow-0 basis-full sm:basis-[calc(50%-8px)] md:basis-auto text-center bg-[#5563ff] text-white px-6 py-3 rounded-full font-semibold shadow hover:opacity-90 transition active:scale-95"
                         >
                             Our Treatments
                         </a>
@@ -134,7 +147,7 @@ export const Header = () => {
 
 
             {/* Mobile */}
-            <div className="relative md:hidden w-full h-full mt-4 rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
+            <div className="relative md:hidden w-full h-full mt-5 rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
                 {/* ✅ Auto-changing Mobile Hero Image */}
                 <img
                     src={mobileImages[heroImg % mobileImages.length]}
@@ -147,7 +160,7 @@ export const Header = () => {
 
                 {/* ✅ Doctor Name Overlay */}
                 <div
-                    className="absolute w-50 bottom-10 right-0 rounded-l-sm bg-gray-100 text-teal-600 text-center py-2 z-20 [@media(max-width:495px)]:hidden"
+                    className="absolute w-50 bottom-12 right-0 rounded-l-sm bg-gray-100 text-teal-600 text-center py-2 z-20 [@media(max-width:495px)]:hidden"
                 >
                     <p className="text-sm font-semibold">
                         {doctorNames[heroImg % doctorNames.length]}
@@ -192,20 +205,50 @@ export const Header = () => {
                     </p>
 
                     {/* ✅ CTA Buttons */}
-                    <div className="flex gap-3 animate-slide-up delay-400">
+                    <div className="flex flex-wrap gap-2 animate-slide-up delay-400">
+
+                        {/* Contact Us — Outline */}
                         <a
                             href="/contact"
-                            className="bg-white text-[#3ed0ca] font-semibold px-4 py-2 rounded-full text-sm shadow hover:bg-gray-100 transition"
+                            className="
+      px-5 py-2
+      text-sm font-semibold
+      text-[#0e0f0f]
+      bg-white
+      border border-[#0eeee6]/40
+      rounded-full
+      transition-all duration-300
+
+      hover:bg-[#d8d5d5]
+      hover:text-[#131313]
+      hover:shadow-md
+      hover:shadow-[#0eeee6]/30
+    "
                         >
                             Contact Us
                         </a>
+
+                        {/* Our Treatments — Secondary */}
                         <a
                             href="/treatments"
-                            className="bg-[#1f2937] text-white font-semibold px-4 py-2 rounded-full text-sm shadow hover:bg-[#111827] transition"
+                            className="
+      px-5 py-2
+      text-sm font-semibold
+      text-white
+      bg-[#1f2937]
+      border border-[#374151]
+      rounded-full
+      transition-all duration-300
+
+      hover:bg-[#111827]
+      hover:shadow-lg
+      hover:-translate-y-0.5
+    "
                         >
                             Our Treatments
                         </a>
                     </div>
+
                 </div>
             </div>
 
