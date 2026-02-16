@@ -5,22 +5,43 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import NetworkStatusPopup from "@/components/NetworkStatusPopup";
 import { AuthProvider } from "@/context/AuthContext";
-// import { ToastContainer } from "react-toastify";
+import FloatingBookButton from "@/components/FloatingBookButton.jsx";
 
 export default function LayoutClient({ children }) {
     const pathname = usePathname();
 
-    // Hide NavBar & Footer for QR_Links and all admin pages
-    const hideNavAndFooter =
-        pathname.startsWith("/QR_Links") || pathname.startsWith("/admin") || pathname.startsWith("/auth");
+    // Routes where NavBar & Footer should be hidden
+    const hideLayoutRoutes = ["/QR_Links", "/admin", "/auth"];
+
+    // Routes where booking button should be hidden
+    const hideBookingRoutes = [
+        "/QR_Links",
+        "/admin",
+        "/auth",
+        "/book-appointment",
+    ];
+
+    const shouldHideLayout = hideLayoutRoutes.some(route =>
+        pathname.startsWith(route)
+    );
+
+    const shouldHideBooking = hideBookingRoutes.some(route =>
+        pathname.startsWith(route)
+    );
 
     return (
         <>
             <NetworkStatusPopup />
-            {!hideNavAndFooter && <NavBar />}
-            <AuthProvider>{children}
+
+            {!shouldHideLayout && <NavBar />}
+
+            {!shouldHideBooking && <FloatingBookButton />}
+
+            <AuthProvider>
+                {children}
             </AuthProvider>
-            {!hideNavAndFooter && <Footer />}
+
+            {!shouldHideLayout && <Footer />}
         </>
     );
 }
