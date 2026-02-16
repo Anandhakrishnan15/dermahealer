@@ -6,14 +6,27 @@ import { motion } from "framer-motion";
 
 export default function RightSideBookTab() {
     const [floating, setFloating] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
             setFloating(window.scrollY > 150);
         };
 
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 485);
+        };
+
+        // run once
+        handleResize();
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("resize", handleResize);
+        };
     }, []);
 
     return (
@@ -24,13 +37,17 @@ export default function RightSideBookTab() {
                 stiffness: 400,
                 damping: 110,
             }}
-            className={`
-                fixed z-[9999]
-                ${floating
-                    ? "bottom-6 right-6"
-                    : "top-50 right-0 -translate-y-1/2"
-                }
-            `}
+            className="fixed z-[89]"
+            style={{
+                right: floating ? 24 : 0,
+                bottom: floating ? 24 : "auto",
+                top: floating
+                    ? "auto"
+                    : isMobile
+                        ? "300px"   // ✅ mobile position
+                        : "20%",   // ✅ desktop position
+                transform: floating ? "none" : "translateY(-50%)",
+            }}
         >
             <Link href="/book-appointment">
                 <motion.div
@@ -47,14 +64,8 @@ export default function RightSideBookTab() {
                         bg-gradient-to-b from-[#fff3b0] via-[#d4af37] to-[#8c6b1f]
 
                         ${floating
-                            ? `
-                                w-14 h-14
-                                rounded-full
-                            `
-                            : `
-                                px-4 py-3
-                                rounded-l-full
-                            `
+                            ? "w-14 h-14 rounded-full"
+                            : "px-3 py-2 rounded-l-full"
                         }
                     `}
                     whileHover={{
@@ -63,7 +74,6 @@ export default function RightSideBookTab() {
                     }}
                     whileTap={{ scale: 0.96 }}
                 >
-                    {/* Icon */}
                     <motion.svg
                         layout
                         xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +90,6 @@ export default function RightSideBookTab() {
                         />
                     </motion.svg>
 
-                    {/* Text */}
                     {!floating && (
                         <motion.span
                             layout
