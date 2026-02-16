@@ -233,18 +233,12 @@ export default function BookAppointmentForm() {
      /* ---------------- UI ---------------- */
      return (
        <>
-         {/* <ToastContainer position="top-right" autoClose={2500} /> */}
+         {/* <ToastContainer position="top-right" autoClose={2500} /> */}   
          <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
            <span className="text-[80px] md:text-[120px] font-extrabold text-red-500/10 rotate-[-30deg] select-none">
              TESTING
            </span>
          </div>
-         <div className="fixed top-20 right-4 z-50">
-           {/* <span className="px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800 rounded-full shadow">
-             SANDBOX MODE
-           </span> */}
-         </div>
-   
          <div className="min-h-screen flex items-center justify-center bg-[var(--navbar-bg)] py-10 px-4">
            <div className="w-full max-w-3xl bg-[var(--bg)] rounded-2xl p-8 shadow-lg border border-gray-100">
              {/* SDK loading banner */}
@@ -299,22 +293,31 @@ export default function BookAppointmentForm() {
                  <input
                    name="phone"
                    value={form.phone}
-                   onChange={handleChange}
+                   onChange={(e) => {
+                     const value = e.target.value;
+                     // Only allow numbers and max length of 10
+                     if (/^\d*$/.test(value) && value.length <= 10) {
+                       handleChange(e);
+                     }
+                   }}
                    disabled={disabledAll}
                    inputMode="numeric"
                    className={`w-full mt-2 p-3 rounded-lg border focus:outline-none ${errors.phone ? "border-red-400 ring-1 ring-red-100" : "border-gray-200"
                      }`}
                    placeholder="10 digit mobile number"
+                   type="text" // Changed from "number" to allow better control
                  />
-                 {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>}
+                 {errors.phone && (
+                   <p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>
+                 )}
                </div>
    
-               {/* Doctor */}
+               {/* Doctor Selection */}
                <div>
                  <label className="text-sm font-medium text-gray-700">
                    Choose Doctor <span className="text-red-500">*</span>
                  </label>
-   
+
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
                    {[
                      {
@@ -331,15 +334,14 @@ export default function BookAppointmentForm() {
                      },
                    ].map((doc) => {
                      const active = form.doctor === doc.value;
-   
+
                      return (
                        <label
                          key={doc.value}
                          className={`flex items-center justify-between gap-3 p-3 rounded-xl border transition ${active
-                             ? "border-blue-200 bg-blue-50 shadow-sm"
-                             : "border-gray-100 bg-[var(--card-shadow)]"
-                           } ${disabledAll ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
-                           }`}
+                             ? "border-blue-400 bg-blue-50 shadow-sm ring-1 ring-blue-400"
+                             : "border-gray-100 bg-white"
+                           } ${disabledAll ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
                        >
                          <input
                            type="radio"
@@ -350,149 +352,107 @@ export default function BookAppointmentForm() {
                            disabled={disabledAll}
                            className="sr-only"
                          />
-   
-                         {/* Left Side */}
+
+                         {/* Left Side Info */}
                          <div>
-                           <div className="font-medium text-gray-600">{doc.name}</div>
-                           <div className="text-xs text-gray-400">{doc.desc}</div>
+                           <div className="font-medium text-gray-800">{doc.name}</div>
+                           <div className="text-xs text-gray-500">{doc.desc}</div>
                          </div>
-   
-                         {/* Right Side - Fee */}
-                         <div className="text-sm font-semibold text-gray-700 text-center">
+
+                         {/* Right Side Fee */}
+                         <div className="text-sm font-bold text-gray-700 text-right">
                            ₹{doc.fee}
-                           <div className="text-xs text-gray-400">
-                             (Payable at clinic)
+                           <div className="text-[10px] font-normal text-gray-400 uppercase">
+                             Pay at clinic
                            </div>
                          </div>
-   
-                        
-   
                        </label>
                      );
                    })}
                  </div>
-   
                  {errors.doctor && <p className="text-red-500 text-xs mt-2">{errors.doctor[0]}</p>}
                </div>
-   
-               {/* Date & Time */}
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div>
-                   <label className="text-sm font-medium text-gray-700">
-                     Select Date <span className="text-red-500">*</span>
-                   </label>
-   
-                   <div className="flex gap-2 overflow-x-auto mt-3 pb-2">
-                     {dates.map((d) => {
-                       const isSunday = d.day === 0;
-                       const slotsLeft = availability[d.value];
-                       const isLoading = loadingAvailability || slotsLeft === undefined;
-                       const selected = selectedDate === d.value;
-                       const isToday = d.value === new Date().toISOString().split("T")[0];
-   
-   
-                       return (
-                         <button
-                           key={d.value}
-                           type="button"
-                           onClick={() => {
-                             if (isSunday || isToday || isLoading || slotsLeft === 0) return;
-                             setSelectedDate(d.value);
-                             setForm((p) => ({ ...p, date: d.value }));
-                             setErrors((prev) => ({ ...prev, date: undefined }));
-                           }}
-                           disabled={
-                             disabledAll ||
-                             isSunday ||
-                             isToday ||
-                             isLoading ||
-                             (slotsLeft === 0 && slotsLeft !== undefined)
-                           }
-                           className={`
-       min-w-[120px] p-2 rounded-lg text-center border transition duration-200 text-[var(--sbg)]
-   
-       /* Selected */
-       ${selected ? "bg-blue-100 border-blue-400 shadow-md" : ""}
-   
-       /* Sunday = Red */
-       ${isSunday ? "bg-red-50 border-red-300 text-red-600" : ""}
-   
-       /* Today = Grey Disabled */
-       ${isToday ? "bg-gray-100 border-gray-300 text-gray-500" : ""}
-   
-       /* No Slots = Red */
-       ${!isSunday &&
-                               !isToday &&
-                               !isLoading &&
-                               slotsLeft === 0
-                               ? "bg-red-100 border-red-300 text-red-700"
-                               : ""
-                             }
-   
-       /* Available = White */
-       ${!isSunday &&
-                               !isToday &&
-                               !isLoading &&
-                               slotsLeft > 0 &&
-                               !selected
-                               ? "bg-white border-gray-200"
-                               : ""
-                             }
-   
-       /* Loading */
-       ${isLoading ? "bg-gray-50 border-gray-200 text-gray-400" : ""}
-     `}
-                         >
-                           <div className="text-sm font-medium">{d.label}</div>
-   
-                           <div className="text-xs mt-1">
-                             {isSunday && "Closed (Sunday)"}
-                             {isToday && "Today (Not allowed)"}
-                             {isLoading && "Loading..."}
-                             {!isSunday && !isToday && !isLoading && slotsLeft === undefined && "—"}
-                             {!isSunday && !isToday && !isLoading && slotsLeft === 0 && "No slots"}
-                             {!isSunday && !isToday && !isLoading && slotsLeft > 0 && `${slotsLeft} slots`}
-                           </div>
-                         </button>
-   
-   
-                       );
-                     })}
+
+               {/* Date & Time - ONLY SHOWS IF DOCTOR IS SELECTED */}
+               {form.doctor && (
+                 <div className="mt-6 space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+                   <hr className="border-gray-100" />
+
+                   {/* Date Selection */}
+                   <div className="flex flex-col">
+                     <label className="text-sm font-medium text-gray-700">
+                       Select Date <span className="text-red-500">*</span>
+                     </label>
+
+                     <div className="flex gap-2 overflow-x-auto mt-3 pb-2 scrollbar-hide">
+                       {dates.map((d) => {
+                         const isSunday = d.day === 0;
+                         const slotsLeft = availability[d.value];
+                         const isLoading = loadingAvailability || slotsLeft === undefined;
+                         const selected = selectedDate === d.value;
+                         const isToday = d.value === new Date().toISOString().split("T")[0];
+
+                         return (
+                           <button
+                             key={d.value}
+                             type="button"
+                             onClick={() => {
+                               if (isSunday || isToday || isLoading || slotsLeft === 0) return;
+                               setSelectedDate(d.value);
+                               setForm((p) => ({ ...p, date: d.value }));
+                               setErrors((prev) => ({ ...prev, date: undefined }));
+                             }}
+                             disabled={disabledAll || isSunday || isToday || isLoading || (slotsLeft === 0 && slotsLeft !== undefined)}
+                             className={`min-w-[110px] p-3 rounded-xl text-center border transition-all duration-200 
+                ${selected ? "bg-blue-600 border-blue-600 text-white shadow-md scale-105" : "bg-white border-gray-200 text-gray-600"}
+                ${isSunday ? "opacity-50 bg-red-50 border-red-100" : ""}
+                ${isToday ? "opacity-50 bg-gray-50 border-gray-100" : ""}
+              `}
+                           >
+                             <div className={`text-sm font-bold ${selected ? "text-white" : "text-gray-800"}`}>{d.label}</div>
+                             <div className={`text-[10px] mt-1 ${selected ? "text-blue-100" : "text-gray-400"}`}>
+                               {isSunday ? "Closed" : isToday ? "Not allowed" : isLoading ? "Loading..." : `${slotsLeft ?? 0} slots`}
+                             </div>
+                           </button>
+                         );
+                       })}
+                     </div>
+                     {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date[0]}</p>}
                    </div>
-                   {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date[0]}</p>}
-                 </div>
-   
-                 <div>
-                   <label className="text-sm font-medium text-gray-700">
-                     Select Time <span className="text-red-500">*</span>
-                   </label>
-   
-                   <div className="flex gap-2 flex-wrap mt-3">
-                     {times.map((t) => {
-                       const selected = selectedTime === t;
-                       return (
-                         <button
-                           key={t}
-                           type="button"
-                           onClick={() => {
-                             setSelectedTime(t);
-                             setForm((p) => ({ ...p, time: t }));
-                             setErrors((prev) => ({ ...prev, time: undefined }));
-                           }}
-                           disabled={disabledAll}
-                           className={`px-4 py-2 rounded-full border text-[var(--sbg)] transition ${selected ? "bg-gray-400 border-gray-300" : "bg-white border-gray-100"
-                             } ${disabledAll ? "opacity-60 cursor-not-allowed" : ""}`}
-                         >
-                           {t}
-                         </button>
-                       );
-                     })}
+
+                   {/* Time Selection */}
+                   <div className="flex flex-col">
+                     <label className="text-sm font-medium text-gray-700">
+                       Select Time <span className="text-red-500">*</span>
+                     </label>
+
+                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mt-3">
+                       {times.map((t) => {
+                         const selected = selectedTime === t;
+                         return (
+                           <button
+                             key={t}
+                             type="button"
+                             onClick={() => {
+                               setSelectedTime(t);
+                               setForm((p) => ({ ...p, time: t }));
+                               setErrors((prev) => ({ ...prev, time: undefined }));
+                             }}
+                             disabled={disabledAll}
+                             className={`px-3 py-2 rounded-lg border text-xs font-medium transition-all
+                ${selected ? "bg-blue-600 border-blue-600 text-white shadow-sm" : "bg-white border-gray-200 text-gray-600 hover:border-blue-300"}
+                ${disabledAll ? "opacity-60 cursor-not-allowed" : ""}
+              `}
+                           >
+                             {t}
+                           </button>
+                         );
+                       })}
+                     </div>
+                     {errors.time && <p className="text-red-500 text-xs mt-1">{errors.time[0]}</p>}
                    </div>
-                   {errors.time && <p className="text-red-500 text-xs mt-1">{errors.time[0]}</p>}
                  </div>
-               </div>
-   
-               {/* Notes */}
+               )}            {/* Notes */}
                <div>
                  <label className="text-sm font-medium text-gray-700">Notes (optional)</label>
                  <textarea
