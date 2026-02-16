@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <div>
       {/* <Demo /> */}
-      <HeroParallax products={products} />;
+      <HeroParallax products={products} />
       <ResponsiveImageGallery />
       <HeroParallaxContent/>
       <TopServicesPreview limit={3} showSeeMore />
