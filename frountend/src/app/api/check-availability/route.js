@@ -3,16 +3,23 @@ import Bookings from "@/models/Bookings";
 import Holiday from "@/models/Holiday";
 
 export async function POST(req) {
+    console.time("Availability API Time"); // start timer
     await connectDB();
 
-    const { doctor, dates } = await req.json(); // doctor = selected doctor
+    const { doctor, dates } = await req.json();
 
     let result = {};
 
-    // Fetch ALL holidays
+    const timings = [
+        "08:30-09:30",
+        "10:30-11:30",
+        "11:30-12:30",
+        "12:30-01:30"
+    ];
+
+    // Fetch holidays
     const holidayDocs = await Holiday.find();
 
-    // Prepare separate lists
     const commonHolidayDates = new Set(
         holidayDocs.filter(h => h.type === "common").map(h => h.date)
     );
@@ -23,29 +30,76 @@ export async function POST(req) {
             .map(h => h.date)
     );
 
+    // 🔥 Fetch ALL bookings in ONE query
+    const bookings = await Bookings.find({
+        doctor,
+        date: { $in: dates },
+        paid: true
+    });
+
+    // Group bookings by date and time
+    const bookingMap = {};
+
+    bookings.forEach(b => {
+
+        if (!bookingMap[b.date]) {
+            bookingMap[b.date] = {
+                total: 0,
+                timings: {}
+            };
+        }
+
+        bookingMap[b.date].total++;
+
+        bookingMap[b.date].timings[b.time] =
+            (bookingMap[b.date].timings[b.time] || 0) + 1;
+
+    });
+
+    // Build result
     for (const d of dates) {
 
-        // ✔ BLOCK COMMON HOLIDAY (All Doctors)
-        if (commonHolidayDates.has(d)) {
-            result[d] = 0;
+        if (commonHolidayDates.has(d) || doctorHolidayDates.has(d)) {
+
+            result[d] = {
+                totalRemaining: 0,
+                timings: {}
+            };
+
+            timings.forEach(t => {
+                result[d].timings[t] = {
+                    remaining: 0,
+                    available: false
+                };
+            });
+
             continue;
         }
 
-        // ✔ BLOCK SPECIFIC DOCTOR HOLIDAY
-        if (doctorHolidayDates.has(d)) {
-            result[d] = 0;
-            continue;
-        }
+        const totalCount = bookingMap[d]?.total || 0;
 
-        // ✔ Count only paid bookings for this doctor on this date
-        const count = await Bookings.countDocuments({
-            doctor,
-            date: d,
-            paid: true,
+        const totalRemaining = Math.max(20 - totalCount, 0);
+
+        result[d] = {
+            totalRemaining,
+            timings: {}
+        };
+
+        timings.forEach(t => {
+
+            const timingCount = bookingMap[d]?.timings[t] || 0;
+
+            const remaining = Math.max(2 - timingCount, 0);
+
+            result[d].timings[t] = {
+                remaining,
+                available: remaining > 0 && totalRemaining > 0
+            };
+
         });
 
-        result[d] = Math.max(10 - count, 0);
     }
-
+    console.timeEnd("Availability API Time"); // end timer
     return Response.json({ availability: result });
+
 }
