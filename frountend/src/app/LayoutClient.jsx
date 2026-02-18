@@ -5,7 +5,8 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import NetworkStatusPopup from "@/components/NetworkStatusPopup";
 import { AuthProvider } from "@/context/AuthContext";
-import FloatingBookButton from "@/components/FloatingBookButton.jsx";
+import FloatingCallButton from "@/components/FloatingCallButton";
+// import FloatingCallButton from "@/components/FloatingCallButton.jsx";
 
 export default function LayoutClient({ children }) {
     const pathname = usePathname();
@@ -35,7 +36,7 @@ export default function LayoutClient({ children }) {
 
             {!shouldHideLayout && <NavBar />}
 
-            {!shouldHideBooking && <FloatingBookButton />}
+            {!shouldHideBooking && <FloatingCallButton />}
 
             <AuthProvider>
                 {children}
