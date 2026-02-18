@@ -5,9 +5,10 @@ import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
 
 export default function Footer() {
     return (
-        <footer className="bg-[var(--sbg)] text-gray-50 py-10 px-6">
+        <footer className="relative bg-[var(--sbg)] text-gray-50 py-10 px-6 z-[99]">
+
             <div
-                className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12"
+                className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 "
             >
                 {/* Column 1 - Logo + Contact */}
                 <div className="flex flex-col gap-5 animate-fadeIn">
