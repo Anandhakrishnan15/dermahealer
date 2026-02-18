@@ -15,7 +15,11 @@ const BookingSchema = new mongoose.Schema(
         amount: { type: Number, default: 50 },
         paid: { type: Boolean, default: false },
         orderId: { type: String, trim: true },
-
+        exportedToSheet: {
+            type: Boolean,
+            default: false,
+            index: true // IMPORTANT for fast search
+        },
         // 🧾 Detailed transaction info
         paymentInfo: {
             txnId: { type: String, default: "" },
@@ -39,5 +43,13 @@ const BookingSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// ✅ Always use singular model name (Mongoose auto-pluralizes)
+// ✅ ADD THIS INDEX HERE
+BookingSchema.index({
+    doctor: 1,
+    date: 1,
+    time: 1,
+    paid: 1
+});
+
+// ✅ Always use singular model name
 export default mongoose.models.Booking || mongoose.model("Booking", BookingSchema);
