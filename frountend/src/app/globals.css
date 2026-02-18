@@ -198,6 +198,38 @@ body {
   animation: floaty 2s ease-in-out infinite;
 }
 
+.animate-pingSlow {
+  animation: pingSlow 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-pingSlow.delay-200 {
+  animation-delay: 0.4s;
+}
+
+.animate-pingSlow.delay-400 {
+  animation-delay: 0.8s;
+}
+
+.animate-pingSlow.delay-600 {
+  animation-delay: 1.2s;
+}
+
+@keyframes pingSlow {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
+
 @layer utilities {
   @keyframes fade-slide-up {
     from {
