@@ -3,6 +3,7 @@
 
 import { motion } from "framer-motion";
 import { CheckCircle, Clock, Calendar, UserCheck, Star } from "lucide-react";
+import Link from "next/link";
 
 // Animation Variants
 const fadeUp = {
@@ -57,14 +58,15 @@ export default function TreatmentContent({ treatment }) {
                         transition={{ delay: 0.4, duration: 0.6 }}
                         className="mt-6 flex gap-4"
                     >
-                        <a
-                            href="#book"
+                        <Link
+                            href="/book-appointment"
                             className="bg-[var(--primary-color)] text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-teal-600 transition"
                         >
                             Book Appointment
-                        </a>
+                        </Link>
+
                         <a
-                            href="#consult"
+                            href="tel:+919693601499"
                             className="bg-white text-[var(--primary-color)] px-6 py-3 rounded-full font-semibold shadow hover:bg-gray-100 transition"
                         >
                             Consult Now
