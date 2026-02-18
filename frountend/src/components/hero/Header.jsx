@@ -71,7 +71,7 @@ export const Header = () => {
     // }, []);
 
     return (
-        <div className="relative top-0 z-50  mb-10 mx-auto py-0 md:py-0 px-1">
+        <div className="relative top-4 z-50  mb-10 mx-auto py-0 md:py-0 px-1">
             {/* Desktop */}
 
             <div className="hidden md:flex items-center">
@@ -118,10 +118,10 @@ export const Header = () => {
 
                         {/* Contact Us */}
                         <a
-                            href="/contact-us"
+                            href="/book-appointment"
                             className="flex-grow sm:flex-grow-0 basis-full sm:basis-[calc(50%-8px)] md:basis-auto text-center bg-[#3ed0ca] text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-teal-600 transition active:scale-95"
                         >
-                            Contact Us
+                            Book Now
                         </a>
 
                         {/* Our Treatments */}
@@ -147,7 +147,7 @@ export const Header = () => {
 
 
             {/* Mobile */}
-            <div className="relative md:hidden w-full h-full mt-5 rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
+            <div className="relative md:hidden w-full h-full rounded-lg shadow-lg overflow-hidden flex bg-[#3ed0ca] mobileStackReverse">
                 {/* ✅ Auto-changing Mobile Hero Image */}
                 <img
                     src={mobileImages[heroImg % mobileImages.length]}
@@ -209,7 +209,7 @@ export const Header = () => {
 
                         {/* Contact Us — Outline */}
                         <a
-                            href="/contact"
+                            href="/book-appointment"
                             className="
       px-5 py-2
       text-sm font-semibold
@@ -225,7 +225,7 @@ export const Header = () => {
       hover:shadow-[#0eeee6]/30
     "
                         >
-                            Contact Us
+                            Book Now
                         </a>
 
                         {/* Our Treatments — Secondary */}
