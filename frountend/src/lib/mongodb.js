@@ -14,7 +14,7 @@ if (!cached) {
 }
 
 export async function connectDB() {
-  console.log("🔄 connectDB() called...");
+  // console.log("🔄 connectDB() called...");
 
   if (cached.conn) {
     // console.log("✅ Using existing MongoDB connection from cache");
