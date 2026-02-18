@@ -17,7 +17,6 @@ export default function BlogsPage() {
                     "https://blog.dermahealerindia.com/wp-json/wp/v2/posts?_embed"
                 );
                 const data = await res.json();
-                console.log("this are the total Blogs", data);
                 
                 setTotalBlog(data.length)  
                 const formatted = data.map((post) => ({
