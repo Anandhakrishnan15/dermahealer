@@ -136,9 +136,7 @@ export default function BookAppointmentForm() {
          
          if (!res.ok) throw new Error("Availability API failed");
          const data = await res.json();
-         console.log('====================================');
-         console.log("avalibility chek ", data);
-         console.log('====================================');
+         
          availabilityCache.current[doctor] = data.availability || {};
          setAvailability(data.availability || {});
        } catch (err) {
