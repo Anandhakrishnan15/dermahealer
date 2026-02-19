@@ -55,7 +55,7 @@ export default function BookAppointmentForm() {
                     return;
                 }
 
-                const sdkUrl = `https://secure.paytmpayments.com/merchantpgpui/checkoutjs/merchants/${data.mid}.js`;
+              const sdkUrl = `https://secure.paytmpayments.com/merchantpgpui/checkoutjs/merchants/${data.mid}.js`;
 
                 if (document.querySelector(`script[src="${sdkUrl}"]`)) {
                     setPaytmReady(Boolean(window.Paytm?.CheckoutJS));
@@ -99,7 +99,7 @@ export default function BookAppointmentForm() {
        };
      });
    
-     const times = ["10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM"];
+  const times = ["08:30-09:30","10:30-11:30","11:30-12:30","12:30-01:30"];
    
      const disabledAll = sdkLoading || loading; // lock the entire form while SDK loads or submitting
    
@@ -133,8 +133,12 @@ export default function BookAppointmentForm() {
            headers: { "Content-Type": "application/json" },
            body: JSON.stringify({ doctor, dates: dates.map((d) => d.value) }),
          });
+         
          if (!res.ok) throw new Error("Availability API failed");
          const data = await res.json();
+         console.log('====================================');
+         console.log("avalibility chek ", data);
+         console.log('====================================');
          availabilityCache.current[doctor] = data.availability || {};
          setAvailability(data.availability || {});
        } catch (err) {
@@ -187,7 +191,7 @@ export default function BookAppointmentForm() {
          // CREATE BOOKING
          const res = await fetch("/api/bookings", {
            method: "POST",
-           headers: { "Content-Type": "application/json" },
+           headers: { "Content-Type": "application/json" }, 
            body: JSON.stringify(submitForm),
          });
          if (!res.ok) throw new Error("Booking failed");
@@ -387,7 +391,7 @@ export default function BookAppointmentForm() {
                      <div className="flex gap-2 overflow-x-auto mt-3 pb-2 scrollbar-hide">
                        {dates.map((d) => {
                          const isSunday = d.day === 0;
-                         const slotsLeft = availability[d.value];
+                         const slotsLeft = availability[d.value]?.totalRemaining;
                          const isLoading = loadingAvailability || slotsLeft === undefined;
                          const selected = selectedDate === d.value;
                          const isToday = d.value === new Date().toISOString().split("T")[0];
@@ -428,29 +432,56 @@ export default function BookAppointmentForm() {
 
                      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mt-3">
                        {times.map((t) => {
+
+                         const timingData = availability[selectedDate]?.timings?.[t];
+
+                         const isFull = timingData && !timingData.available;
+
                          const selected = selectedTime === t;
+
                          return (
                            <button
                              key={t}
                              type="button"
                              onClick={() => {
+                               if (isFull) return;
+
                                setSelectedTime(t);
                                setForm((p) => ({ ...p, time: t }));
                                setErrors((prev) => ({ ...prev, time: undefined }));
                              }}
-                             disabled={disabledAll}
+                             disabled={disabledAll || !selectedDate || isFull}
                              className={`px-3 py-2 rounded-lg border text-xs font-medium transition-all
-                ${selected ? "bg-blue-600 border-blue-600 text-white shadow-sm" : "bg-white border-gray-200 text-gray-600 hover:border-blue-300"}
-                ${disabledAll ? "opacity-60 cursor-not-allowed" : ""}
-              `}
+
+            ${selected
+                                 ? "bg-blue-600 border-blue-600 text-white shadow-sm"
+                                 : "bg-white border-gray-200 text-gray-600 hover:border-blue-300"
+                               }
+
+            ${isFull
+                                 ? "opacity-50 cursor-not-allowed bg-gray-100"
+                                 : ""
+                               }
+
+          `}
                            >
                              {t}
+                             {isFull && (
+                               <div className="text-[10px] text-red-500">Full</div>
+                             )}
                            </button>
                          );
+
                        })}
                      </div>
-                     {errors.time && <p className="text-red-500 text-xs mt-1">{errors.time[0]}</p>}
+
+                     {errors.time && (
+                       <p className="text-red-500 text-xs mt-1">
+                         {errors.time[0]}
+                       </p>
+                     )}
                    </div>
+
                  </div>
                )}            {/* Notes */}
                <div>
