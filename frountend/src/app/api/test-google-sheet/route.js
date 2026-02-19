@@ -6,26 +6,17 @@ import Bookings from "@/models/Bookings";
 
 export async function POST(req) {
     try {
-
         // ✅ Secure route
         await authMiddleware(req);
 
-        // ✅ Connect DB (required in Next.js API)
+        // ✅ Connect DB
         await connectDB();
 
-        // // ✅ Fix old records missing exportedToSheet field (runs only once effectively)
-        // await Bookings.updateMany(
-        //     { exportedToSheet: { $exists: false } },
-        //     { $set: { exportedToSheet: false } }
-        // );
-
-        // ✅ Fetch ONLY not exported bookings
+        // ✅ Fetch only not exported bookings
         const bookings = await Bookings.find({
             paid: true,
             exportedToSheet: false
-        })
-            .sort({ createdAt: 1 })
-            .lean();
+        }).sort({ createdAt: 1 }).lean();
 
         if (!bookings.length) {
             return NextResponse.json({
@@ -51,16 +42,13 @@ export async function POST(req) {
             new Date(b.createdAt).toLocaleString()
         ]);
 
-        // ✅ Google Sheets auth
+        // ✅ Google Sheets auth using env JSON
         const auth = new google.auth.GoogleAuth({
-            keyFile: "google-service-account.json",
-            scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+            credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON),
+            scopes: ["https://www.googleapis.com/auth/spreadsheets"]
         });
 
-        const sheets = google.sheets({
-            version: "v4",
-            auth
-        });
+        const sheets = google.sheets({ version: "v4", auth });
 
         // ✅ Export to sheet
         await sheets.spreadsheets.values.append({
@@ -72,7 +60,7 @@ export async function POST(req) {
             }
         });
 
-        // ✅ Mark exported (VERY IMPORTANT)
+        // ✅ Mark exported
         await Bookings.updateMany(
             { _id: { $in: bookings.map(b => b._id) } },
             { $set: { exportedToSheet: true } }
@@ -84,13 +72,11 @@ export async function POST(req) {
         });
 
     } catch (error) {
-
         console.error("Export Error:", error);
 
         return NextResponse.json({
             success: false,
             error: error.message
         }, { status: 500 });
-
     }
 }
