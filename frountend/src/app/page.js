@@ -10,6 +10,7 @@ import { HeroParallaxContent } from "@/components/hero/HeroParallaxContent.jsx";
 import ResponsiveImageGallery from "@/components/ResponsiveImageGallery.jsx";
 import products from "@/data/serviciess.jsx";
 import { HeroParallax } from "@/components/hero/HeroParallax.jsx";
+import {SimpleVideoCards} from "@/components/PostVideolinks/VideoPage.jsx";
 
 export default function Home() {
  
@@ -24,6 +25,7 @@ export default function Home() {
       <Testimonials />
       <CertificateCarousel />
       <BlogTips />
+      <SimpleVideoCards/>
       <OurExperts/>
       <CTASection />
     </div>
