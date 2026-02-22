@@ -6,8 +6,7 @@ import { sendEmail } from "@/utils/sendEmail";
 
 // Map doctors to email addresses
 const doctorEmails = {
-    "Dr. B.K. Sharma": "anandhakrishnanvellat15@gmail.com",
-    "Dr. Neha Rani": "anandhubalan78@gmail.com"
+    "Dr. Neha Rani": "neharani154@gmail.com "
 };
 
 export async function sendDailyBookingSummary() {
