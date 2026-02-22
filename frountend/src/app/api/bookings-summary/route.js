@@ -19,12 +19,12 @@ export async function sendDailyBookingSummary() {
 
         // Aggregate bookings by doctor
         const todayCounts = await Bookings.aggregate([
-            { $match: { date: today } },
+            { $match: { date: today, paid: true } },
             { $group: { _id: "$doctor", count: { $sum: 1 } } }
         ]);
 
         const tomorrowCounts = await Bookings.aggregate([
-            { $match: { date: tomorrow } },
+            { $match: { date: tomorrow, paid: true } },
             { $group: { _id: "$doctor", count: { $sum: 1 } } }
         ]);
 
