@@ -53,7 +53,7 @@ export async function sendDailyBookingSummary() {
             html: combinedHtml
         });
 
-        console.log("✅ Daily booking summary sent to all doctors");
+        // console.log("✅ Daily booking summary sent to all doctors");
 
     } catch (err) {
         console.error("❌ Error sending daily booking summary:", err);

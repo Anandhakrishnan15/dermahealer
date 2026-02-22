@@ -19,7 +19,7 @@ export async function sendEmail({ to, cc, bcc, subject, html }) {
             html,
         });
 
-        console.log(`✅ Email sent: ${info.messageId} to ${to}`);
+        // console.log(`✅ Email sent: ${info.messageId} to ${to}`);
         return true;
     } catch (err) {
         console.error(`❌ Failed to send email to ${to}:`, err);
