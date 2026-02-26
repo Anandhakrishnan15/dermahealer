@@ -16,7 +16,7 @@ export default function FloatingCallButton() {
                 shadow-xl
             "
             >
-                Call Now
+                Call Now<br/>(10am to 5pm)
             </div>
             <div className="relative flex items-center justify-center">
 
