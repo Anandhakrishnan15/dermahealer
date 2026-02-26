@@ -236,11 +236,11 @@ export default function BookAppointmentForm() {
      return (
        <>
          {/* <ToastContainer position="top-right" autoClose={2500} /> */}   
-         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
+         {/* <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
            <span className="text-[80px] md:text-[120px] font-extrabold text-red-500/10 rotate-[-30deg] select-none">
              TESTING
            </span>
-         </div>
+         </div> */}
          <div className="min-h-screen flex items-center justify-center bg-[var(--navbar-bg)] py-10 px-4">
            <div className="w-full max-w-3xl bg-[var(--bg)] rounded-2xl p-8 shadow-lg border border-gray-100">
              {/* SDK loading banner */}
