@@ -66,6 +66,9 @@ export async function POST(req) {
             <h3>Important Instructions</h3>
             <ul>
                 <li>Please arrive at least <strong>10–15 minutes early</strong> for your appointment.</li>
+                <li>Please be on time for your scheduled slot.</li>
+                <li>Due to patient flow and consultation time variations, you may have to wait approximately <strong>30 minutes to 1 hour</strong>.</li>
+                <li>If you miss your assigned slot, you will need to wait until the next available slot, similar to other patients.</li>
                 <li>Carry any relevant medical reports or prescriptions.</li>
             </ul>
             ${advanceMessage}
