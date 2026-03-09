@@ -8,7 +8,7 @@ import {
     isTomorrow,
     subDays,
     isWithinInterval,
-    parseISO,
+    parseISO, parse
 } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { useStats } from "@/context/StatsContext";
@@ -76,6 +76,7 @@ export default function AppointmentsPage() {
                 email: b.email,
                 paymentDone: b.paid,
                 date: b.date,
+                time: b.time,
             }));
 
             setAppointments(mapped);
@@ -255,6 +256,7 @@ export default function AppointmentsPage() {
                             <th className="p-3">Email</th>
                             <th className="p-3">Payment</th>
                             <th className="p-3">Date</th>
+                            <th className="p-3">Time</th>
                         </tr>
                     </thead>
 
@@ -277,6 +279,7 @@ export default function AppointmentsPage() {
                             {/* Data */}
                             {!loading &&
                                 filteredAppointments.map((appt) => (
+                                    
 
                                     <motion.tr
                                         key={appt.id}
@@ -317,6 +320,9 @@ export default function AppointmentsPage() {
 
                                         <td className="p-3">
                                             {format(parseISO(appt.date), "dd/MM/yyyy")}
+                                        </td>
+                                        <td className="p-3">
+                                            {appt.time}
                                         </td>
 
                                     </motion.tr>
