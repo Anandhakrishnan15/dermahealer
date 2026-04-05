@@ -12,6 +12,7 @@ import {
 } from "date-fns";
 import { motion, AnimatePresence } from "framer-motion";
 import { useStats } from "@/context/StatsContext";
+import { toast } from "react-toastify";
 
 
 // ---------------------------------------------------------
@@ -48,9 +49,9 @@ export default function AppointmentsPage() {
     const [search, setSearch] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
     const [filter, setFilter] = useState("last7");
-
     const { setTotalAppointments, setTodayAppointments } = useStats();
-
+    const [loadingId, setLoadingId] = useState(null);
+    const [actionType, setActionType] = useState(null);
 
     // ---------------------------------------------------------
     // ✅ Fetch bookings (optimized)
@@ -75,6 +76,7 @@ export default function AppointmentsPage() {
                 phone: b.phone,
                 email: b.email,
                 paymentDone: b.paid,
+                visited: b.visited ?? false,
                 date: b.date,
                 time: b.time,
             }));
@@ -173,6 +175,78 @@ export default function AppointmentsPage() {
         });
     }, [appointments, search, filter, selectedDate, paymentFilter]);
 
+    const verifyPayment = async (orderId) => {
+        try {
+            setLoadingId(orderId);
+            setActionType("verify");
+
+            const res = await fetch("/api/paytm/verify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orderId }),
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                // ✅ Update ONLY this row
+                setAppointments((prev) =>
+                    prev.map((appt) =>
+                        appt.id === orderId
+                            ? { ...appt, paymentDone: true }
+                            : appt
+                    )
+                );
+
+                toast.success("Payment verified ✅");
+            } else {
+                toast.error(data.message || "Verification failed");
+            }
+
+        } catch (err) {
+            console.error(err);
+            toast.error("Error verifying payment");
+        } finally {
+            setLoadingId(null);
+            setActionType(null);
+        }
+    };
+    const markVisited = async (orderId) => {
+        try {
+            setLoadingId(orderId);
+            setActionType("visited");
+
+            const res = await fetch("/api/bookings/mark-visited", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orderId }),
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                // ✅ Update ONLY this row
+                setAppointments((prev) =>
+                    prev.map((appt) =>
+                        appt.id === orderId
+                            ? { ...appt, visited: true }
+                            : appt
+                    )
+                );
+
+                toast.success("Marked as visited 🎉");
+            } else {
+                toast.error(data.message || "Failed");
+            }
+
+        } catch (err) {
+            console.error(err);
+            toast.error("Error marking visited");
+        } finally {
+            setLoadingId(null);
+            setActionType(null);
+        }
+    };
 
     // ---------------------------------------------------------
     // UI
@@ -255,6 +329,7 @@ export default function AppointmentsPage() {
                             <th className="p-3">doctor</th>
                             <th className="p-3">Email</th>
                             <th className="p-3">Payment</th>
+                            <th className="p-3">Action</th>
                             <th className="p-3">Date</th>
                             <th className="p-3">Time</th>
                         </tr>
@@ -317,7 +392,61 @@ export default function AppointmentsPage() {
                                         >
                                             {appt.paymentDone ? "Paid" : "Unpaid"}
                                         </td>
+                                        <td className="p-3 flex gap-2 items-center">
 
+                                            {(() => {
+                                                const isPaid = appt.paymentDone === true;
+                                                const isVisited = appt.visited === true;
+
+                                                // ❌ Not Paid → Verify
+                                                if (!isPaid) {
+                                                    return (
+                                                        <button
+                                                            onClick={() => verifyPayment(appt.id)}
+                                                            disabled={loadingId === appt.id}
+                                                            className="flex items-center gap-2 px-3 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 disabled:opacity-50"
+                                                        >
+                                                            {loadingId === appt.id && actionType === "verify" && (
+                                                                <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                                            )}
+                                                            {loadingId === appt.id && actionType === "verify"
+                                                                ? "Checking..."
+                                                                : "Verify"}
+                                                        </button>
+                                                    );
+                                                }
+
+                                                // ✅ Paid but NOT visited
+                                                if (isPaid && !isVisited) {
+                                                    return (
+                                                        <button
+                                                            onClick={() => markVisited(appt.id)}
+                                                            disabled={loadingId === appt.id}
+                                                            className="flex items-center gap-2 px-3 py-1 bg-green-600 text-white rounded-lg text-xs hover:bg-green-700 disabled:opacity-50"
+                                                        >
+                                                            {loadingId === appt.id && actionType === "visited" && (
+                                                                <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                                            )}
+                                                            {loadingId === appt.id && actionType === "visited"
+                                                                ? "Saving..."
+                                                                : "Visited"}
+                                                        </button>
+                                                    );
+                                                }
+
+                                                // ✅ Already visited
+                                                if (isVisited) {
+                                                    return (
+                                                        <span className="text-green-700 text-xs font-semibold">
+                                                            ✔ Visited
+                                                        </span>
+                                                    );
+                                                }
+
+                                                return null;
+                                            })()}
+
+                                        </td>
                                         <td className="p-3">
                                             {format(parseISO(appt.date), "dd/MM/yyyy")}
                                         </td>
