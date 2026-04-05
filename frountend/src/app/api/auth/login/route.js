@@ -32,9 +32,7 @@ export async function POST(req) {
             { expiresIn: "1h" }
         );
 
-        return NextResponse.json({
-            
-            
+        return NextResponse.json({ 
             message: "Login successful",
             token,
             user: { id: user._id, username: user.username, email: user.email ,role: user.role },
