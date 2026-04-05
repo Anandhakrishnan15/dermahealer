@@ -10,6 +10,7 @@ import BlogsTable from "@/components/Admin/AdminDashboard";
 import AppointmentsPage from "./appointments/AppointmentsPage";
 import { useStats } from "@/context/StatsContext";
 import MembersPage from "./members/page";
+import FollowUpTable from "./appointments/followup/FollowUpTable";
 
 export default function AdminHome() {
     const { user } = useAuth();
@@ -56,11 +57,12 @@ export default function AdminHome() {
             {/* Recent Appointments - visible to all */}
             {/* <RecentAppointments appointments={recentAppointments} /> */}
             <AppointmentsPage/>
+            <FollowUpTable />
 
             {/* Admin-only Blogs Table */}
             {isAdmin && (
-                <div className="p-6 rounded-lg shadow" style={{ background: "var(--bg)" }}>
-                    <h2 className="text-lg font-semibold mb-4">Recent Blogs</h2>
+                <div >
+                    {/* <h2 className="text-lg font-semibold mb-4">Recent Blogs</h2> */}
                     <BlogsTable />
                 </div>
             )}
