@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const BookingSchema = new mongoose.Schema(
     {
-        // 👤 Basic booking info
+        // 👤 Booking info
         name: { type: String, required: true, trim: true },
         email: { type: String, required: true, trim: true },
         phone: { type: String, required: true, trim: true },
@@ -11,30 +11,45 @@ const BookingSchema = new mongoose.Schema(
         time: { type: String, required: true },
         notes: { type: String, default: "" },
 
-        // 💰 Payment info
+        // 💰 Payment
         amount: { type: Number, default: 50 },
+
         paid: { type: Boolean, default: false },
-        orderId: { type: String, trim: true },
+
+        paymentStatus: {
+            type: String,
+            enum: ["PENDING", "SUCCESS", "FAILED"],
+            default: "PENDING",
+            index: true,
+        },
+
+        orderId: {
+            type: String,
+            trim: true,
+            unique: true,
+            index: true,
+        },
+
         exportedToSheet: {
             type: Boolean,
             default: false,
-            index: true // IMPORTANT for fast search
+            index: true,
         },
-        // 🧾 Detailed transaction info
+
+        // ✅ NEW FIELD (🔥 IMPORTANT)
+        visited: {
+            type: Boolean,
+            default: false,
+            index: true,
+        },
+
+        // 🧾 Transaction details
         paymentInfo: {
             txnId: { type: String, default: "" },
             bankTxnId: { type: String, default: "" },
             bankName: { type: String, default: "" },
-            gatewayName: {
-                type: String,
-                enum: ["HDFC", "ICICI", "AXIS", "PAYTM", "OTHER", ""],
-                default: "",
-            },
-            paymentMode: {
-                type: String,
-                enum: ["CC", "DC", "NB", "UPI", "WALLET", "OTHER", ""],
-                default: "",
-            },
+            gatewayName: { type: String, default: "" },
+            paymentMode: { type: String, default: "" },
             txnAmount: { type: String, default: "0.00" },
             txnDate: { type: String, default: "" },
             respMsg: { type: String, default: "" },
@@ -43,13 +58,16 @@ const BookingSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// ✅ ADD THIS INDEX HERE
+// 🔍 Prevent double booking (same slot)
 BookingSchema.index({
     doctor: 1,
     date: 1,
     time: 1,
-    paid: 1
+    paid: 1,
 });
 
-// ✅ Always use singular model name
-export default mongoose.models.Booking || mongoose.model("Booking", BookingSchema);
+// 🔍 Payment lookup optimization
+BookingSchema.index({ orderId: 1, paymentStatus: 1 });
+
+export default mongoose.models.Booking ||
+    mongoose.model("Booking", BookingSchema);
