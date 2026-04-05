@@ -22,7 +22,6 @@ export default function ResponsiveImageGallery({
     "/introbanner/2.png",
     "/introbanner/5.png",
   ],
-  className = "",
   radius = "rounded-2xl",
 }) {
   const smallImages = images.slice(0, 6);
