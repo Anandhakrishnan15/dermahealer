@@ -46,7 +46,7 @@ export async function POST(req) {
         // 🔹 Step 3: Call Paytm status API
         const paytmRes = await new Promise((resolve, reject) => {
             const options = {
-                hostname: "securestage.paytmpayments.com",
+                hostname: "secure.paytmpayments.com",
                 path: "/v3/order/status",
                 method: "POST",
                 headers: {
