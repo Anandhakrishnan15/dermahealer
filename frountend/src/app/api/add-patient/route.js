@@ -20,7 +20,24 @@ export async function POST(req) {
             );
         }
 
+        // ✅ Check ENV (VERY IMPORTANT)
+        if (!GOOGLE_SCRIPT_URL) {
+            throw new Error("Missing GOOGLE_SCRIPT_URL in environment variables");
+        }
+
         const body = await req.json();
+
+        // ✅ Log incoming data
+        console.log("📥 Incoming Body:", body);
+
+        // ✅ Make body safe (prevent undefined issues)
+        const safeBody = {
+            name: body.name || "",
+            phone: body.phone || "",
+            email: body.email || "",
+            age: body.age || "",
+            gender: body.gender || "",
+        };
 
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 5000);
@@ -30,18 +47,29 @@ export async function POST(req) {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(body),
+            body: JSON.stringify(safeBody),
             signal: controller.signal,
         });
 
         clearTimeout(timeout);
 
-        const result = await googleRes.json();
+        // ✅ Get RAW response first (IMPORTANT)
+        const rawText = await googleRes.text();
+        console.log("📄 Google Raw Response:", rawText);
+
+        let result;
+
+        try {
+            result = JSON.parse(rawText);
+        } catch (parseError) {
+            throw new Error("Invalid JSON from Google Script");
+        }
 
         if (!googleRes.ok || !result.success) {
             throw new Error(result.error || "Google Script Error");
         }
 
+        // Clear cache
         cache = {};
 
         return Response.json({
@@ -50,7 +78,7 @@ export async function POST(req) {
         });
 
     } catch (error) {
-        console.error("POST API Error:", error);
+        console.error("❌ POST API Error:", error);
 
         return Response.json(
             {
@@ -64,7 +92,6 @@ export async function POST(req) {
         );
     }
 }
-
 // ==========================
 // ✅ GET → FETCH PATIENTS
 // ==========================
