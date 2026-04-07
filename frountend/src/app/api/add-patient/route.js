@@ -23,7 +23,7 @@ export async function POST(req) {
         const body = await req.json();
 
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000);
+        const timeout = setTimeout(() => controller.abort(), 15000);
 
         const googleRes = await fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
