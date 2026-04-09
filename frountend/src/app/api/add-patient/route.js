@@ -1,18 +1,74 @@
 import { authMiddleware } from "@/middleware/auth";
+import { z } from "zod";
 
-// 🔥 GLOBAL CACHE
+// 🔥 CACHE
 let cache = {};
-const CACHE_TTL = 30 * 1000; // 30 seconds
+const CACHE_TTL = 30 * 1000;
 
 const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
+
+// ==========================
+// ✅ ZOD SCHEMA (POST)
+// ==========================
+const patientSchema = z.object({
+    fullName: z.string().min(2, "Name too short").max(50),
+    email: z.string().email("Invalid email"),
+    phone: z.string().regex(/^[6-9]\d{9}$/, "Invalid phone number"),
+    age: z.coerce.number().min(1).max(120), // ✅ FIXED
+    gender: z.enum(["male", "female"]),
+    dob: z.string().min(1, "DOB required"),
+    treatment: z.string().min(2, "Treatment required"),
+    address: z.string().optional(),
+    notes: z.string().max(300).optional(),
+});
+
+// ==========================
+// ✅ ZOD SCHEMA (GET)
+// ==========================
+const querySchema = z.object({
+    page: z.coerce.number().min(1).default(1),
+    limit: z.coerce.number().min(1).max(50).default(10),
+    search: z.string().max(50).optional(),
+});
+
+// ==========================
+// 🔒 SANITIZER
+// ==========================
+const sanitize = (obj) => {
+    const clean = {};
+    for (let key in obj) {
+        if (typeof obj[key] === "string") {
+            clean[key] = obj[key]
+                .trim()
+                .replace(/[<>$;]/g, "");
+        } else {
+            clean[key] = obj[key];
+        }
+    }
+    return clean;
+};
+
+// ==========================
+// ❗ FORMAT ZOD ERRORS
+// ==========================
+const formatZodErrors = (error) => {
+    const errors = {};
+    error.issues.forEach((err) => {
+        const field = err.path[0];
+        if (!errors[field]) {
+            errors[field] = err.message;
+        }
+    });
+    return errors;
+};
 
 // ==========================
 // ✅ POST → ADD PATIENT
 // ==========================
 export async function POST(req) {
     try {
+        // 🔒 AUTH
         const user = await authMiddleware(req);
-
         if (!user) {
             return Response.json(
                 { success: false, error: "Unauthorized" },
@@ -20,28 +76,66 @@ export async function POST(req) {
             );
         }
 
+        // ❗ ENV CHECK
+        if (!GOOGLE_SCRIPT_URL) {
+            throw new Error("Missing GOOGLE_SCRIPT_URL");
+        }
+
         const body = await req.json();
 
+        // ✅ VALIDATION
+        const parsed = patientSchema.safeParse(body);
+
+        if (!parsed.success) {
+            console.log("ZOD ERROR:", parsed.error);
+
+            return Response.json(
+                {
+                    success: false,
+                    error:
+                        parsed.error.issues?.[0]?.message ||
+                        "Validation failed",
+                    errors: formatZodErrors(parsed.error), // 🔥 ALL ERRORS
+                },
+                { status: 400 }
+            );
+        }
+
+        // 🔒 SANITIZE
+        const cleanData = sanitize(parsed.data);
+
+        // ⏱ TIMEOUT PROTECTION
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 15000);
 
-        const googleRes = await fetch(GOOGLE_SCRIPT_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-            signal: controller.signal,
-        });
+        let googleRes;
+        try {
+            googleRes = await fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(cleanData),
+                signal: controller.signal,
+            });
+        } catch (err) {
+            throw new Error("Failed to connect to Google Script");
+        }
 
         clearTimeout(timeout);
 
-        const result = await googleRes.json();
-
-        if (!googleRes.ok || !result.success) {
-            throw new Error(result.error || "Google Script Error");
+        let result;
+        try {
+            result = await googleRes.json();
+        } catch {
+            throw new Error("Invalid response from Google Script");
         }
 
+        if (!googleRes.ok || !result?.success) {
+            throw new Error(result?.error || "Google Script Error");
+        }
+
+        // 🔄 CLEAR CACHE
         cache = {};
 
         return Response.json({
@@ -79,11 +173,28 @@ export async function GET(req) {
             );
         }
 
+        if (!GOOGLE_SCRIPT_URL) {
+            throw new Error("Missing GOOGLE_SCRIPT_URL");
+        }
+
         const { searchParams } = new URL(req.url);
 
-        const page = parseInt(searchParams.get("page")) || 1;
-        const limit = parseInt(searchParams.get("limit")) || 10;
-        const search = searchParams.get("search") || "";
+        const parsedQuery = querySchema.safeParse({
+            page: searchParams.get("page"),
+            limit: searchParams.get("limit"),
+            search: searchParams.get("search"),
+        });
+
+        if (!parsedQuery.success) {
+            return Response.json(
+                { success: false, error: "Invalid query params" },
+                { status: 400 }
+            );
+        }
+
+        let { page, limit, search } = parsedQuery.data;
+
+        search = search?.replace(/[<>$;]/g, "") || "";
 
         const key = `${search}_${page}_${limit}`;
         const now = Date.now();
@@ -95,27 +206,37 @@ export async function GET(req) {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 15000);
 
-        const googleRes = await fetch(
-            `${GOOGLE_SCRIPT_URL}?search=${encodeURIComponent(search)}&page=${page}&limit=${limit}`,
-            {
-                signal: controller.signal,
-            }
-        );
+        let googleRes;
+        try {
+            googleRes = await fetch(
+                `${GOOGLE_SCRIPT_URL}?search=${encodeURIComponent(
+                    search
+                )}&page=${page}&limit=${limit}`,
+                { signal: controller.signal }
+            );
+        } catch {
+            throw new Error("Failed to connect to Google Script");
+        }
 
         clearTimeout(timeout);
 
-        const data = await googleRes.json();
+        let data;
+        try {
+            data = await googleRes.json();
+        } catch {
+            throw new Error("Invalid response from Google Script");
+        }
 
-        if (!googleRes.ok || !data.success) {
-            throw new Error(data.error || "Google Script Error");
+        if (!googleRes.ok || !data?.success) {
+            throw new Error(data?.error || "Google Script Error");
         }
 
         const response = {
             success: true,
-            patients: data.data,
-            total: data.total,
-            page: data.page,
-            totalPages: data.totalPages,
+            patients: data.data || [],
+            total: data.total || 0,
+            page: data.page || page,
+            totalPages: data.totalPages || 1,
         };
 
         cache[key] = {
