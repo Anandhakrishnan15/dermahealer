@@ -4,41 +4,76 @@ import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "supersecret"; // put in .env.local
+const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
 export async function POST(req) {
     try {
         await connectDB();
+
         const { email, password } = await req.json();
 
+        // ✅ Validate input
         if (!email || !password) {
-            return NextResponse.json({ error: "Email & Password required" }, { status: 400 });
+            return NextResponse.json(
+                { error: "Email and password are required" },
+                { status: 400 }
+            );
         }
 
+        // ✅ Find user
         const user = await User.findOne({ email });
+
+        // 🔒 Don't reveal if user exists
         if (!user) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
+            return NextResponse.json(
+                { error: "Invalid email or password" },
+                { status: 401 }
+            );
         }
 
+        // ✅ Compare password
         const isMatch = await bcrypt.compare(password, user.password);
+
         if (!isMatch) {
-            return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+            return NextResponse.json(
+                { error: "Invalid email or password" },
+                { status: 401 }
+            );
         }
 
-        // Create JWT token
+        // 🔥 JWT with 18h expiry
         const token = jwt.sign(
-            { id: user._id, email: user.email,role:user.role },
+            {
+                id: user._id,
+                email: user.email,
+                role: user.role,
+            },
             JWT_SECRET,
-            { expiresIn: "1h" }
+            {
+                expiresIn: "8h", // ✅ UPDATED
+            }
         );
 
-        return NextResponse.json({ 
+        // ✅ Safe user object
+        const safeUser = {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+        };
+
+        return NextResponse.json({
             message: "Login successful",
             token,
-            user: { id: user._id, username: user.username, email: user.email ,role: user.role },
+            user: safeUser,
         });
+
     } catch (err) {
-        console.error("Login error:", err);
-        return NextResponse.json({ error: "Login failed", details: err.message }, { status: 500 });
+        console.error("Login error:", err.message);
+
+        return NextResponse.json(
+            { error: "Something went wrong" },
+            { status: 500 }
+        );
     }
 }
