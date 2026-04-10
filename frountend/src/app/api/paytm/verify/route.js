@@ -25,10 +25,7 @@ export async function POST(req) {
         }
 
         // 🔹 Step 1: Create request body
-        const body = {
-            mid,
-            orderId,
-        };
+        const body = { mid, orderId };
 
         // 🔹 Step 2: Generate checksum
         const checksum = await PaytmChecksum.generateSignature(
@@ -38,15 +35,13 @@ export async function POST(req) {
 
         const postData = JSON.stringify({
             body,
-            head: {
-                signature: checksum,
-            },
+            head: { signature: checksum },
         });
 
-        // 🔹 Step 3: Call Paytm status API
+        // 🔹 Step 3: Call Paytm API
         const paytmRes = await new Promise((resolve, reject) => {
             const options = {
-                hostname: "secure.paytmpayments.com",
+                hostname: "secure.paytmpayments.com", 
                 path: "/v3/order/status",
                 method: "POST",
                 headers: {
@@ -79,10 +74,9 @@ export async function POST(req) {
         const result = paytmRes?.body?.resultInfo;
         const txn = paytmRes?.body;
 
-
         await connectDB();
 
-        // 🔥 Step 4: Handle SUCCESS
+        // 🔥 SUCCESS CASE
         if (result?.resultStatus === "TXN_SUCCESS") {
             const updated = await Bookings.findOneAndUpdate(
                 { orderId },
@@ -101,9 +95,53 @@ export async function POST(req) {
                 { new: true }
             );
 
+            // ❗ booking not found safety
+            if (!updated) {
+                return Response.json(
+                    { success: false, message: "Booking not found" },
+                    { status: 404 }
+                );
+            }
+
+            // 📧 SEND EMAIL (ONLY ONCE)
+            if (updated.email && !updated.emailSent) {
+                try {
+                    const emailRes = await fetch(
+                        `${process.env.NEXT_PUBLIC_BASE_URL}/api/send-confirmation-email`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                email: updated.email,
+                                name: updated.name,
+                                doctor: updated.doctor,
+                                date: updated.date,
+                                time: updated.time,
+                                orderId: updated.orderId,
+                                amount: updated.amount,
+                            }),
+                        }
+                    );
+
+                    if (emailRes.ok) {
+                        await Bookings.updateOne(
+                            { orderId },
+                            { $set: { emailSent: true } }
+                        );
+                    } else {
+                        console.error("❌ Email API failed");
+                    }
+                } catch (err) {
+                    console.error("❌ Email API error:", err);
+                }
+            }
+
             return Response.json({
                 success: true,
                 status: "SUCCESS",
+                message: "Payment verified & email sent",
                 booking: updated,
             });
         }
