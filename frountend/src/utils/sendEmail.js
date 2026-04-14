@@ -11,7 +11,7 @@ export async function sendEmail({ to, cc, bcc, subject, html }) {
         });
 
         const info = await transporter.sendMail({
-            from: `"Booking Summary" <${process.env.EMAIL_USER}>`,
+            from: `"Derma Healer" <${process.env.EMAIL_USER}>`,
             to,
             cc,
             bcc,
