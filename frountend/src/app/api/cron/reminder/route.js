@@ -1,32 +1,14 @@
-// api /corn/reminder
-import { NextResponse } from "next/server";
+import { sendRemindersJob } from "@/lib/sendReminders";
 
 export async function GET(req) {
-    if (req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`) {
-        return new NextResponse("Unauthorized", { status: 401 });
+    if (
+        !req.headers.get("x-vercel-cron") &&
+        req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+    ) {
+        return new Response("Unauthorized", { status: 401 });
     }
 
-    try {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/add-patient/follow-up/send-reminders`
-        );
+    const result = await sendRemindersJob();
 
-        const data = await res.json();
-
-        console.log("⏰ Reminder Cron:", data);
-
-        return NextResponse.json({
-            success: true,
-            job: "reminders",
-            data,
-        });
-
-    } catch (err) {
-        console.error("🔥 Reminder Cron Error:", err);
-
-        return NextResponse.json(
-            { success: false },
-            { status: 500 }
-        );
-    }
+    return Response.json({ success: true, result });
 }
