@@ -4,17 +4,14 @@ import { connectDB } from "@/lib/mongodb";
 
 export async function POST(req) {
     try {
-        // 1️⃣ Parse the Paytm callback form data
         const formData = await req.formData();
         const body = Object.fromEntries(formData);
 
         console.log("📩 Paytm Callback Data Received:", body);
 
-        // 2️⃣ Extract and remove checksum
         const paytmChecksum = body.CHECKSUMHASH;
         delete body.CHECKSUMHASH;
 
-        // 3️⃣ Verify checksum
         const isValid = PaytmChecksum.verifySignature(
             body,
             process.env.PAYTM_MERCHANT_KEY,
@@ -22,20 +19,18 @@ export async function POST(req) {
         );
 
         if (!isValid) {
-            console.error("❌ Invalid Paytm checksum for order:", body.ORDERID);
             return Response.redirect(
                 `${process.env.NEXT_PUBLIC_BASE_URL}/payment-failed?reason=checksum-error`,
                 302
             );
         }
 
-        // 4️⃣ Check transaction status
         if (body.STATUS === "TXN_SUCCESS") {
-            console.log("✅ Payment success for order:", body.ORDERID);
 
             await connectDB();
 
-            await Bookings.findOneAndUpdate(
+            // ✅ Get updated booking
+            const booking = await Bookings.findOneAndUpdate(
                 { orderId: body.ORDERID },
                 {
                     $set: {
@@ -54,13 +49,37 @@ export async function POST(req) {
                 },
                 { new: true }
             );
-            // 5️⃣ Redirect user to success page
+
+            // ✅ 🔥 Call WhatsApp API
+            if (booking?.phone) {
+                try {
+                    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            to: booking.phone,
+                            template: "booking_confirmation_2",
+                            params: [
+                                booking.name || "Customer",
+                                booking.date || "",
+                                booking.time || "",
+                                booking.service || "Consultation",
+                            ],
+                        }),
+                    });
+                } catch (err) {
+                    console.error("WhatsApp send failed:", err);
+                }
+            }
+
             return Response.redirect(
                 `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success?orderId=${body.ORDERID}`,
                 302
             );
+
         } else {
-            console.error("❌ Payment failed:", body.RESPMSG);
             return Response.redirect(
                 `${process.env.NEXT_PUBLIC_BASE_URL}/payment-failed?reason=${encodeURIComponent(
                     body.RESPMSG || "Transaction failed"
@@ -68,8 +87,8 @@ export async function POST(req) {
                 302
             );
         }
+
     } catch (err) {
-        console.error("🔥 Callback handling error:", err);
         return Response.redirect(
             `${process.env.NEXT_PUBLIC_BASE_URL}/payment-failed?reason=server-error`,
             302

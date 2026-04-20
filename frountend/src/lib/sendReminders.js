@@ -4,8 +4,6 @@ import { followUpReminderTemplate } from "@/utils/emailTemplates";
 import { sendEmail } from "@/utils/sendEmail";
 
 export async function sendRemindersJob() {
-    const apiStart = Date.now();
-
     try {
         await connectDB();
 
@@ -22,9 +20,7 @@ export async function sendRemindersJob() {
         tomorrowEnd.setDate(now.getDate() + 1);
         tomorrowEnd.setHours(23, 59, 59, 999);
 
-        // 🔍 DB Query
-        const dbStart = Date.now();
-
+        // ✅ Fetch only pending reminders
         const followUps = await FollowUp.find({
             status: "scheduled",
             "appointment.date": {
@@ -36,121 +32,152 @@ export async function sendRemindersJob() {
             .select("_id patientDetails doctor appointment")
             .lean();
 
-        const dbTime = Date.now() - dbStart;
+        console.log(`📦 Found: ${followUps.length}`);
 
-        console.log(`📦 DB: ${dbTime} ms | Found: ${followUps.length}`);
-
-        if (followUps.length === 0) {
-            return {
-                success: true,
-                message: "No reminders to send",
-                performance: {
-                    dbTime,
-                    totalTime: Date.now() - apiStart,
-                },
-            };
+        if (!followUps.length) {
+            return { success: true, message: "No reminders" };
         }
 
-        let sentIds = [];
+        let reminderSentIds = new Set(); // ✅ prevent duplicates
         let failed = [];
 
-        const BATCH_SIZE = 5;
-        const loopStart = Date.now();
+        // ✅ Track numbers to avoid spamming same number
+        const processedPhones = new Set();
 
-        for (let i = 0; i < followUps.length; i += BATCH_SIZE) {
-            const batch = followUps.slice(i, i + BATCH_SIZE);
+        for (const item of followUps) {
+            const email = item?.patientDetails?.email;
+            const phone = item?.patientDetails?.phone;
 
-            await Promise.all(
-                batch.map(async (item) => {
-                    const emailStart = Date.now();
+            const name = item.patientDetails.name;
+            const doctor = item.doctor.name;
+            const date = item.appointment.date;
+            const time = item.appointment.timeSlot;
 
-                    try {
-                        const email = item?.patientDetails?.email;
-                        if (!email) return;
+            let sent = false;
 
-                        const html = followUpReminderTemplate({
-                            name: item.patientDetails.name,
-                            doctor: item.doctor.name,
-                            date: item.appointment.date,
-                            time: item.appointment.timeSlot,
-                        });
+            // =========================
+            // 📧 EMAIL
+            // =========================
+            try {
+                if (email) {
+                    const html = followUpReminderTemplate({
+                        name,
+                        doctor,
+                        date,
+                        time,
+                    });
 
-                        await sendEmail({
-                            to: email,
-                            subject: "Appointment Reminder - Tomorrow",
-                            html,
-                        });
+                    await sendEmail({
+                        to: email,
+                        subject: "Appointment Reminder - Tomorrow",
+                        html,
+                    });
 
-                        sentIds.push(item._id);
+                    sent = true;
+                    console.log(`📧 Email sent to ${email}`);
+                }
+            } catch (err) {
+                failed.push({
+                    type: "email",
+                    id: item._id,
+                    error: err.message,
+                });
+            }
 
-                        console.log(
-                            `✅ ${email} | ${Date.now() - emailStart} ms`
-                        );
+            // =========================
+            // 📱 WHATSAPP (SAFE MODE)
+            // =========================
+            try {
+                if (phone) {
+                    let formattedPhone = String(phone).replace(/\D/g, "");
 
-                    } catch (err) {
-                        failed.push({
-                            id: item._id,
-                            email: item?.patientDetails?.email,
-                            error: err.message,
-                        });
-
-                        console.error(
-                            `❌ ${item?.patientDetails?.email} | ${err.message}`
-                        );
+                    if (!formattedPhone.startsWith("91")) {
+                        formattedPhone = "91" + formattedPhone;
                     }
-                })
-            );
+
+                    // ✅ Avoid sending multiple times to same number
+                    if (!processedPhones.has(formattedPhone)) {
+                        const res = await fetch(
+                            `${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`,
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    to: formattedPhone,
+                                    template: "appointment_reminder",
+                                    params: [
+                                        name,
+                                        doctor,
+                                        new Date(date).toLocaleDateString("en-IN"),
+                                        time,
+                                    ],
+                                }),
+                            }
+                        );
+
+                        const data = await res.json();
+
+                        if (!data.success) throw new Error(data.message);
+
+                        processedPhones.add(formattedPhone); // ✅ mark used
+                        sent = true;
+
+                        console.log(`📱 WA sent to ${formattedPhone}`);
+
+                        // ⏳ Delay (VERY IMPORTANT)
+                        await new Promise((res) => setTimeout(res, 500));
+                    }
+                }
+            } catch (err) {
+                failed.push({
+                    type: "whatsapp",
+                    id: item._id,
+                    error: err.message,
+                });
+            }
+
+            // ✅ Mark reminder if ANY worked
+            if (sent) {
+                reminderSentIds.add(item._id);
+            }
         }
 
-        const loopTime = Date.now() - loopStart;
-
-        // 🔥 Bulk Update
-        const updateStart = Date.now();
-
-        if (sentIds.length > 0) {
+        // =========================
+        // ✅ UPDATE DB ONCE
+        // =========================
+        if (reminderSentIds.size > 0) {
             await FollowUp.updateMany(
-                { _id: { $in: sentIds } },
-                { $set: { "notifications.reminderSent": true } }
+                { _id: { $in: Array.from(reminderSentIds) } },
+                {
+                    $set: {
+                        "notifications.reminderSent": true,
+                        "notifications.reminderSentAt": new Date(),
+                    },
+                }
             );
         }
 
-        const updateTime = Date.now() - updateStart;
-        const totalTime = Date.now() - apiStart;
-
-        console.log("=================================");
-        console.log(`🚀 API DONE`);
-        console.log(`📊 Total: ${followUps.length}`);
-        console.log(`✅ Sent: ${sentIds.length}`);
-        console.log(`❌ Failed: ${failed.length}`);
-        console.log(`⏱ DB: ${dbTime} ms`);
-        console.log(`⏱ Email: ${loopTime} ms`);
-        console.log(`⏱ Update: ${updateTime} ms`);
-        console.log(`⚡ Total: ${totalTime} ms`);
-        console.log("=================================");
+        // console.log("=================================");
+        // console.log(`📊 Total: ${followUps.length}`);
+        // console.log(`✅ Reminder Sent: ${reminderSentIds.size}`);
+        // console.log(`❌ Failed: ${failed.length}`);
+        // console.log("=================================");
 
         return {
             success: true,
             total: followUps.length,
-            sent: sentIds.length,
-            failed: failed.length,
-            failedDetails: failed, // 🔥 useful for debugging
-            performance: {
-                dbTime,
-                loopTime,
-                updateTime,
-                totalTime,
-            },
+            reminderSent: reminderSentIds.size,
+            failed,
         };
 
     } catch (err) {
-        const totalTime = Date.now() - apiStart;
-
-        console.error("🔥 API ERROR:", err);
+        console.error("🔥 ERROR:", err);
 
         return {
             success: false,
             error: err.message,
-            totalTime,
         };
     }
 }

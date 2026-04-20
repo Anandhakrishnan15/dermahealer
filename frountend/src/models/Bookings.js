@@ -42,7 +42,10 @@ const BookingSchema = new mongoose.Schema(
             default: false,
             index: true,
         },
-
+        whatsappSent: {
+            type: Boolean,
+            default: false,
+        },
         // 🧾 Transaction details
         paymentInfo: {
             txnId: { type: String, default: "" },

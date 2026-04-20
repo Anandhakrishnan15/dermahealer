@@ -77,6 +77,7 @@ export async function POST(req) {
         await connectDB();
 
         // 🔥 SUCCESS CASE
+        // 🔥 SUCCESS CASE
         if (result?.resultStatus === "TXN_SUCCESS") {
             const updated = await Bookings.findOneAndUpdate(
                 { orderId },
@@ -95,7 +96,6 @@ export async function POST(req) {
                 { new: true }
             );
 
-            // ❗ booking not found safety
             if (!updated) {
                 return Response.json(
                     { success: false, message: "Booking not found" },
@@ -103,7 +103,9 @@ export async function POST(req) {
                 );
             }
 
-            // 📧 SEND EMAIL (ONLY ONCE)
+            // =========================
+            // 📧 EMAIL (already yours)
+            // =========================
             if (updated.email && !updated.emailSent) {
                 try {
                     const emailRes = await fetch(
@@ -130,18 +132,54 @@ export async function POST(req) {
                             { orderId },
                             { $set: { emailSent: true } }
                         );
-                    } else {
-                        console.error("❌ Email API failed");
                     }
                 } catch (err) {
-                    console.error("❌ Email API error:", err);
+                    console.error("❌ Email error:", err);
+                }
+            }
+
+            // =========================
+            // 📲 WHATSAPP (NEW)
+            // =========================
+            if (updated.phone && !updated.whatsappSent) {
+                try {
+                    const waRes = await fetch(
+                        `${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                to: updated.phone,
+                                template: "booking_confirmation_2",
+                                params: [
+                                    updated.name || "Customer",
+                                    updated.date || "",
+                                    updated.time || "",
+                                    updated.service || "Consultation",
+                                ],
+                            }),
+                        }
+                    );
+
+                    if (waRes.ok) {
+                        await Bookings.updateOne(
+                            { orderId },
+                            { $set: { whatsappSent: true } }
+                        );
+                    } else {
+                        console.error("❌ WhatsApp API failed");
+                    }
+                } catch (err) {
+                    console.error("❌ WhatsApp error:", err);
                 }
             }
 
             return Response.json({
                 success: true,
                 status: "SUCCESS",
-                message: "Payment verified & email sent",
+                message: "Payment verified, email & WhatsApp sent",
                 booking: updated,
             });
         }

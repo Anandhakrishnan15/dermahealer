@@ -39,13 +39,21 @@ export async function POST(req) {
                 paidAt: body.payment?.isPaid ? new Date() : null,
             },
             status: "scheduled",
-            notifications: { emailSent: false, reminderSent: false, smsSent: false },
+            notifications: {
+                emailSent: false,
+                reminderSent: false,
+                smsSent: false,
+                whatsappSent: false // ✅ add this
+            },
             createdBy: user._id,
         });
 
-        // ✅ Send confirmation email
+        // =========================
+        // 📧 EMAIL
+        // =========================
         if (body.email) {
             const advanceFee = doctorAdvanceFees[body.doctor] || 0;
+
             const html = followUpConfirmationTemplate({
                 name: body.name,
                 doctor: body.doctor,
@@ -54,10 +62,51 @@ export async function POST(req) {
                 advanceFee
             });
 
-            await sendEmail({ to: body.email, subject: "Follow-Up Confirmation", html });
+            await sendEmail({
+                to: body.email,
+                subject: "Follow-Up Confirmation",
+                html
+            });
 
             followUp.notifications.emailSent = true;
             await followUp.save();
+        }
+
+        // =========================
+        // 📲 WHATSAPP (NEW)
+        // =========================
+        if (body.phone && !followUp.notifications.whatsappSent) {
+            try {
+                const waRes = await fetch(
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            to: body.phone,
+                            template: "followup_confirmation", // 👈 your template name
+                            // params: [
+                            //     body.name || "Customer",
+                            //     body.date,
+                            //     body.time,
+                            //     body.doctor || "Doctor",
+                            // ],
+                        }),
+                    }
+                );
+
+                if (waRes.ok) {
+                    followUp.notifications.whatsappSent = true;
+                    await followUp.save();
+                } else {
+                    console.error("❌ WhatsApp API failed");
+                }
+
+            } catch (err) {
+                console.error("❌ WhatsApp error:", err);
+            }
         }
 
         return Response.json({ success: true, data: followUp });
@@ -122,29 +171,76 @@ export async function PATCH(req) {
 
         const updated = await FollowUp.findByIdAndUpdate(id, updateData, { new: true });
 
-        // ✅ Only send email if DATE or TIME changed
         const isDateOrTimeUpdated = date || time;
 
-        if (isDateOrTimeUpdated && updated.patientDetails.email) {
+        if (isDateOrTimeUpdated) {
+
             const advanceFee = doctorAdvanceFees[updated.doctor.name] || 0;
 
-            const html = followUpConfirmationTemplate({
-                name: updated.patientDetails.name,
-                doctor: updated.doctor.name,
-                date: updated.appointment.date,
-                time: updated.appointment.timeSlot,
-                advanceFee,
-                status: updated.status,
-                isUpdate: true,
-            });
+            // =========================
+            // 📧 EMAIL
+            // =========================
+            if (updated.patientDetails.email) {
+                const html = followUpConfirmationTemplate({
+                    name: updated.patientDetails.name,
+                    doctor: updated.doctor.name,
+                    date: updated.appointment.date,
+                    time: updated.appointment.timeSlot,
+                    advanceFee,
+                    status: updated.status,
+                    isUpdate: true,
+                });
 
-            await sendEmail({
-                to: updated.patientDetails.email,
-                subject: "Follow-Up Schedule Updated",
-                html,
-            });
+                await sendEmail({
+                    to: updated.patientDetails.email,
+                    subject: "Follow-Up Schedule Updated",
+                    html,
+                });
 
-            updated.notifications.emailSent = true;
+                updated.notifications.emailSent = true;
+            }
+
+            // =========================
+            // 📲 WHATSAPP TEMPLATE
+            // =========================
+            if (updated.patientDetails.phone) {
+                try {
+                    const phone = String(updated.patientDetails.phone).replace(/\D/g, "");
+
+                    const waRes = await fetch(
+                        `${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                to: phone,
+                                template: "booking_confirmation", // ✅ correct template
+                                params: [
+                                    updated.patientDetails.name || "Customer",
+                                    updated.doctor.name || "Doctor",
+                                    new Date(updated.appointment.date).toDateString(),
+                                    updated.appointment.timeSlot,
+                                ],
+                            }),
+                        }
+                    );
+
+                    const waData = await waRes.json();
+
+                    if (waRes.ok && !waData.error) {
+                        updated.notifications.whatsappSent = true;
+                    } else {
+                        console.error("❌ WhatsApp failed:", waData);
+                    }
+
+                } catch (err) {
+                    console.error("❌ WhatsApp error:", err);
+                }
+            }
+
+            // ✅ Save once
             await updated.save();
         }
 

@@ -44,6 +44,7 @@ const FollowUpSchema = new mongoose.Schema(
         notifications: {
             emailSent: { type: Boolean, default: false },      // confirmation email
             reminderSent: { type: Boolean, default: false },   // 1-day-before reminder
+            whatsappSent: { type: Boolean, default: false },
             smsSent: { type: Boolean, default: false },        // optional SMS
         },
 
