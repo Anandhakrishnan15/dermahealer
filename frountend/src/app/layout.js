@@ -137,6 +137,7 @@ export default function RootLayout({ children }) {
         <GoogleAnalytics gaId={process.env.GA_ID} />
         
         <meta name="apple-mobile-web-app-title" content="Derma Healer" />
+        <meta name="facebook-domain-verification" content="9pj8nclpd6mga7tm1xndaapkdg324z" />
         {/* <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" /> */}
       </head>
       <body
