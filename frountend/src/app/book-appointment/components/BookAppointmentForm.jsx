@@ -55,7 +55,7 @@ export default function BookAppointmentForm() {
           return;
         }
 
-        const sdkUrl = `https://secure.paytmpayments.com/merchantpgpui/checkoutjs/merchants/${data.mid}.js`;
+        const sdkUrl = `https://securestage.paytmpayments.com/merchantpgpui/checkoutjs/merchants/${data.mid}.js`;
 
         if (document.querySelector(`script[src="${sdkUrl}"]`)) {
           setPaytmReady(Boolean(window.Paytm?.CheckoutJS));

@@ -87,56 +87,56 @@ export async function sendRemindersJob() {
             // =========================
             // 📱 WHATSAPP (SAFE MODE)
             // =========================
-            try {
-                if (phone) {
-                    let formattedPhone = String(phone).replace(/\D/g, "");
+            // try {
+            //     if (phone) {
+            //         let formattedPhone = String(phone).replace(/\D/g, "");
 
-                    if (!formattedPhone.startsWith("91")) {
-                        formattedPhone = "91" + formattedPhone;
-                    }
+            //         if (!formattedPhone.startsWith("91")) {
+            //             formattedPhone = "91" + formattedPhone;
+            //         }
 
-                    // ✅ Avoid sending multiple times to same number
-                    if (!processedPhones.has(formattedPhone)) {
-                        const res = await fetch(
-                            `${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`,
-                            {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                    to: formattedPhone,
-                                    template: "appointment_reminder",
-                                    params: [
-                                        name,
-                                        doctor,
-                                        new Date(date).toLocaleDateString("en-IN"),
-                                        time,
-                                    ],
-                                }),
-                            }
-                        );
+            //         // ✅ Avoid sending multiple times to same number
+            //         if (!processedPhones.has(formattedPhone)) {
+            //             const res = await fetch(
+            //                 `${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`,
+            //                 {
+            //                     method: "POST",
+            //                     headers: {
+            //                         "Content-Type": "application/json",
+            //                     },
+            //                     body: JSON.stringify({
+            //                         to: formattedPhone,
+            //                         template: "appointment_reminder",
+            //                         params: [
+            //                             name,
+            //                             doctor,
+            //                             new Date(date).toLocaleDateString("en-IN"),
+            //                             time,
+            //                         ],
+            //                     }),
+            //                 }
+            //             );
 
-                        const data = await res.json();
+            //             const data = await res.json();
 
-                        if (!data.success) throw new Error(data.message);
+            //             if (!data.success) throw new Error(data.message);
 
-                        processedPhones.add(formattedPhone); // ✅ mark used
-                        sent = true;
+            //             processedPhones.add(formattedPhone); // ✅ mark used
+            //             sent = true;
 
-                        console.log(`📱 WA sent to ${formattedPhone}`);
+            //             console.log(`📱 WA sent to ${formattedPhone}`);
 
-                        // ⏳ Delay (VERY IMPORTANT)
-                        await new Promise((res) => setTimeout(res, 500));
-                    }
-                }
-            } catch (err) {
-                failed.push({
-                    type: "whatsapp",
-                    id: item._id,
-                    error: err.message,
-                });
-            }
+            //             // ⏳ Delay (VERY IMPORTANT)
+            //             await new Promise((res) => setTimeout(res, 500));
+            //         }
+            //     }
+            // } catch (err) {
+            //     failed.push({
+            //         type: "whatsapp",
+            //         id: item._id,
+            //         error: err.message,
+            //     });
+            // }
 
             // ✅ Mark reminder if ANY worked
             if (sent) {

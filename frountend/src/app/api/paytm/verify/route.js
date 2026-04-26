@@ -141,45 +141,45 @@ export async function POST(req) {
             // =========================
             // 📲 WHATSAPP (NEW)
             // =========================
-            if (updated.phone && !updated.whatsappSent) {
-                try {
-                    const waRes = await fetch(
-                        `${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                to: updated.phone,
-                                template: "booking_confirmation_2",
-                                params: [
-                                    updated.name || "Customer",
-                                    updated.date || "",
-                                    updated.time || "",
-                                    updated.service || "Consultation",
-                                ],
-                            }),
-                        }
-                    );
+            // if (updated.phone && !updated.whatsappSent) {
+            //     try {
+            //         const waRes = await fetch(
+            //             `${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`,
+            //             {
+            //                 method: "POST",
+            //                 headers: {
+            //                     "Content-Type": "application/json",
+            //                 },
+            //                 body: JSON.stringify({
+            //                     to: updated.phone,
+            //                     template: "booking_confirmation_2",
+            //                     params: [
+            //                         updated.name || "Customer",
+            //                         updated.date || "",
+            //                         updated.time || "",
+            //                         updated.service || "Consultation",
+            //                     ],
+            //                 }),
+            //             }
+            //         );
 
-                    if (waRes.ok) {
-                        await Bookings.updateOne(
-                            { orderId },
-                            { $set: { whatsappSent: true } }
-                        );
-                    } else {
-                        console.error("❌ WhatsApp API failed");
-                    }
-                } catch (err) {
-                    console.error("❌ WhatsApp error:", err);
-                }
-            }
+            //         if (waRes.ok) {
+            //             await Bookings.updateOne(
+            //                 { orderId },
+            //                 { $set: { whatsappSent: true } }
+            //             );
+            //         } else {
+            //             console.error("❌ WhatsApp API failed");
+            //         }
+            //     } catch (err) {
+            //         console.error("❌ WhatsApp error:", err);
+            //     }
+            // }
 
             return Response.json({
                 success: true,
                 status: "SUCCESS",
-                message: "Payment verified, email & WhatsApp sent",
+                message: "Payment verified, email sent",
                 booking: updated,
             });
         }

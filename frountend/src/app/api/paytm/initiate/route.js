@@ -49,7 +49,7 @@ export async function POST(req) {
         // Await HTTPS request properly
         const paytmResponse = await new Promise((resolve, reject) => {
             const options = {
-                hostname: "secure.paytmpayments.com",
+                hostname: "securestage.paytmpayments.com",
                 port: 443,
                 path: `/theia/api/v1/initiateTransaction?mid=${mid}&orderId=${orderId}`,
                 method: "POST",
