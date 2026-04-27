@@ -18,7 +18,7 @@ export async function POST(req) {
                 mid,
                 websiteName: "DEFAULT",
                 orderId,
-                // callbackUrl: `https://securestage.paytmpayments.com/theia/paytmCallback?ORDER_ID=${orderId}`,
+                // callbackUrl: `https://secure.paytmpayments.com/theia/paytmCallback?ORDER_ID=${orderId}`,
                 callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/paytm/callback`,
                 txnAmount: {
                     value: amount.toFixed(2),
@@ -49,7 +49,7 @@ export async function POST(req) {
         // Await HTTPS request properly
         const paytmResponse = await new Promise((resolve, reject) => {
             const options = {
-                hostname: "securestage.paytmpayments.com",
+                hostname: "secure.paytmpayments.com",
                 port: 443,
                 path: `/theia/api/v1/initiateTransaction?mid=${mid}&orderId=${orderId}`,
                 method: "POST",
