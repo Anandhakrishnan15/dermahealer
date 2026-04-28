@@ -14,7 +14,7 @@ export async function POST(req) {
 
         // ✅ Fetch only not exported bookings
         const bookings = await Bookings.find({
-            paid: true,
+            // paid: true,
             exportedToSheet: false
         }).sort({ createdAt: 1 }).lean();
 
@@ -35,7 +35,7 @@ export async function POST(req) {
             b.date,
             b.time,
             b.amount,
-            "YES",
+            b.paid ? "PAID" : "UNPAID",
             b.paymentInfo?.txnId || "",
             b.paymentInfo?.bankName || "",
             b.paymentInfo?.paymentMode || "",
@@ -53,8 +53,9 @@ export async function POST(req) {
         // ✅ Export to sheet
         await sheets.spreadsheets.values.append({
             spreadsheetId: process.env.GOOGLE_SHEET_ID,
-            range: "Sheet1!A:M",
-            valueInputOption: "USER_ENTERED",
+            range: "Sheet1",
+            valueInputOption: "USER_ENTERED", 
+            insertDataOption: "INSERT_ROWS",
             requestBody: {
                 values: sheetData
             }
