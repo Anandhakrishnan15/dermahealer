@@ -3,12 +3,10 @@ import Bookings from "@/models/Bookings";
 import Holiday from "@/models/Holiday";
 
 export async function POST(req) {
-    console.time("Availability API Time"); // start timer
+    console.time("Availability API Time");
     await connectDB();
 
     const { doctor, dates } = await req.json();
-
-    let result = {};
 
     const timings = [
         "08:30-09:30",
@@ -17,11 +15,18 @@ export async function POST(req) {
         "12:30-01:30"
     ];
 
-    // Fetch holidays
+    const MAX_PER_SLOT = 5;
+    const MAX_PER_DAY = timings.length * MAX_PER_SLOT;
+
+    let result = {};
+
+    // ✅ Fetch holidays
     const holidayDocs = await Holiday.find();
 
     const commonHolidayDates = new Set(
-        holidayDocs.filter(h => h.type === "common").map(h => h.date)
+        holidayDocs
+            .filter(h => h.type === "common")
+            .map(h => h.date)
     );
 
     const doctorHolidayDates = new Set(
@@ -30,18 +35,17 @@ export async function POST(req) {
             .map(h => h.date)
     );
 
-    // 🔥 Fetch ALL bookings in ONE query
+    // ✅ Fetch bookings in one query
     const bookings = await Bookings.find({
         doctor,
         date: { $in: dates },
         paid: true
     });
 
-    // Group bookings by date and time
+    // ✅ Group bookings
     const bookingMap = {};
 
     bookings.forEach(b => {
-
         if (!bookingMap[b.date]) {
             bookingMap[b.date] = {
                 total: 0,
@@ -53,14 +57,13 @@ export async function POST(req) {
 
         bookingMap[b.date].timings[b.time] =
             (bookingMap[b.date].timings[b.time] || 0) + 1;
-
     });
 
-    // Build result
+    // ✅ Build response
     for (const d of dates) {
 
+        // 🚫 Holiday check
         if (commonHolidayDates.has(d) || doctorHolidayDates.has(d)) {
-
             result[d] = {
                 totalRemaining: 0,
                 timings: {}
@@ -77,8 +80,7 @@ export async function POST(req) {
         }
 
         const totalCount = bookingMap[d]?.total || 0;
-
-        const totalRemaining = Math.max(20 - totalCount, 0);
+        const totalRemaining = Math.max(MAX_PER_DAY - totalCount, 0);
 
         result[d] = {
             totalRemaining,
@@ -86,20 +88,17 @@ export async function POST(req) {
         };
 
         timings.forEach(t => {
-
             const timingCount = bookingMap[d]?.timings[t] || 0;
-
-            const remaining = Math.max(2 - timingCount, 0);
+            const remaining = Math.max(MAX_PER_SLOT - timingCount, 0);
 
             result[d].timings[t] = {
                 remaining,
                 available: remaining > 0 && totalRemaining > 0
             };
-
         });
-
     }
-    console.timeEnd("Availability API Time"); // end timer
-    return Response.json({ availability: result });
 
+    console.timeEnd("Availability API Time");
+
+    return Response.json({ availability: result });
 }
