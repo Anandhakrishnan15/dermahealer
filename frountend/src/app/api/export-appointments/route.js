@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET(req) {
     try {
         // 1. Validate secret exists
-        const AUTH_KEY = process.env.MONGODB_URI;
+        const AUTH_KEY = process.env.CRON_SECRET;
 
         if (!AUTH_KEY) {
             console.error("EXPORT_SECRET missing in env");
