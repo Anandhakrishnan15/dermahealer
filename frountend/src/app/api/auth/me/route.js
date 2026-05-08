@@ -4,15 +4,28 @@ import User from "@/models/User";
 import { authMiddleware } from "@/middleware/auth";
 
 export async function GET(req) {
+
     try {
+
         await connectDB();
 
         const decoded = await authMiddleware(req);
 
-        const user = await User.findById(decoded.id).select("-password");
+        const user = await User.findById(decoded.id)
+            .select("-password");
 
+        // User not found
         if (!user) {
-            return NextResponse.redirect(new URL("/auth/login", req.url));
+
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "User not found",
+                },
+                {
+                    status: 404,
+                }
+            );
         }
 
         const safeUser = {
@@ -23,11 +36,24 @@ export async function GET(req) {
             createdAt: user.createdAt,
         };
 
-        return NextResponse.json({ user: safeUser });
+        return NextResponse.json({
+            success: true,
+            user: safeUser,
+        });
 
     } catch (err) {
+
         console.error("auth/me error:", err.message);
 
-        return NextResponse.redirect(new URL("/auth", req.url));
+
+        return NextResponse.json(
+            {
+                success: false,
+                error: err.message || "Unauthorized",
+            },
+            {
+                status: 401,
+            }
+        );
     }
 }
