@@ -13,6 +13,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useStats } from "@/context/StatsContext";
 import { toast } from "react-toastify";
+import jsPDF from "jspdf";
 
 
 // ---------------------------------------------------------
@@ -52,6 +53,7 @@ export default function AppointmentsPage() {
     const { setTotalAppointments, setTodayAppointments } = useStats();
     const [loadingId, setLoadingId] = useState(null);
     const [actionType, setActionType] = useState(null);
+    const [doctorFilter, setDoctorFilter] = useState("all");
 
     // ---------------------------------------------------------
     // ✅ Fetch bookings (optimized)
@@ -123,7 +125,6 @@ export default function AppointmentsPage() {
     // ✅ Optimized filtering using useMemo
     // ---------------------------------------------------------
     const filteredAppointments = useMemo(() => {
-
         return appointments.filter((appt) => {
 
             const matchesSearch =
@@ -135,45 +136,46 @@ export default function AppointmentsPage() {
             let matchesDate = true;
 
             switch (filter) {
-
                 case "today":
                     matchesDate = isToday(appointmentDate);
                     break;
-
                 case "yesterday":
                     matchesDate = isYesterday(appointmentDate);
                     break;
-
                 case "tomorrow":
                     matchesDate = isTomorrow(appointmentDate);
                     break;
-
                 case "last7":
                     matchesDate = isWithinInterval(appointmentDate, {
                         start: subDays(new Date(), 7),
                         end: new Date(),
                     });
                     break;
-
                 case "custom":
                     matchesDate =
                         selectedDate &&
                         format(appointmentDate, "yyyy-MM-dd") === selectedDate;
                     break;
-
                 case "all":
                 default:
                     matchesDate = true;
                     break;
             }
+
             let matchesPayment = true;
             if (paymentFilter === "paid") matchesPayment = appt.paymentDone;
             if (paymentFilter === "unpaid") matchesPayment = !appt.paymentDone;
 
-            return matchesSearch && matchesDate && matchesPayment;
+            // ✅ NEW: doctor filter
+            let matchesDoctor = true;
+            if (doctorFilter !== "all") {
+                matchesDoctor = appt.doctor === doctorFilter;
+            }
+
+            return matchesSearch && matchesDate && matchesPayment && matchesDoctor;
 
         });
-    }, [appointments, search, filter, selectedDate, paymentFilter]);
+    }, [appointments, search, filter, selectedDate, paymentFilter, doctorFilter]);
 
     const verifyPayment = async (orderId) => {
         try {
@@ -247,7 +249,143 @@ export default function AppointmentsPage() {
             setActionType(null);
         }
     };
+    const downloadTodayPDF = () => {
+        const doc = new jsPDF();
 
+        const todayAppointments = appointments.filter(
+            (appt) => isToday(parseISO(appt.date)) && appt.paymentDone
+        );
+
+        let y = 20;
+
+        // 🟥🟩 HEADER (DermaHealers centered with colors)
+        doc.setFontSize(20);
+        doc.setFont("helvetica", "bold");
+
+        const text1 = "Derma";
+        const text2 = "Healer";
+
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const text1Width = doc.getTextWidth(text1);
+        const text2Width = doc.getTextWidth(text2);
+
+        const totalWidth = text1Width + text2Width;
+        let startX = (pageWidth - totalWidth) / 2;
+
+        // Derma (Red)
+        doc.setTextColor(220, 0, 0);
+        doc.text(text1, startX, y);
+
+        // Healers (Green)
+        doc.setTextColor(0, 150, 0);
+        doc.text(text2, startX + text1Width, y);
+
+        // Reset font + color
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(0, 0, 0);
+
+        // 📄 REPORT TITLE
+        y += 10;
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text("Today’s appointment", 105, y, { align: "center" });
+
+        // Reset
+        doc.setFont("helvetica", "normal");
+
+        // 📅 Date + Time
+        y += 8;
+        doc.setFontSize(10);
+        doc.setTextColor(60, 60, 60);
+        const now = new Date();
+        doc.text(`Date: ${format(now, "dd MMM yyyy")}`, 20, y);
+        doc.text(`Time: ${format(now, "hh:mm a")}`, 150, y);
+
+        // Divider
+        y += 6;
+        doc.setDrawColor(0);
+        doc.line(20, y, 190, y);
+
+        y += 8;
+
+        // 🧾 TABLE HEADER (bold only here)
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 0, 0);
+
+        doc.text("No", 20, y);
+        doc.text("Name", 30, y);
+        doc.text("Phone", 80, y);
+        doc.text("Doctor", 120, y);
+        doc.text("Time", 160, y);
+
+        y += 6;
+        doc.line(20, y, 190, y);
+        y += 6;
+
+        // 🔽 TABLE DATA (normal text)
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(40, 40, 40);
+
+        if (todayAppointments.length === 0) {
+            doc.text("No paid patients today.", 20, y);
+        } else {
+            todayAppointments.forEach((appt, index) => {
+                if (y > 270) {
+                    doc.addPage();
+                    y = 20;
+                }
+
+                doc.text(String(index + 1), 20, y);
+                doc.text(appt.name || "-", 30, y);
+                doc.text(appt.phone || "-", 80, y);
+                doc.text(appt.doctor || "-", 120, y);
+                doc.text(appt.time || "-", 160, y);
+
+                y += 8;
+            });
+        }
+
+        // 👥 TOTAL PATIENT COUNT
+        y += 10;
+        doc.setDrawColor(0);
+        doc.line(20, y, 190, y);
+
+        y += 10;
+
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 0, 0);
+
+        doc.text(`Total Patients: ${todayAppointments.length}`, 20, y);
+
+        // Reset
+        doc.setFont("helvetica", "normal");
+
+        // 📌 FOOTER
+        y += 20;
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+
+        doc.text(
+            "Thank you for choosing Derma Healers",
+            105,
+            y,
+            { align: "center" }
+        );
+
+        y += 6;
+        doc.text(
+            "This is a system-generated report",
+            105,
+            y,
+            { align: "center" }
+        );
+
+        // 📄 File name
+        const fileDate = format(new Date(), "yyyy-MM-dd");
+        doc.save(`dermahealers-paid-${fileDate}.pdf`);
+    };
     // ---------------------------------------------------------
     // UI
     // ---------------------------------------------------------
@@ -280,6 +418,15 @@ export default function AppointmentsPage() {
                 <FilterButton label="Last 7 Days" value="last7" activeFilter={filter} setFilter={setFilter} />
                     <FilterButton label="Paid" value="paid" activeFilter={paymentFilter} setFilter={setPaymentFilter} />
                     <FilterButton label="Unpaid" value="unpaid" activeFilter={paymentFilter} setFilter={setPaymentFilter} />
+                <select
+                    value={doctorFilter}
+                    onChange={(e) => setDoctorFilter(e.target.value)}
+                    className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300"
+                >
+                    <option value="all">All Doctors</option>
+                    <option value="Dr. Neha Rani">Dr. Neha Rani</option>
+                    <option value="Dr. B.K. Sharma">Dr. B.K. Sharma</option>
+                </select>
                
 
 
@@ -313,6 +460,12 @@ export default function AppointmentsPage() {
                     Reload
                 </button>
 
+                <button 
+                    className="px-3 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+                 onClick={downloadTodayPDF}>
+                
+                    Today's Patients PDF
+                </button>
             </div>
 
 
@@ -323,7 +476,6 @@ export default function AppointmentsPage() {
 
                     <thead>
                         <tr className="bg-gradient-to-r from-gray-300 to-gray-200 text-[var(--sbg)]">
-                            <th className="p-3">Order ID</th>
                             <th className="p-3">Name</th>
                             <th className="p-3">Phone</th>
                             <th className="p-3">doctor</th>
@@ -332,6 +484,7 @@ export default function AppointmentsPage() {
                             <th className="p-3">Action</th>
                             <th className="p-3">Date</th>
                             <th className="p-3">Time</th>
+                            <th className="p-3">Order ID</th>
                         </tr>
                     </thead>
 
@@ -365,9 +518,7 @@ export default function AppointmentsPage() {
                                         className="odd:bg-[var(--bg)] even:bg-[var(--form-bg)] hover:bg-[var(--link-hover)] transition-colors"
                                     >
 
-                                        <td className="p-3 font-medium text-gray-700">
-                                            {appt.id}
-                                        </td>
+                                        
 
                                         <td className="p-3">
                                             {appt.name}
@@ -452,6 +603,9 @@ export default function AppointmentsPage() {
                                         </td>
                                         <td className="p-3">
                                             {appt.time}
+                                        </td>
+                                        <td className="p-3 font-medium text-gray-700">
+                                            {appt.id}
                                         </td>
 
                                     </motion.tr>
