@@ -1,11 +1,11 @@
 // utils/emailTemplates.js
 
 export function followUpConfirmationTemplate({ name, doctor, date, time, advanceFee, status, isUpdate = false }) {
-  const advanceMessage = advanceFee
-    ? `<p style="color:#b45309; font-weight:bold; margin-top:10px;">
-             This amount is the advance booking fee. Please pay ₹${advanceFee} on arrival at the clinic.
-           </p>`
-    : "";
+  // const advanceMessage = advanceFee
+  //   ? `<p style="color:#b45309; font-weight:bold; margin-top:10px;">
+  //            This amount is the advance booking fee. Please pay ₹${advanceFee} on arrival at the clinic.
+  //          </p>`
+  //   : "";
 
   const header = isUpdate
     ? "Follow-Up Updated 🔄"
@@ -36,7 +36,6 @@ export function followUpConfirmationTemplate({ name, doctor, date, time, advance
         </table>
 
         ${statusMessage}
-        ${advanceMessage}
 
         <h3>Important Instructions</h3>
         <ul>
