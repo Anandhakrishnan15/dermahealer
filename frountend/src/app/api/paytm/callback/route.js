@@ -51,28 +51,29 @@ export async function POST(req) {
             );
 
             // ✅ 🔥 Call WhatsApp API
-            // if (booking?.phone) {
-            //     try {
-            //         await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`, {
-            //             method: "POST",
-            //             headers: {
-            //                 "Content-Type": "application/json",
-            //             },
-            //             body: JSON.stringify({
-            //                 to: booking.phone,
-            //                 template: "booking_confirmation_2",
-            //                 params: [
-            //                     booking.name || "Customer",
-            //                     booking.date || "",
-            //                     booking.time || "",
-            //                     booking.service || "Consultation",
-            //                 ],
-            //             }),
-            //         });
-            //     } catch (err) {
-            //         console.error("WhatsApp send failed:", err);
-            //     }
-            // }
+            if (booking?.phone) {
+                try {
+                    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            to: booking.phone,
+                            template: "appointment_confirmed",
+                            params: [
+                                booking.name || "Customer",
+                                booking.doctor,
+                                `${booking.date} at ${booking.time}`,
+                                booking.service || "Consultation",
+                                booking.orderId ||"NILL",
+                            ],
+                        }),
+                    });
+                } catch (err) {
+                    console.error("WhatsApp send failed:", err);
+                }
+            }
 
             return Response.redirect(
                 `${process.env.NEXT_PUBLIC_BASE_URL}/payment-success?orderId=${body.ORDERID}`,

@@ -86,13 +86,15 @@ export async function POST(req) {
                         },
                         body: JSON.stringify({
                             to: body.phone,
-                            template: "followup_confirmation", // 👈 your template name
-                            // params: [
-                            //     body.name || "Customer",
-                            //     body.date,
-                            //     body.time,
-                            //     body.doctor || "Doctor",
-                            // ],
+                            template: "appointment_confirmed ", // 👈 your template name
+                            params: [
+                                body.name || "Customer",
+                                body.doctor,
+                                `${body.date} at ${body.time}`,
+                                body.service || "Consultation",
+                                body.phone || "NILL",
+                            ],
+                            
                         }),
                     }
                 );
@@ -161,21 +163,50 @@ export async function PATCH(req) {
 
         const { id, status, paymentStatus, date, time } = await req.json();
 
+        // 🧠 Get existing data FIRST (important for comparison)
+        const existing = await FollowUp.findById(id);
+        if (!existing) {
+            return Response.json(
+                { success: false, message: "Record not found" },
+                { status: 404 }
+            );
+        }
+
+        // 🧠 Check if date/time actually changed
+        const isDateChanged =
+            date &&
+            new Date(date).toISOString() !==
+            new Date(existing.appointment.date).toISOString();
+
+        const isTimeChanged =
+            time && time !== existing.appointment.timeSlot;
+
+        const isDateOrTimeUpdated = isDateChanged || isTimeChanged;
+
+        // 🛠 Build update object
         const updateData = {};
 
         if (status) updateData.status = status;
-        if (paymentStatus !== undefined)
+
+        if (paymentStatus !== undefined) {
             updateData["payment.isPaid"] = paymentStatus === "paid";
+        }
+
         if (date) updateData["appointment.date"] = new Date(date);
+
         if (time) updateData["appointment.timeSlot"] = time;
 
-        const updated = await FollowUp.findByIdAndUpdate(id, updateData, { new: true });
+        // 🔄 Update DB
+        const updated = await FollowUp.findByIdAndUpdate(id, updateData, {
+            new: true,
+        });
 
-        const isDateOrTimeUpdated = date || time;
-
+        // =========================
+        // 🚨 ONLY send if date/time changed
+        // =========================
         if (isDateOrTimeUpdated) {
-
-            const advanceFee = doctorAdvanceFees[updated.doctor.name] || 0;
+            const advanceFee =
+                doctorAdvanceFees[updated.doctor.name] || 0;
 
             // =========================
             // 📧 EMAIL
@@ -201,11 +232,13 @@ export async function PATCH(req) {
             }
 
             // =========================
-            // 📲 WHATSAPP TEMPLATE
+            // 📲 WHATSAPP
             // =========================
             if (updated.patientDetails.phone) {
                 try {
-                    const phone = String(updated.patientDetails.phone).replace(/\D/g, "");
+                    const phone = String(
+                        updated.patientDetails.phone
+                    ).replace(/\D/g, "");
 
                     const waRes = await fetch(
                         `${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`,
@@ -216,12 +249,14 @@ export async function PATCH(req) {
                             },
                             body: JSON.stringify({
                                 to: phone,
-                                template: "booking_confirmation", // ✅ correct template
+                                template: "followup_schedule_update",
                                 params: [
                                     updated.patientDetails.name || "Customer",
                                     updated.doctor.name || "Doctor",
-                                    new Date(updated.appointment.date).toDateString(),
-                                    updated.appointment.timeSlot,
+                                    new Date(
+                                        updated.appointment.date
+                                    ).toLocaleDateString(),
+                                    updated.appointment.timeSlot || "",
                                 ],
                             }),
                         }
@@ -234,19 +269,20 @@ export async function PATCH(req) {
                     } else {
                         console.error("❌ WhatsApp failed:", waData);
                     }
-
                 } catch (err) {
                     console.error("❌ WhatsApp error:", err);
                 }
             }
 
-            // ✅ Save once
+            // ✅ Save notification flags
             await updated.save();
         }
 
         return Response.json({ success: true, data: updated });
 
     } catch (err) {
+        console.error("PATCH ERROR:", err);
+
         return Response.json(
             { success: false, error: err.message },
             { status: 500 }

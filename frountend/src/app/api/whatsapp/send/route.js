@@ -48,7 +48,7 @@ export async function POST(req) {
                             type: "template",
                             template: {
                                 name: template,
-                                language: { code: "en" },
+                                language: { code: "en_US" },
                                 components: [
                                     {
                                         type: "body",
