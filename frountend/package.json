@@ -17,6 +17,7 @@
     "framer-motion": "^12.23.12",
     "googleapis": "^161.0.0",
     "jsonwebtoken": "^9.0.2",
+    "jspdf": "^4.2.1",
     "lodash": "^4.17.23",
     "lucide-react": "^0.539.0",
     "mongoose": "^8.18.1",
