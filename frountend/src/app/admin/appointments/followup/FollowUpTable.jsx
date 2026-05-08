@@ -60,37 +60,76 @@ export default function FollowUpTable() {
     // }, []);
 
     /* ✅ MARK DONE (⚡ OPTIMISTIC UPDATE) */
-    const markDone = async (id) => {
+    const markDone = async (id, phone, name, date, doctor) => {
         if (loadingId) return;
 
         setLoadingId(id);
 
-        // ⚡ instantly update UI
+        // 🔁 backup for rollback
+        const previousData = [...data];
+
+        // ⚡ optimistic UI update
         setData((prev) =>
             prev.map((item) =>
                 item._id === id ? { ...item, status: "completed" } : item
             )
         );
 
-        const res = await fetch("/api/add-patient/follow-up", {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getToken()}`,
-            },
-            body: JSON.stringify({ id, status: "completed" }),
-        });
+        try {
+            // ✅ 1. Update DB
+            const res = await fetch("/api/add-patient/follow-up", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${getToken()}`,
+                },
+                body: JSON.stringify({ id, status: "completed" }),
+            });
 
-        if (res.ok) {
-            toast.success("Marked as done ✅");
-        } else {
-            toast.error("Failed ❌");
+            if (!res.ok) {
+                throw new Error("DB update failed");
+            }
+            const formattedDate = new Date(date).toLocaleDateString("en-GB");
+            // ✅ 2. Send WhatsApp
+            const waRes = await fetch("/api/whatsapp/send", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    to: phone,
+                    template: "thank_you_visit",
+                    params: [
+                        name || "Customer",
+                        formattedDate
+                    ]
+                })
+            });
 
-            // ❗ rollback if failed
-            fetchData(search);
+            const waData = await waRes.json();
+
+            console.log("WhatsApp Result:", waData);
+
+            // ❗ Check WhatsApp result
+            if (!waRes.ok || waData.failed > 0) {
+                throw new Error(
+                    waData?.failedList?.[0]?.error || "WhatsApp sending failed"
+                );
+            }
+
+            // 🎉 Success
+            toast.success("Marked as done & WhatsApp sent ✅");
+
+        } catch (error) {
+            console.error("Error:", error.message);
+
+            // ❗ rollback UI
+            setData(previousData);
+
+            toast.error(error.message || "Something went wrong ❌");
+        } finally {
+            setLoadingId(null);
         }
-
-        setLoadingId(null);
     };
 
     /* ✅ DELETE (⚡ OPTIMISTIC UPDATE) */
@@ -111,10 +150,10 @@ export default function FollowUpTable() {
         });
 
         if (res.ok) {
-            toast.success("Deleted 🗑️");
+            toast.success("Deleted");
             setShowDelete(false);
         } else {
-            toast.error("Delete failed ❌");
+            toast.error("Delete failed");
 
             // ❗ rollback
             setData(backup);
@@ -127,8 +166,8 @@ export default function FollowUpTable() {
     const total = data.length;
     const completed = data.filter((d) => d.status === "completed").length;
     const scheduled = data.filter((d) => d.status === "scheduled").length;
-    const cancelled = data.filter((d) => d.status === "cancelled").length;
-    const noShow = data.filter((d) => d.status === "no-show").length;
+    // const cancelled = data.filter((d) => d.status === "cancelled").length;
+    // const noShow = data.filter((d) => d.status === "no-show").length;
     const unpaid = data.filter((d) => !d.payment?.isPaid).length;
 
     /* 🎨 STATUS UI */
@@ -274,16 +313,24 @@ export default function FollowUpTable() {
                                         {item.status !== "completed" && item.status !== "done" && (
                                             <button
                                                 disabled={loadingId === item._id || !item.payment?.isPaid}
-                                                onClick={() => markDone(item._id)}
+                                                onClick={() =>
+                                                    markDone(
+                                                        item._id,
+                                                        item.patientDetails?.phone,      // ✅ phone
+                                                        item.patientDetails?.name,       // ✅ name
+                                                        item.appointment?.date,          // ✅ date
+                                                        item.doctor?.name                // ✅ doctor
+                                                    )
+                                                }
                                                 className={`p-2 rounded-lg ${!item.payment?.isPaid
                                                         ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                                                         : "bg-green-500 text-white hover:bg-green-600"
                                                     }`}
                                             >
                                                 {loadingId === item._id ? (
-                                                    <Loader2 size={16} className="animate-spin" />
+                                                    <Loader2 size={16} className="animate-spin"/>
                                                 ) : (
-                                                    <CheckCircle size={16} />
+                                                    <CheckCircle size={16}/>
                                                 )}
                                             </button>
                                         )}
