@@ -12,7 +12,12 @@ import { z } from "zod";
 // ==========================
 const patientSchema = z.object({
     fullName: z.string().min(2, "Name is too short").max(50),
-    email: z.string().email("Invalid email"),
+    email: z
+        .string()
+        .trim()
+        .email("Invalid email format")
+        .optional()
+        .or(z.literal("")),
     phone: z.string().regex(/^[6-9]\d{9}$/, "Invalid Indian phone number"),
     age: z.coerce
         .number({
@@ -28,8 +33,10 @@ const patientSchema = z.object({
         }),
     dob: z.string().min(1, "Date of birth reqd"),
     treatment: z.string().min(2, "Enter treatment"),
-    address: z.string().optional(),
-    notes: z.string().max(300).optional(),
+    // ✅ CRITICAL: Allow empty strings so the sanitizer can turn them into "NIL"
+    address: z.string().trim().optional().or(z.literal("")),
+
+    notes: z.string().trim().max(300).optional().or(z.literal("")),
 });
 const initialForm = {
     fullName: "",
@@ -214,7 +221,7 @@ export default function AddForm() {
                                     placeholder="example@email.com"
                                     className={inputClass("email")}
                                 />
-                                {errors.email && <p className={errorText}>{errors.email}</p>}
+                                {/* {errors.email && <p className={errorText}>{errors.email}</p>} */}
                             </div>
 
                             <div>
