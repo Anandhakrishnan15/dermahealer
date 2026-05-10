@@ -12,14 +12,14 @@ const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
 // ==========================
 const patientSchema = z.object({
     fullName: z.string().min(2, "Name too short").max(50),
-    email: z.string().email("Invalid email"),
+    email: z.string().optional().or(z.literal("")), // Allows ""
     phone: z.string().regex(/^[6-9]\d{9}$/, "Invalid phone number"),
     age: z.coerce.number().min(1).max(120), // ✅ FIXED
     gender: z.enum(["male", "female"]),
     dob: z.string().min(1, "DOB required"),
     treatment: z.string().min(2, "Treatment required"),
-    address: z.string().optional(),
-    notes: z.string().max(300).optional(),
+    address: z.string().optional().or(z.literal("")),
+    notes: z.string().max(300).optional().or(z.literal("")),
 });
 
 // ==========================
@@ -38,9 +38,13 @@ const sanitize = (obj) => {
     const clean = {};
     for (let key in obj) {
         if (typeof obj[key] === "string") {
-            clean[key] = obj[key]
-                .trim()
-                .replace(/[<>$;]/g, "");
+            const trimmedValue = obj[key].trim().replace(/[<>$;]/g, "");
+
+            // If the string is empty after cleaning, set it to "NIL"
+            clean[key] = trimmedValue === "" ? "NIL" : trimmedValue;
+        } else if (obj[key] === null || obj[key] === undefined) {
+            // Handle null or undefined values as NIL as well
+            clean[key] = "NIL";
         } else {
             clean[key] = obj[key];
         }
