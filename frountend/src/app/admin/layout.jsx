@@ -14,7 +14,9 @@ import {
     Repeat,
     FileText,
     ClipboardList,
-    PlusCircle
+    PlusCircle,
+    Plus,
+    MoreVertical,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -28,6 +30,7 @@ export default function AdminLayout({ children }) {
     const { user, logout } = useAuth();
     const router = useRouter();
     const pathname = usePathname(); // ✅ active route detect
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const handleLogout = () => {
         setLoggingOut(true);
@@ -160,24 +163,127 @@ export default function AdminLayout({ children }) {
                         <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2">
                             <Logo large />
                         </div>
-
                         <div className="ml-auto flex items-center gap-3">
-                            {user?.role === "admin" && (
-                                <Link
-                                    href="/admin/add-blog"
-                                    className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                                >
-                                    New Blog
-                                </Link>
-                            )}
 
-                            <button
-                                onClick={handleLogout}
-                                className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-                            >
-                                <LogOut size={18} />
-                                Logout
-                            </button>
+                            {/* DESKTOP BUTTONS */}
+                            <div className="hidden md:flex items-center gap-3">
+
+                                {user?.role === "admin" && (
+                                    <Link
+                                        href="/admin/add-blog"
+                                        className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition"
+                                    >
+                                        New Blog
+                                    </Link>
+                                )}
+
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700 transition"
+                                >
+                                    <LogOut size={18} />
+                                    Logout
+                                </button>
+
+                            </div>
+
+                            {/* MOBILE/TABLET MENU */}
+                            <div className="relative md:hidden">
+
+                                <button
+                                    onClick={() =>
+                                        setMenuOpen((prev) => !prev)
+                                    }
+                                    className="rounded-lg border p-2 hover:bg-[var(--link-hover)] transition"
+                                >
+                                    <MoreVertical size={22} />
+                                </button>
+
+                                <AnimatePresence>
+
+                                    {menuOpen && (
+
+                                        <motion.div
+                                            initial={{
+                                                opacity: 0,
+                                                y: -10,
+                                            }}
+
+                                            animate={{
+                                                opacity: 1,
+                                                y: 0,
+                                            }}
+
+                                            exit={{
+                                                opacity: 0,
+                                                y: -10,
+                                            }}
+
+                                            transition={{
+                                                duration: 0.2,
+                                            }}
+
+                                            className="
+                        absolute right-0 mt-2
+                        w-48 rounded-xl shadow-xl
+                        border z-50
+                        overflow-hidden
+                        bg-[var(--bg)]
+                    "
+                                        >
+
+                                            {user?.role === "admin" && (
+
+                                                <Link
+                                                    href="/admin/add-blog"
+                                                    onClick={() =>
+                                                        setMenuOpen(false)
+                                                    }
+                                                    className="
+                                flex items-center gap-3
+                                px-4 py-3
+                                hover:bg-[var(--link-hover)]
+                                transition
+                            "
+                                                >
+
+                                                    <Plus size={18} />
+
+                                                    <span>
+                                                        New Blog
+                                                    </span>
+
+                                                </Link>
+
+                                            )}
+
+                                            <button
+                                                onClick={() => {
+
+                                                    setMenuOpen(false);
+
+                                                    handleLogout();
+
+                                                }}
+                                                className="w-full flex items-center gap-3 px-4 py-3 text-left transition hover:bg-red-500 hover:text-white"
+                                            >
+
+                                                <LogOut size={18} />
+
+                                                <span>
+                                                    Logout
+                                                </span>
+
+                                            </button>
+
+                                        </motion.div>
+
+                                    )}
+
+                                </AnimatePresence>
+
+                            </div>
+
                         </div>
                     </header>
 
