@@ -60,8 +60,51 @@ export default function ProtectedRoute({ children }) {
 
     if (authorized === null) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                Loading...
+            <div className="flex min-h-screen items-center justify-center bg-[var(--bg)]">
+
+                <div className="flex flex-col items-center gap-4">
+
+                    {/* SPINNER */}
+                    <div className="relative h-16 w-16">
+
+                        {/* OUTER RING */}
+                        <div
+                            className="
+                    absolute inset-0
+                    rounded-full
+                    border-4 border-teal-100
+                "
+                        />
+
+                        {/* SPINNING RING */}
+                        <div
+                            className="
+                    absolute inset-0
+                    rounded-full
+                    border-4 border-transparent
+                    border-t-teal-500
+                    border-r-teal-400
+                    animate-spin
+                "
+                        />
+
+                    </div>
+
+                    {/* TEXT */}
+                    <div className="text-center">
+
+                        <p className="text-lg font-semibold text-teal-600">
+                            Loading
+                        </p>
+
+                        <p className="text-sm text-gray-500">
+                            Please wait a moment...
+                        </p>
+
+                    </div>
+
+                </div>
+
             </div>
         );
     }
