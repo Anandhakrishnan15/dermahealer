@@ -60,7 +60,7 @@ export default function ProtectedRoute({ children }) {
 
     if (authorized === null) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[var(--bg)]">
+            <div className="flex min-h-screen items-center justify-center bg-(--bg)">
 
                 <div className="flex flex-col items-center gap-4">
 
