@@ -54,7 +54,16 @@ export function useAppointments() {
             }));
 
             setAppointments(mapped);
+
             setPagination(data.pagination);
+
+            setTotalAppointments(
+                data.stats.totalAppointments
+            );
+
+            setTodayAppointments(
+                data.stats.todayAppointments
+            );
         } catch (error) {
             console.error("Error loading bookings:", error);
 
@@ -70,26 +79,7 @@ export function useAppointments() {
     useEffect(() => {
         loadBookings();
     }, [loadBookings]);
-    useEffect(() => {
 
-        setTotalAppointments(
-            appointments.length
-        );
-
-        const todayCount =
-            appointments.filter(
-                (a) =>
-                    a.paymentDone &&
-                    isToday(parseISO(a.date))
-            ).length;
-
-        setTodayAppointments(todayCount);
-
-    }, [
-        appointments,
-        setTotalAppointments,
-        setTodayAppointments,
-    ]);
     // ---------------------------------------------------------
     // VERIFY PAYMENT
     // ---------------------------------------------------------
