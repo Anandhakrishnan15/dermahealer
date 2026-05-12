@@ -18,14 +18,18 @@ export function useAppointments() {
         setTodayAppointments,
     } = useStats();
 
+    const [page ,setPage]=useState(1)
+    const [pagination, setPagination] =useState(null)
+    
+
     // ---------------------------------------------------------
     // LOAD BOOKINGS
     // ---------------------------------------------------------
     const loadBookings = useCallback(async () => {
         try {
             setLoading(true);
-
-            const res = await fetch("/api/bookings?limit=30");
+            // const LIMIT = 5
+            const res = await fetch(`/api/bookings?page=${page}&limit=30`)
 
             if (!res.ok) {
                 throw new Error("Failed to fetch");
@@ -50,6 +54,7 @@ export function useAppointments() {
             }));
 
             setAppointments(mapped);
+            setPagination(data.pagination);
         } catch (error) {
             console.error("Error loading bookings:", error);
 
@@ -57,7 +62,7 @@ export function useAppointments() {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [page]);
 
     // ---------------------------------------------------------
     // INITIAL LOAD
@@ -179,17 +184,14 @@ export function useAppointments() {
 
     return {
         appointments,
-
         loading,
-
         loadingId,
-
         actionType,
-
+        pagination,
+        page,
+        setPage,
         reloadBookings: loadBookings,
-
         verifyPayment,
-
         markVisited,
     };
 }

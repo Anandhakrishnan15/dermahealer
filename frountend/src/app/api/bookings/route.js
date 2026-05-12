@@ -9,17 +9,51 @@ async function handleError(error) {
     );
 }
 
-export async function GET() {
+export async function GET(req) {
     try {
         await connectDB();
 
+        const { searchParams } = new URL(req.url);
+
+        const page =
+            Number(searchParams.get("page")) || 1;
+
+        const limit =
+            Number(searchParams.get("limit")) || 10;
+
+        const skip = (page - 1) * limit;
+
         const bookings = await Bookings.find()
             .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
             .lean();
 
-        return Response.json({ success: true, bookings });
+        const totalBookings =
+            await Bookings.countDocuments();
+
+        const totalPages = Math.ceil(
+            totalBookings / limit
+        );
+
+        return Response.json({
+            success: true,
+            bookings,
+
+            pagination: {
+                page,
+                limit,
+                totalBookings,
+                totalPages,
+                hasNextPage: page < totalPages,
+                hasPrevPage: page > 1,
+            },
+        });
+
     } catch (error) {
+
         return handleError(error);
+
     }
 }
 

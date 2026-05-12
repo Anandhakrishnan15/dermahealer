@@ -9,13 +9,15 @@ import { useAppointments } from "./hooks/useAppointments";
 
 import { filterAppointments } from "./utils/filters";
 import { downloadTodayPDF } from "./utils/pdfGenerator";
-import { useStats } from "@/context/StatsContext";
 
 export default function AppointmentsPage() {
 
   const {
     appointments,
     loading,
+    pagination,
+    page,
+    setPage,
     verifyPayment,
     markVisited,
     reloadBookings,
@@ -74,14 +76,20 @@ export default function AppointmentsPage() {
         }
       />
 
-      <AppointmentsTable
-        appointments={filteredAppointments}
-        loading={loading}
-        verifyPayment={verifyPayment}
-        markVisited={markVisited}
-        loadingId={loadingId}
-        actionType={actionType}
-      />
+          <AppointmentsTable
+              appointments={filteredAppointments}
+              loading={loading}
+
+              verifyPayment={verifyPayment}
+              markVisited={markVisited}
+
+              loadingId={loadingId}
+              actionType={actionType}
+
+              pagination={pagination}
+              setPage={setPage}
+          />
+          
 
     </div>
   );
