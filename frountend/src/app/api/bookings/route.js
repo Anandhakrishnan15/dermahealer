@@ -23,30 +23,63 @@ export async function GET(req) {
 
         const skip = (page - 1) * limit;
 
+        // -------------------------------------------------
+        // GET PAGINATED BOOKINGS
+        // -------------------------------------------------
         const bookings = await Bookings.find()
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
             .lean();
 
+        // -------------------------------------------------
+        // TOTAL BOOKINGS COUNT
+        // -------------------------------------------------
         const totalBookings =
             await Bookings.countDocuments();
 
+        // -------------------------------------------------
+        // TODAY APPOINTMENTS COUNT
+        // -------------------------------------------------
+        const today = new Date()
+            .toISOString()
+            .split("T")[0];
+
+        const todayAppointments =
+            await Bookings.countDocuments({
+                paid: true,
+                date: today,
+            });
+
+        // -------------------------------------------------
+        // PAGINATION
+        // -------------------------------------------------
         const totalPages = Math.ceil(
             totalBookings / limit
         );
 
         return Response.json({
             success: true,
+
             bookings,
 
+            stats: {
+                totalAppointments:
+                    totalBookings,
+
+                todayAppointments,
+            },
+
             pagination: {
+                total: totalBookings,
                 page,
                 limit,
-                totalBookings,
                 totalPages,
-                hasNextPage: page < totalPages,
-                hasPrevPage: page > 1,
+                hasNextPage:
+                    page < totalPages,
+
+                hasPrevPage:
+                    page > 1,
             },
         });
 
