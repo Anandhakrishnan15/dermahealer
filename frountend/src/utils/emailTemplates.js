@@ -44,7 +44,7 @@ export function followUpConfirmationTemplate({ name, doctor, date, time, advance
           <li>Follow-up timings may vary slightly based on patient flow.</li>
         </ul>
 
-        <p style="margin-top:24px;">Warm regards,<br/><strong>Derma Healer India</strong><br/>Customer Support Team</p>
+        <p style="margin-top:24px;">Warm regards,<br/><strong>Derma Healer</strong><br/>Customer Support Team</p>
 
         <p style="font-size:12px; color:#777; margin-top:20px;">This is an automated email. Please do not reply.</p>
       </div>
