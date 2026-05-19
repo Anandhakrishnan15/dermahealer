@@ -7,6 +7,7 @@ export default function FollowUpForm({ patient, setShowModal }) {
         name: patient?.fullName || "",
         email: patient?.email,
         phone: patient?.phone || "",
+        treatment: patient?.treatment || "Consulting",
         date: "",
         doctor: "",
         time: "",
@@ -129,7 +130,17 @@ export default function FollowUpForm({ patient, setShowModal }) {
                border-gray-200 
                focus:outline-none"
             />
-
+            {/* Treatment */}
+            <input
+                type="text"
+                name="treatment"
+                value={form.treatment}
+                onChange={handleChange}
+                placeholder="Treatment"
+                className="w-full px-4 py-3 rounded-xl border
+    border-gray-300
+    focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
             <div className="flex flex-wrap gap-3">
 
                 {/* Date */}

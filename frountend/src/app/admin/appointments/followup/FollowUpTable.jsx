@@ -248,6 +248,7 @@ export default function FollowUpTable() {
                             <th className="p-4">Doctor</th>
                             <th className="p-4">Payment</th>
                             <th className="p-4">Date</th>
+                            <th className="p-4">Treatment</th>
                             <th className="p-4">Time</th>
                             <th className="p-4">Status</th>
                             <th className="p-4 text-center">Actions</th>
@@ -281,7 +282,7 @@ export default function FollowUpTable() {
                                             ? new Date(item.appointment.date).toLocaleDateString()
                                             : "-"}
                                     </td>
-
+                                    <td className="p-4">{item.treatment}</td>
                                     <td className="p-4">{item.appointment?.timeSlot}</td>
 
                                     <td className="p-4">

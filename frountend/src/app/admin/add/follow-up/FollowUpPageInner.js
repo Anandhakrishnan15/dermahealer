@@ -251,24 +251,38 @@ export default function FollowUpPageInner() {
             {/* 📝 MODAL */}
             {showModal && selectedPatient && (
                 <div
-                    className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
-                    onClick={() => setShowModal(false)} // 👈 click outside closes
+                    className="fixed inset-0 bg-black/40 backdrop-blur-sm 
+        z-50 overflow-y-auto p-4"
+                    onClick={() => setShowModal(false)}
                 >
                     <div
-                        className="bg-white p-6 rounded-2xl w-full max-w-lg shadow-2xl relative"
-                        onClick={(e) => e.stopPropagation()} // 👈 prevent closing inside
+                        className="min-h-full flex items-center justify-center py-6"
                     >
-                        <button
-                            onClick={() => setShowModal(false)}
-                            className="absolute top-3 right-4 text-lg hover:text-red-500"
+                        <div
+                            className="bg-white w-full max-w-lg rounded-2xl 
+shadow-2xl relative
+max-h-[90vh] overflow-y-auto
+[-ms-overflow-style:none]
+[scrollbar-width:none]
+[&::-webkit-scrollbar]:hidden"
+                            onClick={(e) => e.stopPropagation()}
                         >
-                            ✖
-                        </button>
+                            {/* CLOSE BUTTON */}
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="absolute top-3 right-4 text-lg hover:text-red-500 z-10"
+                            >
+                                ✖
+                            </button>
 
-                        <FollowUpForm
-                            patient={selectedPatient}
-                            setShowModal={setShowModal}
-                        />
+                            {/* CONTENT */}
+                            <div className="p-6">
+                                <FollowUpForm
+                                    patient={selectedPatient}
+                                    setShowModal={setShowModal}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

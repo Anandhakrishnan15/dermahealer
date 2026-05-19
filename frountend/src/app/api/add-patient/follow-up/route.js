@@ -31,6 +31,7 @@ export async function POST(req) {
                 date: new Date(body.date),
                 timeSlot: body.time,
             },
+            treatment: body.treatment || "Consulting",
             payment: {
                 isPaid: body.payment?.isPaid || false,
                 amount: body.payment?.amount || 0,
@@ -91,7 +92,7 @@ export async function POST(req) {
                                 body.name || "Customer",
                                 body.doctor,
                                 `${body.date} at ${body.time}`,
-                                body.service || "Consultation",
+                                body.treatment || "Consultation",
                                 body.phone || "NILL",
                             ],
                             

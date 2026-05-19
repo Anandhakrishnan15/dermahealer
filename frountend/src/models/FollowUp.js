@@ -22,7 +22,10 @@ const FollowUpSchema = new mongoose.Schema(
             date: { type: Date, required: true },
             timeSlot: { type: String, required: true },
         },
-
+        treatment: {
+            type: String,
+            required: true,
+        },
         // ✅ Professional Status System
         status: {
             type: String,
