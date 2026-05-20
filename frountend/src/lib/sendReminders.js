@@ -7,20 +7,34 @@ export async function sendRemindersJob() {
     try {
         await connectDB();
 
-        // ✅ IST Time
-        const now = new Date(
-            new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+        // =========================
+        // ✅ UTC DATE RANGE
+        // =========================
+        const tomorrowStart = new Date();
+        tomorrowStart.setUTCDate(
+            tomorrowStart.getUTCDate() + 1
+        );
+        tomorrowStart.setUTCHours(0, 0, 0, 0);
+
+        const tomorrowEnd = new Date();
+        tomorrowEnd.setUTCDate(
+            tomorrowEnd.getUTCDate() + 1
+        );
+        tomorrowEnd.setUTCHours(
+            23,
+            59,
+            59,
+            999
         );
 
-        const tomorrowStart = new Date(now);
-        tomorrowStart.setDate(now.getDate() + 1);
-        tomorrowStart.setHours(0, 0, 0, 0);
+        console.log("=================================");
+        console.log("📅 Tomorrow Start:", tomorrowStart);
+        console.log("📅 Tomorrow End:", tomorrowEnd);
+        console.log("=================================");
 
-        const tomorrowEnd = new Date(now);
-        tomorrowEnd.setDate(now.getDate() + 1);
-        tomorrowEnd.setHours(23, 59, 59, 999);
-
-        // ✅ Fetch only pending reminders
+        // =========================
+        // ✅ FETCH FOLLOWUPS
+        // =========================
         const followUps = await FollowUp.find({
             "appointment.status": "scheduled",
             "appointment.date": {
@@ -28,163 +42,291 @@ export async function sendRemindersJob() {
                 $lte: tomorrowEnd,
             },
             "notifications.reminderSent": false,
-        })
-            .select("_id patientDetails doctor appointment treatment")
-            .lean();
+        }).lean();
 
         console.log(`📦 Found: ${followUps.length}`);
-        // console.log('============followUps========================');
-        // console.log(followUps); 
-        // console.log('====================================');
 
         if (!followUps.length) {
-            return { success: true, message: "No reminders" };
+            return {
+                success: true,
+                message: "No reminders found",
+            };
         }
 
-        let reminderSentIds = new Set(); // ✅ prevent duplicates
-        let failed = [];
-
-        // ✅ Track numbers to avoid spamming same number
+        // =========================
+        // ✅ TRACKERS
+        // =========================
+        const reminderSentIds = new Set();
         const processedPhones = new Set();
 
+        let failed = [];
+
+        // =========================
+        // ✅ LOOP
+        // =========================
         for (const item of followUps) {
-            const email = item?.patientDetails?.email;
-            const phone = item?.patientDetails?.phone;
-
-            const name = item.patientDetails.name;
-            const doctor = item.doctor.name;
-            const date = item.appointment.date;
-            const time = item.appointment.timeSlot;
-            const treatment = item.treatment;
-
-            let sent = false;
-
-            // =========================
-            // 📧 EMAIL
-            // =========================
             try {
-                if (email) {
-                    const html = followUpReminderTemplate({
-                        name,
-                        doctor,
-                        date,
-                        time,
-                    });
+                const email =
+                    item?.patientDetails?.email?.trim();
 
-                    await sendEmail({
-                        to: email,
-                        subject: "Appointment Reminder - Tomorrow",
-                        html,
-                    });
+                const phone =
+                    item?.patientDetails?.phone;
 
-                    sent = true;
-                    console.log(`📧 Email sent to ${email}`);
-                } else {
-                    console.log(`⚠️ No email for ${name}, skipping email`);
-                }
-            } catch (err) {
-                failed.push({
-                    type: "email",
-                    id: item._id,
-                    error: err.message,
-                });
-            }
+                const name =
+                    item?.patientDetails?.name ||
+                    "Patient";
 
-            // =========================
-            // 📱 WHATSAPP (SAFE MODE)
-            // =========================
-            try {
-                if (phone) {
-                    let formattedPhone = String(phone).replace(/\D/g, "");
+                const doctor =
+                    item?.doctor?.name ||
+                    "Doctor";
 
-                    if (!formattedPhone.startsWith("91")) {
-                        formattedPhone = "91" + formattedPhone;
-                    }
+                const date =
+                    item?.appointment?.date;
 
-                    // ✅ Avoid sending multiple times to same number
-                    if (!processedPhones.has(formattedPhone)) {
-                        const res = await fetch(
-                            `${process.env.BASE_URL}/api/whatsapp/send`,
-                            {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                    to: formattedPhone,
-                                    template: "appointment_reminder",
-                                    params: [
-                                        name,
-                                        doctor,
-                                        new Date(date).toLocaleDateString("en-IN"),
-                                        time,
-                                        treatment
-                                    ],
-                                }),
-                            }
+                const time =
+                    item?.appointment?.timeSlot ||
+                    "";
+
+                const treatment =
+                    item?.appointment?.treatment ||
+                    item?.treatment ||
+                    "";
+
+                let emailSent = false;
+                let whatsappSent = false;
+
+                console.log(
+                    `\n👤 Processing: ${name}`
+                );
+
+                // =========================
+                // 📧 EMAIL
+                // =========================
+                try {
+                    if (
+                        email &&
+                        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                            email
+                        )
+                    ) {
+                        const html =
+                            followUpReminderTemplate({
+                                name,
+                                doctor,
+                                date,
+                                time,
+                            });
+
+                        await sendEmail({
+                            to: email,
+                            subject:
+                                "Appointment Reminder - Tomorrow",
+                            html,
+                        });
+
+                        emailSent = true;
+
+                        console.log(
+                            `📧 Email sent -> ${email}`
                         );
+                    } else {
+                        console.log(
+                            `⚠️ Invalid email for ${name}`
+                        );
+                    }
+                } catch (err) {
+                    console.error(
+                        `❌ Email failed for ${name}:`,
+                        err.message
+                    );
 
-                        const data = await res.json();
+                    failed.push({
+                        type: "email",
+                        id: item._id,
+                        patient: name,
+                        error: err.message,
+                    });
+                }
 
-                        if (data.failed > 0) {
-                            throw new Error(
-                                data.failedList?.[0]?.error || "WhatsApp failed"
+                // =========================
+                // 📱 WHATSAPP
+                // =========================
+                try {
+                    if (phone) {
+                        let formattedPhone =
+                            String(phone).replace(
+                                /\D/g,
+                                ""
                             );
+
+                        if (
+                            !formattedPhone.startsWith(
+                                "91"
+                            )
+                        ) {
+                            formattedPhone =
+                                "91" +
+                                formattedPhone;
                         }
 
-                        processedPhones.add(formattedPhone); // ✅ mark used
-                        sent = true;
+                        if (
+                            formattedPhone.length >=
+                            12 &&
+                            !processedPhones.has(
+                                formattedPhone
+                            )
+                        ) {
+                            const res =
+                                await fetch(
+                                    `${process.env.BASE_URL}/api/whatsapp/send`,
+                                    {
+                                        method:
+                                            "POST",
+                                        headers: {
+                                            "Content-Type":
+                                                "application/json",
+                                        },
+                                        body: JSON.stringify(
+                                            {
+                                                to: formattedPhone,
+                                                template:
+                                                    "appointment_reminder",
+                                                params:
+                                                    [
+                                                        name,
+                                                        doctor,
+                                                        new Date(
+                                                            date
+                                                        ).toLocaleDateString(
+                                                            "en-IN"
+                                                        ),
+                                                        time,
+                                                        treatment,
+                                                    ],
+                                            }
+                                        ),
+                                    }
+                                );
 
-                        console.log(`📱 WA sent to ${formattedPhone}`);
+                            const data =
+                                await res.json();
 
-                        // ⏳ Delay (VERY IMPORTANT)
-                        await new Promise((res) => setTimeout(res, 500));
+                            if (
+                                !res.ok ||
+                                data.failed > 0
+                            ) {
+                                throw new Error(
+                                    data
+                                        ?.failedList?.[0]
+                                        ?.error ||
+                                    "WhatsApp failed"
+                                );
+                            }
+
+                            processedPhones.add(
+                                formattedPhone
+                            );
+
+                            whatsappSent = true;
+
+                            console.log(
+                                `📱 WhatsApp sent -> ${formattedPhone}`
+                            );
+
+                            // small delay
+                            await new Promise(
+                                (res) =>
+                                    setTimeout(
+                                        res,
+                                        500
+                                    )
+                            );
+                        } else {
+                            console.log(
+                                `⚠️ Invalid phone for ${name}`
+                            );
+                        }
                     }
+                } catch (err) {
+                    console.error(
+                        `❌ WhatsApp failed for ${name}:`,
+                        err.message
+                    );
+
+                    failed.push({
+                        type: "whatsapp",
+                        id: item._id,
+                        patient: name,
+                        error: err.message,
+                    });
+                }
+
+                // =========================
+                // ✅ MARK SUCCESS
+                // =========================
+                if (
+                    emailSent ||
+                    whatsappSent
+                ) {
+                    reminderSentIds.add(
+                        item._id
+                    );
                 }
             } catch (err) {
-                failed.push({
-                    type: "whatsapp",
-                    id: item._id,
-                    error: err.message,
-                });
-            }
-
-            // ✅ Mark reminder if ANY worked
-            if (sent) {
-                reminderSentIds.add(item._id);
+                console.error(
+                    "🔥 LOOP ERROR:",
+                    err
+                );
             }
         }
 
         // =========================
-        // ✅ UPDATE DB ONCE
+        // ✅ UPDATE DB
         // =========================
         if (reminderSentIds.size > 0) {
             await FollowUp.updateMany(
-                { _id: { $in: Array.from(reminderSentIds) } },
+                {
+                    _id: {
+                        $in: Array.from(
+                            reminderSentIds
+                        ),
+                    },
+                },
                 {
                     $set: {
-                        "notifications.reminderSent": true,
-                        "notifications.reminderSentAt": new Date(),
+                        "notifications.reminderSent":
+                            true,
+                        "notifications.reminderSentAt":
+                            new Date(),
                     },
                 }
             );
         }
 
         console.log("=================================");
-        console.log(`📊 Total: ${followUps.length}`);
-        console.log(`✅ Reminder Sent: ${reminderSentIds.size}`);
-        console.log(`❌ Failed: ${failed.length}`);
+        console.log(
+            `📊 Total Found: ${followUps.length}`
+        );
+        console.log(
+            `✅ Sent: ${reminderSentIds.size}`
+        );
+        console.log(
+            `❌ Failed: ${failed.length}`
+        );
         console.log("=================================");
 
         return {
             success: true,
             total: followUps.length,
-            reminderSent: reminderSentIds.size,
+            reminderSent:
+                reminderSentIds.size,
             failed,
         };
-
     } catch (err) {
-        console.error("🔥 ERROR:", err);
+        console.error(
+            "🔥 REMINDER JOB ERROR:",
+            err
+        );
 
         return {
             success: false,
