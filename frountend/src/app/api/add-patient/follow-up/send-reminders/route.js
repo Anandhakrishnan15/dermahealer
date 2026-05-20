@@ -5,11 +5,15 @@ export async function GET(req) {
 
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
         return new Response(
-            JSON.stringify({ success: false, message: "Unauthorized" }),
+            JSON.stringify({
+                success: false,
+                message: "Unauthorized",
+            }),
             { status: 401 }
         );
     }
 
     const result = await sendRemindersJob();
+
     return Response.json(result);
 }

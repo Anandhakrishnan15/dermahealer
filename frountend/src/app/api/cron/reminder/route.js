@@ -3,7 +3,7 @@ import { sendRemindersJob } from "@/lib/sendReminders";
 export async function GET(req) {
     if (
         !req.headers.get("x-vercel-cron") &&
-        req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+        req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`
     ) {
         return new Response("Unauthorized", { status: 401 });
     }
