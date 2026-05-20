@@ -27,10 +27,10 @@ export async function sendRemindersJob() {
             999
         );
 
-        console.log("=================================");
-        console.log("📅 Tomorrow Start:", tomorrowStart);
-        console.log("📅 Tomorrow End:", tomorrowEnd);
-        console.log("=================================");
+        // console.log("=================================");
+        // console.log("📅 Tomorrow Start:", tomorrowStart);
+        // console.log("📅 Tomorrow End:", tomorrowEnd);
+        // console.log("=================================");
 
         // =========================
         // ✅ FETCH FOLLOWUPS
@@ -49,7 +49,7 @@ export async function sendRemindersJob() {
             "notifications.reminderSent": false,
         }).lean();
 
-        console.log(`📦 Found: ${followUps.length}`);
+        // console.log(`📦 Found: ${followUps.length}`);
 
         if (!followUps.length) {
             return {
@@ -100,9 +100,9 @@ export async function sendRemindersJob() {
                 let emailSent = false;
                 let whatsappSent = false;
 
-                console.log(
-                    `\n👤 Processing: ${name}`
-                );
+                // console.log(
+                //     `\n👤 Processing: ${name}`
+                // );
 
                 // =========================
                 // 📧 EMAIL
@@ -131,9 +131,9 @@ export async function sendRemindersJob() {
 
                         emailSent = true;
 
-                        console.log(
-                            `📧 Email sent -> ${email}`
-                        );
+                        // console.log(
+                        //     `📧 Email sent -> ${email}`
+                        // );
                     } else {
                         console.log(
                             `⚠️ Invalid email for ${name}`
@@ -234,9 +234,9 @@ export async function sendRemindersJob() {
 
                             whatsappSent = true;
 
-                            console.log(
-                                `📱 WhatsApp sent -> ${formattedPhone}`
-                            );
+                            // console.log(
+                            //     `📱 WhatsApp sent -> ${formattedPhone}`
+                            // );
 
                             // small delay
                             await new Promise(
@@ -308,17 +308,17 @@ export async function sendRemindersJob() {
             );
         }
 
-        console.log("=================================");
-        console.log(
-            `📊 Total Found: ${followUps.length}`
-        );
-        console.log(
-            `✅ Sent: ${reminderSentIds.size}`
-        );
-        console.log(
-            `❌ Failed: ${failed.length}`
-        );
-        console.log("=================================");
+        // console.log("=================================");
+        // console.log(
+        //     `📊 Total Found: ${followUps.length}`
+        // );
+        // console.log(
+        //     `✅ Sent: ${reminderSentIds.size}`
+        // );
+        // console.log(
+        //     `❌ Failed: ${failed.length}`
+        // );
+        // console.log("=================================");
 
         return {
             success: true,
