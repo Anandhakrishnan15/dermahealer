@@ -36,11 +36,16 @@ export async function sendRemindersJob() {
         // ✅ FETCH FOLLOWUPS
         // =========================
         const followUps = await FollowUp.find({
-            "appointment.status": "scheduled",
+            $or: [
+                { status: "scheduled" },
+                { "appointment.status": "scheduled" }
+            ],
+
             "appointment.date": {
                 $gte: tomorrowStart,
                 $lte: tomorrowEnd,
             },
+
             "notifications.reminderSent": false,
         }).lean();
 
