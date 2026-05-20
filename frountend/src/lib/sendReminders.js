@@ -29,10 +29,13 @@ export async function sendRemindersJob() {
             },
             "notifications.reminderSent": false,
         })
-            .select("_id patientDetails doctor appointment")
+            .select("_id patientDetails doctor appointment treatment")
             .lean();
 
-        console.log(`📦 Found: ${followUps.length}`);
+        // console.log(`📦 Found: ${followUps.length}`);
+        // console.log('============followUps========================');
+        // console.log(followUps); 
+        // console.log('====================================');
 
         if (!followUps.length) {
             return { success: true, message: "No reminders" };
@@ -52,6 +55,7 @@ export async function sendRemindersJob() {
             const doctor = item.doctor.name;
             const date = item.appointment.date;
             const time = item.appointment.timeSlot;
+            const treatment = item.treatment;
 
             let sent = false;
 
@@ -112,6 +116,7 @@ export async function sendRemindersJob() {
                                         doctor,
                                         new Date(date).toLocaleDateString("en-IN"),
                                         time,
+                                        treatment
                                     ],
                                 }),
                             }
