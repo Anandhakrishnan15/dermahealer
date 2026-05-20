@@ -22,7 +22,7 @@ export async function sendRemindersJob() {
 
         // ✅ Fetch only pending reminders
         const followUps = await FollowUp.find({
-            status: "scheduled",
+            "appointment.status": "scheduled",
             "appointment.date": {
                 $gte: tomorrowStart,
                 $lte: tomorrowEnd,
@@ -79,6 +79,8 @@ export async function sendRemindersJob() {
 
                     sent = true;
                     console.log(`📧 Email sent to ${email}`);
+                } else {
+                    console.log(`⚠️ No email for ${name}, skipping email`);
                 }
             } catch (err) {
                 failed.push({
@@ -124,7 +126,11 @@ export async function sendRemindersJob() {
 
                         const data = await res.json();
 
-                        if (!data.success) throw new Error(data.message);
+                        if (data.failed > 0) {
+                            throw new Error(
+                                data.failedList?.[0]?.error || "WhatsApp failed"
+                            );
+                        }
 
                         processedPhones.add(formattedPhone); // ✅ mark used
                         sent = true;
