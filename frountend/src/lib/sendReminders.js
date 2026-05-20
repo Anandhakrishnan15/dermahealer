@@ -102,7 +102,7 @@ export async function sendRemindersJob() {
                     // ✅ Avoid sending multiple times to same number
                     if (!processedPhones.has(formattedPhone)) {
                         const res = await fetch(
-                            `${process.env.NEXT_PUBLIC_BASE_URL}/api/whatsapp/send`,
+                            `${process.env.BASE_URL}/api/whatsapp/send`,
                             {
                                 method: "POST",
                                 headers: {
