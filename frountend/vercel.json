@@ -1,12 +1,12 @@
 {
   "crons": [
-     {
+    {
       "path": "/api/cron/reminder",
-      "schedule": "*/5 * * * *"
+      "schedule": "*/10 * * * *"
     },
     {
       "path": "/api/cron",
-      "schedule": "0 0 * * *"  
+      "schedule": "0 0 * * *"
     }
   ]
 }
