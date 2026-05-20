@@ -49,7 +49,7 @@ export async function sendRemindersJob() {
 
         
         const followUps = await FollowUp.find({
-            status: "scheduled",
+            "appointment.status": "scheduled",
             "appointment.date": {
                 $gte: tomorrowStart,
                 $lte: tomorrowEnd,
