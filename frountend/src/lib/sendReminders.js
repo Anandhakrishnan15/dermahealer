@@ -9,18 +9,40 @@ export async function sendRemindersJob() {
 
         console.log("⏰ Reminder Job Started");
 
-        const now = new Date(
-            new Date().toLocaleString("en-US", {
+        const now = new Date();
+
+        // ✅ IST tomorrow date
+        const istTomorrow = new Date(
+            now.toLocaleString("en-US", {
                 timeZone: "Asia/Kolkata",
             })
         );
-        const tomorrowStart = new Date(now);
-        tomorrowStart.setDate(now.getDate() + 1);
-        tomorrowStart.setHours(0, 0, 0, 0);
 
-        const tomorrowEnd = new Date(now);
-        tomorrowEnd.setDate(now.getDate() + 1);
-        tomorrowEnd.setHours(23, 59, 59, 999);
+        istTomorrow.setDate(istTomorrow.getDate() + 1);
+
+        // ✅ Create proper UTC range for DB query
+        const tomorrowStart = new Date(
+            Date.UTC(
+                istTomorrow.getFullYear(),
+                istTomorrow.getMonth(),
+                istTomorrow.getDate(),
+                0,
+                0,
+                0
+            )
+        );
+
+        const tomorrowEnd = new Date(
+            Date.UTC(
+                istTomorrow.getFullYear(),
+                istTomorrow.getMonth(),
+                istTomorrow.getDate(),
+                23,
+                59,
+                59,
+                999
+            )
+        );
 
         console.log("📅 Tomorrow Start:", tomorrowStart);
         console.log("📅 Tomorrow End:", tomorrowEnd);
