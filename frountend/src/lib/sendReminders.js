@@ -9,15 +9,11 @@ export async function sendRemindersJob() {
 
         console.log("⏰ Reminder Job Started");
 
-        // =========================
-        // ✅ IST Time
-        // =========================
         const now = new Date(
             new Date().toLocaleString("en-US", {
                 timeZone: "Asia/Kolkata",
             })
         );
-
         const tomorrowStart = new Date(now);
         tomorrowStart.setDate(now.getDate() + 1);
         tomorrowStart.setHours(0, 0, 0, 0);
@@ -29,9 +25,7 @@ export async function sendRemindersJob() {
         console.log("📅 Tomorrow Start:", tomorrowStart);
         console.log("📅 Tomorrow End:", tomorrowEnd);
 
-        // =========================
-        // ✅ Fetch Pending Reminders
-        // =========================
+        
         const followUps = await FollowUp.find({
             status: "scheduled",
             "appointment.date": {
@@ -58,9 +52,7 @@ export async function sendRemindersJob() {
         // ✅ Prevent duplicate WA to same number
         const processedPhones = new Set();
 
-        // =========================
-        // 🔁 LOOP
-        // =========================
+        
         for (const item of followUps) {
             try {
                 const email = item?.patientDetails?.email;
@@ -80,9 +72,7 @@ export async function sendRemindersJob() {
                 console.log("💉 Treatment:", treatment);
                 console.log("=================================");
 
-                // =========================
-                // 📧 EMAIL
-                // =========================
+              
                 try {
                     if (email) {
                         const html = followUpReminderTemplate({
