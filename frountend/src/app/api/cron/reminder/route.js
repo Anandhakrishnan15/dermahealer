@@ -2,38 +2,20 @@ import { sendRemindersJob } from "@/lib/sendReminders";
 
 export async function GET(req) {
     try {
-        console.log("Cron triggered");
+        const authHeader = req.headers.get("authorization");
 
-        const authHeader =
-            req.headers.get("authorization");
-
-        console.log("AUTH:", authHeader);
-
-        if (
-            authHeader !==
-            `Bearer ${process.env.CRON_SECRET}`
-        ) {
-            console.log("Unauthorized");
-
-            return new Response(
-                "Unauthorized",
-                { status: 401 }
-            );
+        if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+            return new Response("Unauthorized", { status: 401 });
         }
 
-        console.log("Running reminders");
-
-        const result =
-            await sendRemindersJob();
-
-        console.log("Success");
+        const result = await sendRemindersJob();
 
         return Response.json({
             success: true,
             result,
         });
     } catch (error) {
-        console.error("CRON ERROR:", error);
+        console.error("Cron reminder error:", error);
 
         return Response.json(
             {
