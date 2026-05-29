@@ -95,7 +95,16 @@ body {
 .custom-prose p {
   margin: 5px 0 !important;
 }
+.custom-prose a {
+  color: #2563eb;
+  text-decoration: underline;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
 
+.custom-prose a:hover {
+  color: red;
+}
 .custom-prose h2 {
   font-size: 1.25rem;
   color: #14b8a6;
