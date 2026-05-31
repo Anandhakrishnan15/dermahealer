@@ -52,7 +52,7 @@ export async function POST(req) {
             const html = `
                 <h2>Thank You ${booking.name} 🙏</h2>
                 <p>We appreciate your visit.</p>
-                <p>Hope you had a great experience with Dr. ${booking.doctor}.</p>
+                <p>Hope you had a great experience with ${booking.doctor}.</p>
                 <p>Looking forward to seeing you again!</p>
             `;
 
