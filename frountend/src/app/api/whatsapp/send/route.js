@@ -63,8 +63,6 @@ export async function POST(req) {
                 const data = await response.json();
 
                 // 🔍 Log each response
-                console.log(`WA RESPONSE [${phone}]:`, data);
-
                 if (!response.ok || data.error) {
                     failedList.push({
                         phone,
