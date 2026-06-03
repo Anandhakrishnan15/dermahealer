@@ -16,7 +16,7 @@ const patientSchema = z.object({
     phone: z.string().regex(/^[6-9]\d{9}$/, "Invalid phone number"),
     age: z.coerce.number().min(1).max(120), // ✅ FIXED
     gender: z.enum(["male", "female"]),
-    dob: z.string().min(1, "DOB required"),
+    dob: z.string().optional().or(z.literal("")),
     treatment: z.string().min(2, "Treatment required"),
     address: z.string().optional().or(z.literal("")),
     notes: z.string().max(300).optional().or(z.literal("")),

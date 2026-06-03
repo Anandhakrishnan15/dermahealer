@@ -31,7 +31,7 @@ const patientSchema = z.object({
         .refine((val) => ["male", "female"].includes(val), {
             message: "Select a gender",
         }),
-    dob: z.string().min(1, "Date of birth reqd"),
+    dob: z.string().optional().or(z.literal("")),
     treatment: z.string().min(2, "Enter treatment"),
     // ✅ CRITICAL: Allow empty strings so the sanitizer can turn them into "NIL"
     address: z.string().trim().optional().or(z.literal("")),
@@ -288,7 +288,7 @@ export default function AddForm() {
                                     onChange={handleChange}
                                     className={inputClass("dob")}
                                 />
-                                {errors.dob && <p className={errorText}>{errors.dob}</p>}
+                                {/* {errors.dob && <p className={errorText}>{errors.dob}</p>} */}
                             </div>
                         </div>
 
