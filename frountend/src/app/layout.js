@@ -9,6 +9,7 @@ import GoogleAnalytics from "./GoogleAnalytics";
 import ToastProvider from "@/components/ToastProvider";
 import { StatsProvider } from "@/context/StatsContext";
 
+
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 const playfair = Playfair_Display({
@@ -20,16 +21,33 @@ const playfair = Playfair_Display({
 // ✅ SEO Metadata
 export const metadata = {
   metadataBase: new URL("https://dermahealerindia.com"),
-  title: {
-    default: "Derma Healer - Top Skin & Laser Clinic in Siwan, Bihar",
-    template: "%s | Derma Healer India",
-  },
-  description:
-    "Derma Healer offers USFDA-approved skin and laser treatments in Siwan, Bihar. Consult expert dermatologists for acne, scars, hair loss, and cosmetic dermatology.",
 
-  // ✅ Canonical correctly placed
+  // Title Optimization: Leads with target keywords + location, strictly within recommended character limits (under 60 chars)
+  title: {
+    default: "Best Skin & Laser Clinic in Siwan, Bihar | Derma Healer",
+    template: "%s | Derma Healer Siwan",
+  },
+
+  // Description Optimization: High-converting, action-oriented, includes primary search terms (150–160 chars)
+  description:
+    "Looking for the best dermatologist in Siwan, Bihar? Derma Healer provides USFDA-approved laser hair removal, acne scar treatment, and hair loss solutions.",
+
+  keywords: [
+    "Dermatologist in Siwan",
+    "Best skin clinic Siwan Bihar",
+    "Laser hair removal Siwan",
+    "Acne scar treatment Siwan",
+    "Hair loss treatment Bihar",
+    "Cosmetic dermatologist Siwan",
+    "Derma Healer India",
+  ],
+
+  authors: [{ name: "Derma Healer India" }],
+  creator: "Derma Healer India",
+  publisher: "Derma Healer India",
+
   alternates: {
-    canonical: "https://dermahealerindia.com",
+    canonical: "/", // Resolves to metadataBase automatically
   },
 
   icons: {
@@ -39,17 +57,17 @@ export const metadata = {
   },
 
   openGraph: {
-    title: "Derma Healer - Skin & Laser Clinic in Siwan, Bihar",
+    title: "Best Skin & Laser Clinic in Siwan, Bihar | Derma Healer",
     description:
-      "Your trusted clinic for advanced dermatology treatments in Siwan, Bihar. We specialize in acne, laser treatments, hair restoration, and more.",
+      "Transform your skin and hair with USFDA-approved treatments in Siwan. Specializing in acne, hair restoration, and laser care. Book your consultation today!",
     url: "https://dermahealerindia.com",
     siteName: "Derma Healer India",
     images: [
       {
-        url: "/home.png", // should be 1200x630
+        url: "https://dermahealerindia.com/home.png",
         width: 1200,
         height: 630,
-        alt: "Derma Healer Clinic Banner",
+        alt: "Derma Healer - Advanced Skin & Laser Clinic in Siwan, Bihar",
       },
     ],
     type: "website",
@@ -58,22 +76,37 @@ export const metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Derma Healer - Your Siwan Dermatology Clinic",
+    title: "Best Skin & Laser Clinic in Siwan, Bihar | Derma Healer",
     description:
-      "Expert dermatology and cosmetic treatments in Siwan, Bihar. Find solutions for acne, pigmentation, hair loss, and more.",
+      "Expert skin, hair, and laser treatments in Siwan, Bihar. USFDA-approved care for acne, scars, and hair loss.",
     images: ["/home.png"],
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
 export default function RootLayout({ children }) {
+  // ✅ Complete, Validated Schema.org Data
   const schemaData = {
     "@context": "https://schema.org",
-    "@type": "MedicalClinic",
+    "@type": ["MedicalClinic", "LocalBusiness"],
     name: "Derma Healer India",
-    image: "home.png",
-    "@id": "https://dermahealerindia.com",
+    alternateName: "Derma Healer Clinic",
+    image: "https://dermahealerindia.com/home.png",
+    logo: "https://dermahealerindia.com/icon0.svg",
+    "@id": "https://dermahealerindia.com/#clinic",
     url: "https://dermahealerindia.com",
-    telephone: "+91-919931766933",
+    telephone: "+91-9931766933", // Fixed extra '91'
+    priceRange: "₹₹",
     address: {
       "@type": "PostalAddress",
       streetAddress: "North of Gandhi Maidan",
@@ -111,7 +144,7 @@ export default function RootLayout({ children }) {
       "@type": "ReserveAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://dermahealerindia.com/contact-us",
+        urlTemplate: "https://dermahealerindia.com/book-appointment",
         actionPlatform: [
           "https://schema.org/DesktopWebPlatform",
           "https://schema.org/MobileWebPlatform",
@@ -125,6 +158,7 @@ export default function RootLayout({ children }) {
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <head>
         <AnalyticsProvider />
+        <GoogleAnalytics gaId={process.env.GA_ID} />
         <Script
           id="schema-org"
           type="application/ld+json"
@@ -134,7 +168,7 @@ export default function RootLayout({ children }) {
         />
 
         {/* Google Analytics */}
-        <GoogleAnalytics gaId={process.env.GA_ID} />
+        
         
         <meta name="apple-mobile-web-app-title" content="Derma Healer" />
         <meta name="facebook-domain-verification" content="9pj8nclpd6mga7tm1xndaapkdg324z" />
