@@ -4,55 +4,61 @@
   <!-- MAIN PAGES -->
   <url>
     <loc>https://www.dermahealerindia.com/</loc>
+    <lastmod>2026-03-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
     <loc>https://www.dermahealerindia.com/book-appointment</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-03-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://www.dermahealerindia.com/about</loc>
+    <lastmod>2026-03-14</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
 
   <!-- TREATMENTS -->
   <url>
-    <loc>https://www.dermahealerindia.com/treatments/hair/laser-hair-removal</loc>
+    <loc>https://www.dermahealerindia.com/treatments/tattoo-removal</loc>
+    <lastmod>2026-03-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://www.dermahealerindia.com/treatments/skin/melasma</loc>
+    <lastmod>2026-03-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- BLOG LIST PAGE -->
+  <!-- BLOG HUB -->
   <url>
-    <loc>https://www.dermahealerindia.com/blog</loc>
+    <loc>https://www.dermahealerindia.com/blogs</loc>
+    <lastmod>2026-03-14</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
   </url>
 
-  <!-- BLOG POSTS (SLUG BASED) -->
+  <!-- BLOG POSTS -->
   <url>
     <loc>https://www.dermahealerindia.com/blogs/best-skin-doctor-in-siwan-dr-b-k-sharma-binay-kumar-sharma-dermatologist-guide</loc>
     <lastmod>2026-03-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://www.dermahealerindia.com/blogs/hair-fall-problems-in-bihar-from-hard-water-to-nutritional-deficiency</loc>
+    <loc>https://www.dermahealerindia.com/blogs/foods-that-can-trigger-acne-what-your-skin-is-trying-to-tell-you</loc>
     <lastmod>2026-03-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 
 </urlset>
