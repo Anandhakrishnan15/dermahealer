@@ -1,7 +1,32 @@
+# Allow all search engines and crawlers by default
 User-agent: *
-Disallow: /admin
-Disallow: /api
 Allow: /
 
-# Sitemap for better crawling
-Sitemap: https://www.dermahealerindia.com/sitemap.xml
+# Block admin, API, and internal app routes
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api
+Disallow: /api/
+Disallow: /_next/
+
+# Explicitly allow AI Search & Recommendation Crawlers
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: ClaudeUser
+Allow: /
+
+# Link to your XML Sitemap
+Sitemap: https://dermahealerindia.com/sitemap.xml
