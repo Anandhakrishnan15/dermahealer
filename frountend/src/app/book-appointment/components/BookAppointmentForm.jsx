@@ -123,29 +123,31 @@ export default function BookAppointmentForm() {
   }, []);
 
   /* ---------------- Generate next 7 available days (EXCLUDING SUNDAYS) ---------------- */
-  const dates = (() => {
-    const list = [];
-    let offset = 0;
+ 
+/* Generate next 7 available days, excluding today and Sundays */
+const dates = (() => {
+  const list = [];
+  let offset = 1; // Start from tomorrow
 
-    while (list.length < 7) {
-      const d = new Date();
-      d.setDate(d.getDate() + offset);
-      offset++;
+  while (list.length < 7) {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    offset++;
 
-      const dayOfWeek = getISTDayOfWeek(d);
+    const dayOfWeek = getISTDayOfWeek(d);
 
-      // Skip Sunday completely
-      if (dayOfWeek === 0) continue;
+    // Skip Sundays
+    if (dayOfWeek === 0) continue;
 
-      list.push({
-        value: getISTDateString(d),
-        label: d.toDateString().slice(0, 10),
-        day: dayOfWeek,
-      });
-    }
+    list.push({
+      value: getISTDateString(d),
+      label: d.toDateString().slice(0, 10),
+      day: dayOfWeek,
+    });
+  }
 
-    return list;
-  })();
+  return list;
+})();
 
   const times = ["08:30-09:30", "10:30-11:30", "11:30-12:30", "12:30-01:30"];
   const disabledAll = sdkLoading || loading;
@@ -474,18 +476,26 @@ export default function BookAppointmentForm() {
                         type="button"
                         onClick={() => {
                           if (isLoading || slotsLeft === 0) return;
+
                           setSelectedDate(d.value);
                           setForm((p) => ({ ...p, date: d.value }));
-                          setErrors((prev) => ({ ...prev, date: undefined }));
+                          setErrors((prev) => ({
+                            ...prev,
+                            date: undefined,
+                          }));
                         }}
-                        disabled={disabledAll || isLoading || slotsLeft === 0}
-                        className={`min-w-[110px] p-3 rounded-xl text-center border transition-all duration-200 
-                          ${selected
+                        disabled={
+                          disabledAll ||
+                          isLoading ||
+                          slotsLeft === 0
+                        }
+                        className={`min-w-[110px] p-3 rounded-xl text-center border transition-all duration-200
+    ${selected
                             ? "bg-blue-600 border-blue-600 text-white shadow-md scale-105"
                             : "bg-white border-gray-200 text-gray-600"
                           }
-                          ${slotsLeft === 0 ? "opacity-50 bg-gray-50" : ""}
-                        `}
+    ${slotsLeft === 0 ? "opacity-50 bg-gray-50" : ""}
+  `}
                       >
                         <div
                           className={`text-sm font-bold ${selected ? "text-white" : "text-gray-800"
@@ -493,6 +503,7 @@ export default function BookAppointmentForm() {
                         >
                           {d.label}
                         </div>
+
                         <div
                           className={`text-[10px] mt-1 ${selected ? "text-blue-100" : "text-gray-400"
                             }`}
