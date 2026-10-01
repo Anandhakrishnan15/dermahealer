@@ -39,56 +39,126 @@ function isSundayIST(dateStr) {
 }
 
 export async function GET(req) {
-    try {
-        await connectDB();
+  try {
+    await connectDB();
 
-        const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(req.url);
 
-        const page = Number(searchParams.get("page")) || 1;
-        const limit = Number(searchParams.get("limit")) || 10;
-        const skip = (page - 1) * limit;
+    // -------------------------------------------------
+    // CHECK FOR ALL BOOKINGS REQUEST
+    // -------------------------------------------------
 
-        // ✅ Get current date in IST (prevents UTC mismatch after 5:30 PM IST)
-        const todayIST = getISTDateString(new Date());
+    const getAll = searchParams.get("all") === "true";
 
-        // ✅ Run queries concurrently with Promise.all for faster response times
-        const [bookings, totalBookings, todayAppointments] = await Promise.all([
-            Bookings.find()
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(limit)
-                .lean(),
-            Bookings.countDocuments(),
-            Bookings.countDocuments({
-                paid: true,
-                date: todayIST,
-            }),
-        ]);
+    // -------------------------------------------------
+    // CURRENT DATE IN IST
+    // -------------------------------------------------
 
-        // -------------------------------------------------
-        // PAGINATION
-        // -------------------------------------------------
-        const totalPages = Math.ceil(totalBookings / limit);
+    const todayIST = getISTDateString(new Date());
 
-        return Response.json({
-            success: true,
-            bookings,
-            stats: {
-                totalAppointments: totalBookings,
-                todayAppointments,
-            },
-            pagination: {
-                total: totalBookings,
-                page,
-                limit,
-                totalPages,
-                hasNextPage: page < totalPages,
-                hasPrevPage: page > 1,
-            },
-        });
-    } catch (error) {
-        return handleError(error);
+    // -------------------------------------------------
+    // PDF REQUEST
+    // -------------------------------------------------
+    // /api/bookings?all=true
+    //
+    // This does NOT use pagination.
+    // It returns every booking.
+    // -------------------------------------------------
+
+    if (getAll) {
+      const bookings = await Bookings.find()
+        .sort({
+          createdAt: -1,
+        })
+        .lean();
+
+      return Response.json({
+        success: true,
+
+        bookings,
+
+        // Keep stats available
+        // in case they are useful.
+
+        stats: {
+          totalAppointments: bookings.length,
+
+          todayAppointments: bookings.filter(
+            (booking) => booking.paid === true && booking.date === todayIST,
+          ).length,
+        },
+      });
     }
+
+    // -------------------------------------------------
+    // NORMAL DASHBOARD PAGINATION
+    // -------------------------------------------------
+
+    const page = Number(searchParams.get("page")) || 1;
+
+    const limit = Number(searchParams.get("limit")) || 10;
+
+    const skip = (page - 1) * limit;
+
+    // -------------------------------------------------
+    // RUN QUERIES CONCURRENTLY
+    // -------------------------------------------------
+
+    const [bookings, totalBookings, todayAppointments] = await Promise.all([
+      Bookings.find()
+        .sort({
+          createdAt: -1,
+        })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+
+      Bookings.countDocuments(),
+
+      Bookings.countDocuments({
+        paid: true,
+        date: todayIST,
+      }),
+    ]);
+
+    // -------------------------------------------------
+    // PAGINATION
+    // -------------------------------------------------
+
+    const totalPages = Math.ceil(totalBookings / limit);
+
+    // -------------------------------------------------
+    // RESPONSE
+    // -------------------------------------------------
+
+    return Response.json({
+      success: true,
+
+      bookings,
+
+      stats: {
+        totalAppointments: totalBookings,
+
+        todayAppointments,
+      },
+
+      pagination: {
+        total: totalBookings,
+
+        page,
+
+        limit,
+
+        totalPages,
+
+        hasNextPage: page < totalPages,
+
+        hasPrevPage: page > 1,
+      },
+    });
+  } catch (error) {
+    return handleError(error);
+  }
 }
 
 export async function POST(req) {
