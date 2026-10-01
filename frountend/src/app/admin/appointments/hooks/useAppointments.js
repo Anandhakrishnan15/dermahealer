@@ -1,187 +1,258 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+
 import { useStats } from "@/context/StatsContext";
+
 import { toast } from "react-toastify";
-import { isToday, parseISO } from "date-fns";
 
 export function useAppointments() {
-    const [appointments, setAppointments] = useState([]);
-   
-    const [loading, setLoading] = useState(true);
+  const [appointments, setAppointments] = useState([]);
 
-    const [loadingId, setLoadingId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const [actionType, setActionType] = useState(null);
-    const {
-        setTotalAppointments,
-        setTodayAppointments,
-    } = useStats();
+  const [loadingId, setLoadingId] = useState(null);
 
-    const [page ,setPage]=useState(1)
-    const [pagination, setPagination] =useState(null)
-    
+  const [actionType, setActionType] = useState(null);
 
-    // ---------------------------------------------------------
-    // LOAD BOOKINGS
-    // ---------------------------------------------------------
-    const loadBookings = useCallback(async () => {
-        try {
-            setLoading(true);
-            // const LIMIT = 5
-            const res = await fetch(`/api/bookings?page=${page}&limit=30`)
+  const { setTotalAppointments, setTodayAppointments } = useStats();
 
-            if (!res.ok) {
-                throw new Error("Failed to fetch");
-            }
+  const [page, setPage] = useState(1);
 
-            const data = await res.json();
+  const [pagination, setPagination] = useState(null);
 
-            if (!data.success) {
-                throw new Error(data.message);
-            }
+  // ---------------------------------------------------------
+  // LOAD BOOKINGS - DASHBOARD
+  // ---------------------------------------------------------
 
-            const mapped = data.bookings.map((b) => ({
-                id: b.orderId,
-                name: b.name,
-                doctor: b.doctor,
-                phone: b.phone,
-                email: b.email,
-                paymentDone: b.paid,
-                visited: b.visited ?? false,
-                date: b.date,
-                time: b.time,
-            }));
+  const loadBookings = useCallback(async () => {
+    try {
+      setLoading(true);
 
-            setAppointments(mapped);
+      const res = await fetch(`/api/bookings?page=${page}&limit=30`);
 
-            setPagination(data.pagination);
+      if (!res.ok) {
+        throw new Error("Failed to fetch");
+      }
 
-            setTotalAppointments(
-                data.stats.totalAppointments
-            );
+      const data = await res.json();
 
-            setTodayAppointments(
-                data.stats.todayAppointments
-            );
-        } catch (error) {
-            console.error("Error loading bookings:", error);
+      if (!data.success) {
+        throw new Error(data.message);
+      }
 
-            toast.error("Failed to load appointments");
-        } finally {
-            setLoading(false);
-        }
-    }, [page]);
+      const mapped = data.bookings.map((b) => ({
+        id: b.orderId,
+        name: b.name,
+        doctor: b.doctor,
+        phone: b.phone,
+        email: b.email,
+        paymentDone: b.paid,
+        visited: b.visited ?? false,
+        date: b.date,
+        time: b.time,
+      }));
 
-    // ---------------------------------------------------------
-    // INITIAL LOAD
-    // ---------------------------------------------------------
-    useEffect(() => {
-        loadBookings();
-    }, [loadBookings]);
+      setAppointments(mapped);
 
-    // ---------------------------------------------------------
-    // VERIFY PAYMENT
-    // ---------------------------------------------------------
-    const verifyPayment = async (orderId) => {
-        try {
-            setLoadingId(orderId);
+      setPagination(data.pagination);
 
-            setActionType("verify");
+      setTotalAppointments(data.stats.totalAppointments);
 
-            const res = await fetch("/api/paytm/verify", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ orderId }),
-            });
+      setTodayAppointments(data.stats.todayAppointments);
+    } catch (error) {
+      console.error("Error loading bookings:", error);
 
-            const data = await res.json();
+      toast.error("Failed to load appointments");
+    } finally {
+      setLoading(false);
+    }
+  }, [page]);
 
-            if (data.success) {
-                setAppointments((prev) =>
-                    prev.map((appt) =>
-                        appt.id === orderId
-                            ? {
-                                ...appt,
-                                paymentDone: true,
-                            }
-                            : appt,
-                    ),
-                );
+  // ---------------------------------------------------------
+  // LOAD ALL TODAY'S BOOKINGS FOR PDF
+  // ---------------------------------------------------------
 
-                toast.success("Payment verified ✅");
-            } else {
-                toast.error(data.message || "Verification failed");
-            }
-        } catch (error) {
-            console.error(error);
+  const getTodayAppointmentsForPDF = useCallback(async () => {
+    try {
+      /*
+       * IMPORTANT:
+       *
+       * This request is separate from
+       * the dashboard pagination.
+       *
+       * We request ALL bookings.
+       */
 
-            toast.error("Error verifying payment");
-        } finally {
-            setLoadingId(null);
+      const res = await fetch("/api/bookings?all=true");
 
-            setActionType(null);
-        }
-    };
+      if (!res.ok) {
+        throw new Error("Failed to fetch appointments for PDF");
+      }
 
-    // ---------------------------------------------------------
-    // MARK VISITED
-    // ---------------------------------------------------------
-    const markVisited = async (orderId) => {
-        try {
-            setLoadingId(orderId);
+      const data = await res.json();
 
-            setActionType("visited");
+      if (!data.success) {
+        throw new Error(data.message || "Failed to fetch appointments");
+      }
 
-            const res = await fetch("/api/bookings/mark-visited", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ orderId }),
-            });
+      const mapped = data.bookings.map((b) => ({
+        id: b.orderId,
+        name: b.name,
+        doctor: b.doctor,
+        phone: b.phone,
+        email: b.email,
+        paymentDone: b.paid,
+        visited: b.visited ?? false,
+        date: b.date,
+        time: b.time,
+      }));
 
-            const data = await res.json();
+      return mapped;
+    } catch (error) {
+      console.error("PDF appointments error:", error);
 
-            if (data.success) {
-                setAppointments((prev) =>
-                    prev.map((appt) =>
-                        appt.id === orderId
-                            ? {
-                                ...appt,
-                                visited: true,
-                            }
-                            : appt,
-                    ),
-                );
+      toast.error("Failed to load appointments for PDF");
 
-                toast.success("Marked as visited 🎉");
-            } else {
-                toast.error(data.message || "Failed");
-            }
-        } catch (error) {
-            console.error(error);
+      return [];
+    }
+  }, []);
 
-            toast.error("Error marking visited");
-        } finally {
-            setLoadingId(null);
+  // ---------------------------------------------------------
+  // INITIAL LOAD
+  // ---------------------------------------------------------
 
-            setActionType(null);
-        }
-    };
+  useEffect(() => {
+    loadBookings();
+  }, [loadBookings]);
 
-    return {
-        appointments,
-        loading,
-        loadingId,
-        actionType,
-        pagination,
-        page,
-        setPage,
-        reloadBookings: loadBookings,
-        verifyPayment,
-        markVisited,
-    };
+  // ---------------------------------------------------------
+  // VERIFY PAYMENT
+  // ---------------------------------------------------------
+
+  const verifyPayment = async (orderId) => {
+    try {
+      setLoadingId(orderId);
+
+      setActionType("verify");
+
+      const res = await fetch("/api/paytm/verify", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          orderId,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setAppointments((prev) =>
+          prev.map((appt) =>
+            appt.id === orderId
+              ? {
+                  ...appt,
+                  paymentDone: true,
+                }
+              : appt,
+          ),
+        );
+
+        toast.success("Payment verified ✅");
+      } else {
+        toast.error(data.message || "Verification failed");
+      }
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Error verifying payment");
+    } finally {
+      setLoadingId(null);
+
+      setActionType(null);
+    }
+  };
+
+  // ---------------------------------------------------------
+  // MARK VISITED
+  // ---------------------------------------------------------
+
+  const markVisited = async (orderId) => {
+    try {
+      setLoadingId(orderId);
+
+      setActionType("visited");
+
+      const res = await fetch("/api/bookings/mark-visited", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          orderId,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setAppointments((prev) =>
+          prev.map((appt) =>
+            appt.id === orderId
+              ? {
+                  ...appt,
+                  visited: true,
+                }
+              : appt,
+          ),
+        );
+
+        toast.success("Marked as visited 🎉");
+      } else {
+        toast.error(data.message || "Failed");
+      }
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Error marking visited");
+    } finally {
+      setLoadingId(null);
+
+      setActionType(null);
+    }
+  };
+
+  // ---------------------------------------------------------
+  // RETURN
+  // ---------------------------------------------------------
+
+  return {
+    appointments,
+
+    loading,
+
+    loadingId,
+
+    actionType,
+
+    pagination,
+
+    page,
+
+    setPage,
+
+    reloadBookings: loadBookings,
+
+    verifyPayment,
+
+    markVisited,
+
+    getTodayAppointmentsForPDF,
+  };
 }

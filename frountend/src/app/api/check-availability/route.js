@@ -20,8 +20,8 @@ export async function POST(req) {
 
     let result = {};
 
-    // ✅ Fetch holidays
-    const holidayDocs = await Holiday.find();
+    // ✅ Fetch holidays using .lean() for fast query performance
+    const holidayDocs = await Holiday.find().lean();
 
     const commonHolidayDates = new Set(
         holidayDocs
@@ -40,9 +40,9 @@ export async function POST(req) {
         doctor,
         date: { $in: dates },
         paid: true
-    });
+    }).lean();
 
-    // ✅ Group bookings
+    // ✅ Group bookings by date and timing
     const bookingMap = {};
 
     bookings.forEach(b => {
@@ -59,11 +59,28 @@ export async function POST(req) {
             (bookingMap[b.date].timings[b.time] || 0) + 1;
     });
 
+    // ✅ Helper to check if a "YYYY-MM-DD" string falls on Sunday in IST
+    const isSundayIST = (dateStr) => {
+        const [year, month, day] = dateStr.split("-").map(Number);
+        // Note: Month in JS Date constructor is 0-indexed (month - 1)
+        const dateObj = new Date(year, month - 1, day);
+
+        const dayName = new Intl.DateTimeFormat("en-US", {
+            timeZone: "Asia/Kolkata",
+            weekday: "short"
+        }).format(dateObj);
+
+        return dayName === "Sun";
+    };
+
     // ✅ Build response
     for (const d of dates) {
 
-        // 🚫 Holiday check
-        if (commonHolidayDates.has(d) || doctorHolidayDates.has(d)) {
+        // 🚫 Check if Sunday OR Holiday
+        const isSunday = isSundayIST(d);
+        const isHoliday = commonHolidayDates.has(d) || doctorHolidayDates.has(d);
+
+        if (isSunday || isHoliday) {
             result[d] = {
                 totalRemaining: 0,
                 timings: {}
@@ -79,6 +96,7 @@ export async function POST(req) {
             continue;
         }
 
+        // 🟢 Calculate regular availability
         const totalCount = bookingMap[d]?.total || 0;
         const totalRemaining = Math.max(MAX_PER_DAY - totalCount, 0);
 
