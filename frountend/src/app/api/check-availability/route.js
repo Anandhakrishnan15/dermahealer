@@ -1,6 +1,13 @@
 import { connectDB } from "@/lib/mongodb";
 import Bookings from "@/models/Bookings";
 import Holiday from "@/models/Holiday";
+import {
+    BOOKING_DOCTORS,
+    BOOKING_TIMES,
+    MAX_PER_DAY,
+    MAX_PER_SLOT,
+    getActiveBookingFilter,
+} from "@/lib/bookingCapacity";
 
 export async function POST(req) {
     console.time("Availability API Time");
@@ -8,15 +15,16 @@ export async function POST(req) {
 
     const { doctor, dates } = await req.json();
 
-    const timings = [
-        "08:30-09:30",
-        "10:30-11:30",
-        "11:30-12:30",
-        "12:30-01:30"
-    ];
-
-    const MAX_PER_SLOT = 5;
-    const MAX_PER_DAY = timings.length * MAX_PER_SLOT;
+    if (
+        !BOOKING_DOCTORS.includes(doctor) ||
+        !Array.isArray(dates) ||
+        dates.some((date) => typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date))
+    ) {
+        return Response.json(
+            { message: "Invalid doctor or dates" },
+            { status: 400 },
+        );
+    }
 
     let result = {};
 
@@ -36,10 +44,28 @@ export async function POST(req) {
     );
 
     // ✅ Fetch bookings in one query
+    const now = new Date();
+
+    await Bookings.updateMany(
+        {
+            doctor,
+            date: { $in: dates },
+            capacitySeat: { $type: "number" },
+            paid: { $ne: true },
+            reservationExpiresAt: { $lte: now },
+        },
+        {
+            $unset: {
+                capacitySeat: "",
+                reservationExpiresAt: "",
+            },
+        },
+    );
+
     const bookings = await Bookings.find({
         doctor,
         date: { $in: dates },
-        paid: true
+        ...getActiveBookingFilter(now),
     }).lean();
 
     // ✅ Group bookings by date and timing
@@ -86,7 +112,7 @@ export async function POST(req) {
                 timings: {}
             };
 
-            timings.forEach(t => {
+            BOOKING_TIMES.forEach(t => {
                 result[d].timings[t] = {
                     remaining: 0,
                     available: false
@@ -105,7 +131,7 @@ export async function POST(req) {
             timings: {}
         };
 
-        timings.forEach(t => {
+        BOOKING_TIMES.forEach(t => {
             const timingCount = bookingMap[d]?.timings[t] || 0;
             const remaining = Math.max(MAX_PER_SLOT - timingCount, 0);
 

@@ -1,5 +1,49 @@
 import { connectDB } from "@/lib/mongodb";
 import Bookings from "@/models/Bookings";
+import Holiday from "@/models/Holiday";
+import { randomUUID } from "node:crypto";
+import {
+  BOOKING_DOCTORS,
+  BOOKING_TIMES,
+  MAX_PER_DAY,
+  MAX_PER_SLOT,
+  RESERVATION_HOLD_MS,
+  getActiveBookingFilter,
+} from "@/lib/bookingCapacity";
+
+let capacityIndexPromise;
+
+async function ensureCapacityIndex() {
+  if (!capacityIndexPromise) {
+    capacityIndexPromise = Bookings.collection
+      .createIndex(
+        { doctor: 1, date: 1, time: 1, capacitySeat: 1 },
+        {
+          unique: true,
+          partialFilterExpression: { capacitySeat: { $type: "number" } },
+          name: "unique_booking_slot_seat",
+        },
+      )
+      .catch((error) => {
+        capacityIndexPromise = null;
+        throw error;
+      });
+  }
+
+  await capacityIndexPromise;
+}
+
+function isValidDateString(date) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return false;
+  }
+
+  const [year, month, day] = date.split("-").map(Number);
+  return (
+    new Date(Date.UTC(year, month - 1, day)).toISOString().slice(0, 10) ===
+    date
+  );
+}
 
 async function handleError(error) {
     console.error(error);
@@ -36,6 +80,17 @@ function isSundayIST(dateStr) {
     }).format(dateObj);
 
     return dayName === "Sun";
+}
+
+function addDaysToDateString(dateStr, days) {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(Date.UTC(year, month - 1, day + days))
+        .toISOString()
+        .slice(0, 10);
+}
+
+function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 export async function GET(req) {
@@ -100,18 +155,68 @@ export async function GET(req) {
 
     const skip = (page - 1) * limit;
 
+    const query = {};
+    const search = searchParams.get("search") || "";
+    const dateFilter = searchParams.get("dateFilter") || "all";
+    const selectedDate = searchParams.get("selectedDate") || "";
+    const paymentFilter = searchParams.get("paymentFilter") || "all";
+    const doctorFilter = searchParams.get("doctorFilter") || "all";
+
+    if (search) {
+      const escapedSearch = escapeRegExp(search);
+      query.$or = [
+        { name: { $regex: escapedSearch, $options: "i" } },
+        { orderId: { $regex: escapedSearch, $options: "i" } },
+      ];
+    }
+
+    if (paymentFilter === "paid") {
+      query.paid = true;
+    } else if (paymentFilter === "unpaid") {
+      query.paid = false;
+    }
+
+    if (doctorFilter !== "all") {
+      query.doctor = doctorFilter;
+    }
+
+    switch (dateFilter) {
+      case "today":
+        query.date = todayIST;
+        break;
+      case "yesterday":
+        query.date = addDaysToDateString(todayIST, -1);
+        break;
+      case "tomorrow":
+        query.date = addDaysToDateString(todayIST, 1);
+        break;
+      case "last7":
+        query.date = {
+          $gte: addDaysToDateString(todayIST, -6),
+          $lte: todayIST,
+        };
+        break;
+      case "custom":
+        query.date = selectedDate || "__no_custom_date_selected__";
+        break;
+      default:
+        break;
+    }
+
     // -------------------------------------------------
     // RUN QUERIES CONCURRENTLY
     // -------------------------------------------------
 
-    const [bookings, totalBookings, todayAppointments] = await Promise.all([
-      Bookings.find()
+    const [bookings, filteredBookings, totalBookings, todayAppointments] = await Promise.all([
+      Bookings.find(query)
         .sort({
           createdAt: -1,
         })
         .skip(skip)
         .limit(limit)
         .lean(),
+
+      Bookings.countDocuments(query),
 
       Bookings.countDocuments(),
 
@@ -125,7 +230,7 @@ export async function GET(req) {
     // PAGINATION
     // -------------------------------------------------
 
-    const totalPages = Math.ceil(totalBookings / limit);
+    const totalPages = Math.ceil(filteredBookings / limit);
 
     // -------------------------------------------------
     // RESPONSE
@@ -143,7 +248,7 @@ export async function GET(req) {
       },
 
       pagination: {
-        total: totalBookings,
+        total: filteredBookings,
 
         page,
 
@@ -172,6 +277,17 @@ export async function POST(req) {
             );
         }
 
+        if (
+            !BOOKING_DOCTORS.includes(data.doctor) ||
+            !BOOKING_TIMES.includes(data.time) ||
+            !isValidDateString(data.date)
+        ) {
+            return Response.json(
+                { success: false, message: "Invalid doctor, date, or time slot." },
+                { status: 400 }
+            );
+        }
+
         // 🚫 SERVER-SIDE GUARD: Hard-block Sunday bookings
         if (isSundayIST(data.date)) {
             return Response.json(
@@ -182,12 +298,134 @@ export async function POST(req) {
 
         await connectDB();
 
-        const booking = await Bookings.create({
-            ...data,
-            orderId: "ORDER" + Date.now(),
+        await ensureCapacityIndex();
+
+        const holiday = await Holiday.findOne({
+            date: data.date,
+            $or: [
+                { type: "common" },
+                { type: "doctor", doctor: data.doctor },
+            ],
         });
 
-        return Response.json({ success: true, booking });
+        if (holiday) {
+            return Response.json(
+                { success: false, message: "The clinic is closed on this date." },
+                { status: 400 }
+            );
+        }
+
+        const now = new Date();
+        await Bookings.updateMany(
+            {
+                doctor: data.doctor,
+                date: data.date,
+                capacitySeat: { $type: "number" },
+                paid: { $ne: true },
+                reservationExpiresAt: { $lte: now },
+            },
+            {
+                $unset: {
+                    capacitySeat: "",
+                    reservationExpiresAt: "",
+                },
+            },
+        );
+
+        const activeBookings = await Bookings.find({
+            doctor: data.doctor,
+            date: data.date,
+            ...getActiveBookingFilter(now),
+        })
+            .select("time capacitySeat")
+            .lean();
+
+        const slotBookings = activeBookings.filter(
+            (booking) => booking.time === data.time,
+        );
+
+        if (
+            activeBookings.length >= MAX_PER_DAY ||
+            slotBookings.length >= MAX_PER_SLOT
+        ) {
+            return Response.json(
+                {
+                    success: false,
+                    message: "This date or time slot just became full. Please choose another.",
+                },
+                { status: 409 }
+            );
+        }
+
+        const legacySlotCount = slotBookings.filter(
+            (booking) => !Number.isInteger(booking.capacitySeat),
+        ).length;
+        const occupiedSeats = new Set(
+            Array.from({ length: legacySlotCount }, (_, index) => index + 1),
+        );
+
+        slotBookings.forEach((booking) => {
+            if (Number.isInteger(booking.capacitySeat)) {
+                occupiedSeats.add(booking.capacitySeat);
+            }
+        });
+
+        const availableSeats = Array.from(
+            { length: MAX_PER_SLOT },
+            (_, index) => index + 1,
+        ).filter((seat) => !occupiedSeats.has(seat));
+        const orderId = `ORDER${Date.now()}${randomUUID().replace(/-/g, "")}`;
+
+        for (const capacitySeat of availableSeats) {
+            try {
+                const booking = await Bookings.create({
+                    name: data.name,
+                    email: data.email,
+                    phone: data.phone,
+                    doctor: data.doctor,
+                    date: data.date,
+                    time: data.time,
+                    notes: data.notes || "",
+                    amount: 50,
+                    paid: false,
+                    paymentStatus: "PENDING",
+                    capacityManaged: true,
+                    capacitySeat,
+                    reservationExpiresAt: new Date(
+                        now.getTime() + RESERVATION_HOLD_MS,
+                    ),
+                    orderId,
+                });
+
+                return Response.json({ success: true, booking });
+            } catch (error) {
+                const seatConflict =
+                    error.code === 11000 &&
+                    (error.keyPattern?.capacitySeat ||
+                        error.message.includes("unique_booking_slot_seat"));
+
+                if (seatConflict) {
+                    continue;
+                }
+
+                if (error.name === "ValidationError") {
+                    return Response.json(
+                        { success: false, message: "Invalid booking details." },
+                        { status: 400 }
+                    );
+                }
+
+                throw error;
+            }
+        }
+
+        return Response.json(
+            {
+                success: false,
+                message: "This time slot just became full. Please choose another.",
+            },
+            { status: 409 }
+        );
     } catch (error) {
         return handleError(error);
     }

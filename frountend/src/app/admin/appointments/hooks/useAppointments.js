@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 import { useStats } from "@/context/StatsContext";
 
 import { toast } from "react-toastify";
 
-export function useAppointments() {
+export function useAppointments({
+  search,
+  filter,
+  selectedDate,
+  paymentFilter,
+  doctorFilter,
+}) {
   const [appointments, setAppointments] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -21,21 +27,51 @@ export function useAppointments() {
 
   const [pagination, setPagination] = useState(null);
 
+  const requestController = useRef(null);
+  const previousFilters = useRef({
+    search,
+    filter,
+    selectedDate,
+    paymentFilter,
+    doctorFilter,
+  });
+
   // ---------------------------------------------------------
   // LOAD BOOKINGS - DASHBOARD
   // ---------------------------------------------------------
 
   const loadBookings = useCallback(async () => {
+    requestController.current?.abort();
+
+    const controller = new AbortController();
+    requestController.current = controller;
+
     try {
       setLoading(true);
 
-      const res = await fetch(`/api/bookings?page=${page}&limit=30`);
+      const params = new URLSearchParams({
+        page: String(page),
+        limit: "30",
+        search,
+        dateFilter: filter,
+        selectedDate,
+        paymentFilter,
+        doctorFilter,
+      });
+
+      const res = await fetch(`/api/bookings?${params.toString()}`, {
+        signal: controller.signal,
+      });
 
       if (!res.ok) {
         throw new Error("Failed to fetch");
       }
 
       const data = await res.json();
+
+      if (controller.signal.aborted) {
+        return;
+      }
 
       if (!data.success) {
         throw new Error(data.message);
@@ -61,13 +97,28 @@ export function useAppointments() {
 
       setTodayAppointments(data.stats.todayAppointments);
     } catch (error) {
+      if (controller.signal.aborted) {
+        return;
+      }
+
       console.error("Error loading bookings:", error);
 
       toast.error("Failed to load appointments");
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted) {
+        setLoading(false);
+      }
     }
-  }, [page]);
+  }, [
+    page,
+    search,
+    filter,
+    selectedDate,
+    paymentFilter,
+    doctorFilter,
+    setTotalAppointments,
+    setTodayAppointments,
+  ]);
 
   // ---------------------------------------------------------
   // LOAD ALL TODAY'S BOOKINGS FOR PDF
@@ -123,8 +174,40 @@ export function useAppointments() {
   // ---------------------------------------------------------
 
   useEffect(() => {
+    const filtersChanged =
+      previousFilters.current.search !== search ||
+      previousFilters.current.filter !== filter ||
+      previousFilters.current.selectedDate !== selectedDate ||
+      previousFilters.current.paymentFilter !== paymentFilter ||
+      previousFilters.current.doctorFilter !== doctorFilter;
+
+    previousFilters.current = {
+      search,
+      filter,
+      selectedDate,
+      paymentFilter,
+      doctorFilter,
+    };
+
+    if (filtersChanged && page !== 1) {
+      setPage(1);
+      return;
+    }
+
     loadBookings();
-  }, [loadBookings]);
+
+    return () => {
+      requestController.current?.abort();
+    };
+  }, [
+    loadBookings,
+    page,
+    search,
+    filter,
+    selectedDate,
+    paymentFilter,
+    doctorFilter,
+  ]);
 
   // ---------------------------------------------------------
   // VERIFY PAYMENT

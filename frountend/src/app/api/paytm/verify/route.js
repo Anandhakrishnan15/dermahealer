@@ -79,24 +79,68 @@ export async function POST(req) {
         // 🔥 SUCCESS CASE
         // 🔥 SUCCESS CASE
         if (result?.resultStatus === "TXN_SUCCESS") {
+            const paymentInfo = {
+                txnId: txn.txnId,
+                bankTxnId: txn.bankTxnId,
+                txnAmount: txn.txnAmount,
+                txnDate: txn.txnDate,
+            };
+
             const updated = await Bookings.findOneAndUpdate(
-                { orderId },
+                {
+                    orderId,
+                    $or: [
+                        { capacityManaged: { $ne: true } },
+                        { paid: true },
+                        { capacitySeat: { $type: "number" } },
+                    ],
+                },
                 {
                     $set: {
                         paid: true,
                         paymentStatus: "SUCCESS",
-                        paymentInfo: {
-                            txnId: txn.txnId,
-                            bankTxnId: txn.bankTxnId,
-                            txnAmount: txn.txnAmount,
-                            txnDate: txn.txnDate,
-                        },
+                        paymentInfo,
+                    },
+                    $unset: {
+                        reservationExpiresAt: "",
                     },
                 },
                 { new: true }
             );
 
             if (!updated) {
+                const expiredBooking = await Bookings.findOne({
+                    orderId,
+                    capacityManaged: true,
+                });
+
+                if (expiredBooking) {
+                    await Bookings.updateOne(
+                        { orderId, paid: { $ne: true } },
+                        {
+                            $set: {
+                                paid: false,
+                                paymentStatus: "CAPACITY_CONFLICT",
+                                paymentInfo,
+                            },
+                            $unset: {
+                                capacitySeat: "",
+                                reservationExpiresAt: "",
+                            },
+                        },
+                    );
+
+                    return Response.json(
+                        {
+                            success: false,
+                            status: "CAPACITY_CONFLICT",
+                            message:
+                                "Payment succeeded after the slot hold expired. Contact the clinic.",
+                        },
+                        { status: 409 }
+                    );
+                }
+
                 return Response.json(
                     { success: false, message: "Booking not found" },
                     { status: 404 }
@@ -185,15 +229,22 @@ export async function POST(req) {
         }
 
         // ❌ FAILED / PENDING
-        await Bookings.findOneAndUpdate(
-            { orderId },
-            {
-                $set: {
-                    paid: false,
-                    paymentStatus: result?.resultStatus || "FAILED",
-                },
-            }
-        );
+        const isPending = result?.resultStatus === "PENDING";
+        const failedPaymentUpdate = {
+            $set: {
+                paid: false,
+                paymentStatus: isPending ? "PENDING" : "FAILED",
+            },
+        };
+
+        if (!isPending) {
+            failedPaymentUpdate.$unset = {
+                capacitySeat: "",
+                reservationExpiresAt: "",
+            };
+        }
+
+        await Bookings.findOneAndUpdate({ orderId }, failedPaymentUpdate);
 
         return Response.json({
             success: false,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import Filters from "./components/Filters";
 
@@ -8,11 +8,19 @@ import AppointmentsTable from "./components/AppointmentsTable";
 
 import { useAppointments } from "./hooks/useAppointments";
 
-import { filterAppointments } from "./utils/filters";
-
 import { downloadTodayPDF } from "./utils/pdfGenerator";
 
 export default function AppointmentsPage() {
+  const [search, setSearch] = useState("");
+
+  const [filter, setFilter] = useState("last7");
+
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const [paymentFilter, setPaymentFilter] = useState("paid");
+
+  const [doctorFilter, setDoctorFilter] = useState("all");
+
   const {
     appointments,
 
@@ -35,37 +43,13 @@ export default function AppointmentsPage() {
     actionType,
 
     getTodayAppointmentsForPDF,
-  } = useAppointments();
-
-  const [search, setSearch] = useState("");
-
-  const [filter, setFilter] = useState("last7");
-
-  const [selectedDate, setSelectedDate] = useState("");
-
-  const [paymentFilter, setPaymentFilter] = useState("paid");
-
-  const [doctorFilter, setDoctorFilter] = useState("all");
-
-  // ---------------------------------------------------------
-  // FILTER DASHBOARD DATA
-  // ---------------------------------------------------------
-
-  const filteredAppointments = useMemo(() => {
-    return filterAppointments({
-      appointments,
-
-      search,
-
-      filter,
-
-      selectedDate,
-
-      paymentFilter,
-
-      doctorFilter,
-    });
-  }, [appointments, search, filter, selectedDate, paymentFilter, doctorFilter]);
+  } = useAppointments({
+    search,
+    filter,
+    selectedDate,
+    paymentFilter,
+    doctorFilter,
+  });
 
   // ---------------------------------------------------------
   // DOWNLOAD TODAY PDF
@@ -114,7 +98,7 @@ export default function AppointmentsPage() {
       />
 
       <AppointmentsTable
-        appointments={filteredAppointments}
+        appointments={appointments}
         loading={loading}
         verifyPayment={verifyPayment}
         markVisited={markVisited}

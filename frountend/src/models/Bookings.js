@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { MAX_PER_SLOT } from "@/lib/bookingCapacity";
 
 const BookingSchema = new mongoose.Schema(
     {
@@ -18,9 +19,21 @@ const BookingSchema = new mongoose.Schema(
 
         paymentStatus: {
             type: String,
-            enum: ["PENDING", "SUCCESS", "FAILED"],
+            enum: ["PENDING", "SUCCESS", "FAILED", "CAPACITY_CONFLICT"],
             default: "PENDING",
             index: true,
+        },
+        capacityManaged: {
+            type: Boolean,
+            default: false,
+        },
+        capacitySeat: {
+            type: Number,
+            min: 1,
+            max: MAX_PER_SLOT,
+        },
+        reservationExpiresAt: {
+            type: Date,
         },
 
         orderId: {
@@ -68,6 +81,22 @@ BookingSchema.index({
     time: 1,
     paid: 1,
 });
+
+BookingSchema.index(
+    {
+        doctor: 1,
+        date: 1,
+        time: 1,
+        capacitySeat: 1,
+    },
+    {
+        unique: true,
+        partialFilterExpression: {
+            capacitySeat: { $type: "number" },
+        },
+        name: "unique_booking_slot_seat",
+    },
+);
 
 // 🔍 Payment lookup optimization
 BookingSchema.index({ orderId: 1, paymentStatus: 1 });

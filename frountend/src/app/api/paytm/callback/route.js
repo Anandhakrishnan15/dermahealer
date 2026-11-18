@@ -29,26 +29,75 @@ export async function POST(req) {
 
             await connectDB();
 
+            const paymentInfo = {
+                txnId: body.TXNID,
+                bankTxnId: body.BANKTXNID,
+                bankName: body.BANKNAME,
+                gatewayName: body.GATEWAYNAME,
+                paymentMode: body.PAYMENTMODE,
+                txnAmount: body.TXNAMOUNT,
+                txnDate: body.TXNDATE,
+                respMsg: body.RESPMSG,
+            };
+
             // ✅ Get updated booking
             const booking = await Bookings.findOneAndUpdate(
-                { orderId: body.ORDERID },
+                {
+                    orderId: body.ORDERID,
+                    $or: [
+                        { capacityManaged: { $ne: true } },
+                        { paid: true },
+                        { capacitySeat: { $type: "number" } },
+                    ],
+                },
                 {
                     $set: {
                         paid: true,
-                        paymentInfo: {
-                            txnId: body.TXNID,
-                            bankTxnId: body.BANKTXNID,
-                            bankName: body.BANKNAME,
-                            gatewayName: body.GATEWAYNAME,
-                            paymentMode: body.PAYMENTMODE,
-                            txnAmount: body.TXNAMOUNT,
-                            txnDate: body.TXNDATE,
-                            respMsg: body.RESPMSG,
-                        },
+                        paymentStatus: "SUCCESS",
+                        paymentInfo,
+                    },
+                    $unset: {
+                        reservationExpiresAt: "",
                     },
                 },
                 { new: true }
             );
+
+            if (!booking) {
+                const expiredBooking = await Bookings.findOne({
+                    orderId: body.ORDERID,
+                    capacityManaged: true,
+                });
+
+                if (expiredBooking) {
+                    await Bookings.updateOne(
+                        { orderId: body.ORDERID, paid: { $ne: true } },
+                        {
+                            $set: {
+                                paid: false,
+                                paymentStatus: "CAPACITY_CONFLICT",
+                                paymentInfo,
+                            },
+                            $unset: {
+                                capacitySeat: "",
+                                reservationExpiresAt: "",
+                            },
+                        },
+                    );
+
+                    return Response.redirect(
+                        `${process.env.NEXT_PUBLIC_BASE_URL}/payment-failed?reason=${encodeURIComponent(
+                            "Payment succeeded after the slot hold expired. Please contact the clinic.",
+                        )}`,
+                        302
+                    );
+                }
+
+                return Response.redirect(
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/payment-failed?reason=booking-not-found`,
+                    302
+                );
+            }
 
             // ✅ 🔥 Call WhatsApp API
             if (booking?.phone) {
@@ -81,6 +130,23 @@ export async function POST(req) {
             );
 
         } else {
+            if (body.STATUS === "TXN_FAILURE") {
+                await connectDB();
+                await Bookings.updateOne(
+                    { orderId: body.ORDERID, paid: { $ne: true } },
+                    {
+                        $set: {
+                            paid: false,
+                            paymentStatus: "FAILED",
+                        },
+                        $unset: {
+                            capacitySeat: "",
+                            reservationExpiresAt: "",
+                        },
+                    },
+                );
+            }
+
             return Response.redirect(
                 `${process.env.NEXT_PUBLIC_BASE_URL}/payment-failed?reason=${encodeURIComponent(
                     body.RESPMSG || "Transaction failed"

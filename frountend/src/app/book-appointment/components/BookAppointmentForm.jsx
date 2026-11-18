@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 
 import { z } from "zod";
 
 import { toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+
+import { BOOKING_TIMES } from "@/lib/bookingCapacity";
 
 /* ---------------- HELPER: Get Date String in IST (YYYY-MM-DD) ---------------- */
 
@@ -120,7 +122,7 @@ export default function BookAppointmentForm() {
 
   const [selectedTime, setSelectedTime] = useState("");
 
-  const availabilityCache = useRef({});
+  const availabilityController = useRef(null);
 
   const [availability, setAvailability] = useState({});
 
@@ -188,7 +190,8 @@ export default function BookAppointmentForm() {
 
   /* Generate next 7 available days, excluding today and Sundays */
 
-  const dates = (() => {
+  const todayKey = new Date().toDateString();
+  const dates = useMemo(() => {
     const list = [];
 
     let offset = 1; // Start from tomorrow
@@ -216,67 +219,88 @@ export default function BookAppointmentForm() {
     }
 
     return list;
-  })();
-
-  const times = ["08:30-09:30", "10:30-11:30", "11:30-12:30", "12:30-01:30"];
+  }, [todayKey]);
 
   const disabledAll = sdkLoading || loading;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setForm((p) => ({ ...p, [name]: value }));
+    if (name === "doctor") {
+      setSelectedDate("");
+      setSelectedTime("");
+      setForm((p) => ({ ...p, doctor: value, date: "", time: "" }));
+    } else {
+      setForm((p) => ({ ...p, [name]: value }));
+    }
 
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
-  /* ---------------- Load availability (debounced) ---------------- */
-
-  useEffect(() => {
-    if (!form.doctor) return;
-
-    const t = setTimeout(loadAvailability, 450);
-
-    return () => clearTimeout(t);
-  }, [form.doctor]);
-
-  async function loadAvailability() {
+  const loadAvailability = useCallback(async (
+    showLoading = true,
+    datesToCheck = dates.map((date) => date.value),
+  ) => {
     const doctor = form.doctor;
 
-    if (!doctor) return;
+    if (!doctor || datesToCheck.length === 0) return null;
 
-    if (availabilityCache.current[doctor]) {
-      setAvailability(availabilityCache.current[doctor]);
+    availabilityController.current?.abort();
+    const controller = new AbortController();
+    availabilityController.current = controller;
 
-      return;
-    }
-
-    setLoadingAvailability(true);
-
+    setLoadingAvailability(showLoading);
     try {
       const res = await fetch("/api/check-availability", {
         method: "POST",
 
         headers: { "Content-Type": "application/json" },
 
-        body: JSON.stringify({ doctor, dates: dates.map((d) => d.value) }),
+        body: JSON.stringify({ doctor, dates: datesToCheck }),
+        signal: controller.signal,
       });
 
       if (!res.ok) throw new Error("Availability API failed");
 
       const data = await res.json();
 
-      availabilityCache.current[doctor] = data.availability || {};
+      if (controller.signal.aborted) return null;
 
-      setAvailability(data.availability || {});
+      const updatedAvailability = data.availability || {};
+      setAvailability((currentAvailability) => ({
+        ...currentAvailability,
+        ...updatedAvailability,
+      }));
+      return updatedAvailability;
     } catch (err) {
+      if (controller.signal.aborted) return null;
+
       console.error(err);
 
-      toast.error("Unable to load availability");
+      if (showLoading) toast.error("Unable to load availability");
+      return null;
     } finally {
-      setLoadingAvailability(false);
+      if (!controller.signal.aborted) {
+        setLoadingAvailability(false);
+      }
     }
-  }
+  }, [form.doctor, dates]);
+
+  /* ---------------- Load availability after doctor selection ---------------- */
+
+  useEffect(() => {
+    if (!form.doctor) {
+      setAvailability({});
+      return;
+    }
+
+    setAvailability({});
+    loadAvailability(true);
+
+    return () => {
+      availabilityController.current?.abort();
+    };
+  }, [form.doctor, loadAvailability]);
 
   /* ---------------- Submit Handler ---------------- */
   const handleSubmit = (e) => {
@@ -358,6 +382,8 @@ export default function BookAppointmentForm() {
       const booking = bookingData?.booking;
       if (!booking) throw new Error("Booking failed: booking details missing");
 
+      await loadAvailability(false);
+
       // Initiate Paytm.
       const paytmRes = await fetch("/api/paytm/initiate", {
         method: "POST",
@@ -399,6 +425,7 @@ export default function BookAppointmentForm() {
       await paytm.CheckoutJS.init(config);
       paytm.CheckoutJS.invoke();
     } catch (err) {
+      loadAvailability(false);
       console.error("Booking/Payment error:", err);
       toast.error(err?.message || "Something went wrong during booking");
     } finally {
@@ -701,18 +728,39 @@ export default function BookAppointmentForm() {
                       <button
                         key={d.value}
                         type="button"
-                        onClick={() => {
+                        onClick={async () => {
                           if (isLoading || slotsLeft === 0) return;
 
                           setSelectedDate(d.value);
+                          setSelectedTime("");
 
-                          setForm((p) => ({ ...p, date: d.value }));
+                          setForm((p) => ({
+                            ...p,
+                            date: d.value,
+                            time: "",
+                          }));
 
                           setErrors((prev) => ({
                             ...prev,
 
                             date: undefined,
+                            time: undefined,
                           }));
+
+                          const latestAvailability = await loadAvailability(
+                            true,
+                            [d.value],
+                          );
+
+                          if (
+                            latestAvailability?.[d.value]?.totalRemaining === 0
+                          ) {
+                            setSelectedDate("");
+                            setForm((p) => ({ ...p, date: "", time: "" }));
+                            toast.info(
+                              "This date just became fully booked. Please choose another.",
+                            );
+                          }
                         }}
                         disabled={disabledAll || isLoading || slotsLeft === 0}
                         className={`min-w-[110px] p-3 rounded-xl text-center border transition-all duration-200
@@ -760,10 +808,10 @@ export default function BookAppointmentForm() {
                 </label>
 
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mt-3">
-                  {times.map((t) => {
+                  {BOOKING_TIMES.map((t) => {
                     const timingData = availability[selectedDate]?.timings?.[t];
 
-                    const isFull = timingData && !timingData.available;
+                    const isFull = timingData ? !timingData.available : false;
 
                     const selected = selectedTime === t;
 
@@ -771,8 +819,26 @@ export default function BookAppointmentForm() {
                       <button
                         key={t}
                         type="button"
-                        onClick={() => {
-                          if (isFull) return;
+                        onClick={async () => {
+                          if (isFull || !selectedDate) return;
+
+                          const latestAvailability = await loadAvailability(
+                            true,
+                            [selectedDate],
+                          );
+                          if (!latestAvailability) return;
+
+                          const latestTiming =
+                            latestAvailability?.[selectedDate]?.timings?.[t];
+
+                          if (!latestTiming?.available) {
+                            setSelectedTime("");
+                            setForm((p) => ({ ...p, time: "" }));
+                            toast.info(
+                              "This time slot just became full. Please choose another.",
+                            );
+                            return;
+                          }
 
                           setSelectedTime(t);
 
@@ -780,7 +846,13 @@ export default function BookAppointmentForm() {
 
                           setErrors((prev) => ({ ...prev, time: undefined }));
                         }}
-                        disabled={disabledAll || !selectedDate || isFull}
+                        disabled={
+                          disabledAll ||
+                          loadingAvailability ||
+                          !selectedDate ||
+                          !timingData ||
+                          isFull
+                        }
                         className={`px-3 py-2 rounded-lg border text-xs font-medium transition-all
 
                           ${
