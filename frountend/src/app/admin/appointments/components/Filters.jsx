@@ -112,11 +112,9 @@ export default function Filters({
                 type="date"
                 value={selectedDate}
                 onChange={(e) => {
-
-                    setSelectedDate(e.target.value);
-
-                    setFilter("custom");
-
+                    const date = e.target.value;
+                    setSelectedDate(date);
+                    setFilter(date ? "custom" : "all");
                 }}
                 className="border p-2 rounded-lg shadow-sm"
             />

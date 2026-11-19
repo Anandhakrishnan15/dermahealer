@@ -24,6 +24,16 @@ function getISTDateString(dateObj = new Date()) {
     return `${year}-${month}-${day}`;
 }
 
+function getISTDateOffset(offset) {
+    const [year, month, day] = getISTDateString().split("-").map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day + offset));
+    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
+}
+
+function escapeRegex(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 /* ---------------- HELPER: Check if YYYY-MM-DD is Sunday in IST ---------------- */
 function isSundayIST(dateStr) {
     if (!dateStr) return false;
@@ -100,12 +110,51 @@ export async function GET(req) {
 
     const skip = (page - 1) * limit;
 
+    const search = searchParams.get("search")?.trim();
+    const dateFilter = searchParams.get("dateFilter");
+    const selectedDate = searchParams.get("selectedDate");
+    const payment = searchParams.get("payment");
+    const doctor = searchParams.get("doctor");
+
+    const query = {};
+
+    if (search) {
+      const escapedSearch = escapeRegex(search);
+      query.$or = [
+        { name: { $regex: escapedSearch, $options: "i" } },
+        { orderId: { $regex: escapedSearch, $options: "i" } },
+        { phone: { $regex: escapedSearch, $options: "i" } },
+      ];
+    }
+
+    if (dateFilter === "today") {
+      query.date = getISTDateString();
+    } else if (dateFilter === "yesterday") {
+      query.date = getISTDateOffset(-1);
+    } else if (dateFilter === "tomorrow") {
+      query.date = getISTDateOffset(1);
+    } else if (dateFilter === "last7") {
+      query.date = { $gte: getISTDateOffset(-7), $lte: getISTDateString() };
+    } else if (dateFilter === "custom" && selectedDate) {
+      query.date = selectedDate;
+    }
+
+    if (payment === "paid") {
+      query.paid = true;
+    } else if (payment === "unpaid") {
+      query.paid = { $ne: true };
+    }
+
+    if (doctor && doctor !== "all") {
+      query.doctor = doctor;
+    }
+
     // -------------------------------------------------
     // RUN QUERIES CONCURRENTLY
     // -------------------------------------------------
 
     const [bookings, totalBookings, todayAppointments] = await Promise.all([
-      Bookings.find()
+      Bookings.find(query)
         .sort({
           createdAt: -1,
         })
@@ -113,7 +162,7 @@ export async function GET(req) {
         .limit(limit)
         .lean(),
 
-      Bookings.countDocuments(),
+      Bookings.countDocuments(query),
 
       Bookings.countDocuments({
         paid: true,

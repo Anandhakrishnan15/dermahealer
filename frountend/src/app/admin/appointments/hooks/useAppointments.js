@@ -6,7 +6,7 @@ import { useStats } from "@/context/StatsContext";
 
 import { toast } from "react-toastify";
 
-export function useAppointments() {
+export function useAppointments(filterOptions = {}) {
   const [appointments, setAppointments] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -29,7 +29,18 @@ export function useAppointments() {
     try {
       setLoading(true);
 
-      const res = await fetch(`/api/bookings?page=${page}&limit=30`);
+      const params = new URLSearchParams({
+        page: String(page),
+        limit: "30",
+      });
+
+      if (filterOptions.search) params.set("search", filterOptions.search);
+      if (filterOptions.filter) params.set("dateFilter", filterOptions.filter);
+      if (filterOptions.selectedDate) params.set("selectedDate", filterOptions.selectedDate);
+      if (filterOptions.paymentFilter) params.set("payment", filterOptions.paymentFilter);
+      if (filterOptions.doctorFilter) params.set("doctor", filterOptions.doctorFilter);
+
+      const res = await fetch(`/api/bookings?${params.toString()}`);
 
       if (!res.ok) {
         throw new Error("Failed to fetch");
@@ -67,7 +78,7 @@ export function useAppointments() {
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, [page, filterOptions.search, filterOptions.filter, filterOptions.selectedDate, filterOptions.paymentFilter, filterOptions.doctorFilter]);
 
   // ---------------------------------------------------------
   // LOAD ALL TODAY'S BOOKINGS FOR PDF
