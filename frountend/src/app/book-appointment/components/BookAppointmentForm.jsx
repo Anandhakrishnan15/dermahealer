@@ -13,7 +13,9 @@ const getISTDateString = (dateObj) => {
     month: "2-digit",
     day: "2-digit",
   };
-  const parts = new Intl.DateTimeFormat("en-GB", options).formatToParts(dateObj);
+  const parts = new Intl.DateTimeFormat("en-GB", options).formatToParts(
+    dateObj,
+  );
   const day = parts.find((p) => p.type === "day")?.value;
   const month = parts.find((p) => p.type === "month")?.value;
   const year = parts.find((p) => p.type === "year")?.value;
@@ -29,25 +31,44 @@ const getISTDayOfWeek = (dateObj) => {
 
   const daysMap = {
     Sun: 0,
+
     Mon: 1,
+
     Tue: 2,
+
     Wed: 3,
+
     Thu: 4,
+
     Fri: 5,
+
     Sat: 6,
   };
+
   return daysMap[dayStr];
 };
 
 /* ---------------- ZOD SCHEMA ---------------- */
+
 const FormSchema = z.object({
   name: z.string().min(2, "Name is required"),
+
   email: z.string().email("Invalid email"),
+
   phone: z.string().regex(/^[0-9]{10}$/, "Phone must be 10 digits"),
+
   doctor: z.string().min(1, "Please select a doctor"),
+
   date: z.string().min(1, "Please select a date"),
+
   time: z.string().min(1, "Please select a time"),
+
   notes: z.string().optional(),
+  nonRefundable: z.boolean().refine((val) => val === true, {
+    message:
+      "Please acknowledge that the online booking fee is non-refundable.",
+  }),
+
   terms: z.boolean().refine((val) => val === true, {
     message: "You must accept the terms to continue",
   }),
@@ -56,36 +77,67 @@ const FormSchema = z.object({
 export default function BookAppointmentForm() {
   const [form, setForm] = useState({
     name: "",
+
     email: "",
+
     phone: "",
+
     doctor: "",
+
     date: "",
+
     time: "",
+
     notes: "",
+    nonRefundable: false,
+
     terms: false,
   });
 
   const [errors, setErrors] = useState({});
+
   const [loading, setLoading] = useState(false);
+
   const [sdkLoading, setSdkLoading] = useState(true);
+
   const [paytmReady, setPaytmReady] = useState(false);
+
   const [selectedDate, setSelectedDate] = useState("");
+
   const [selectedTime, setSelectedTime] = useState("");
 
   const availabilityCache = useRef({});
+
   const [availability, setAvailability] = useState({});
+
   const [loadingAvailability, setLoadingAvailability] = useState(false);
+  const [showPrescriptionNotice, setShowPrescriptionNotice] = useState(false);
+
+  // Display once per browser tab/session.
+  useEffect(() => {
+    const dismissed = sessionStorage.getItem("prescriptionNoticeDismissed");
+    if (dismissed !== "true") setShowPrescriptionNotice(true);
+  }, []);
+
+  const dismissPrescriptionNotice = () => {
+    sessionStorage.setItem("prescriptionNoticeDismissed", "true");
+    setShowPrescriptionNotice(false);
+  };
 
   /* ---------------- Load Paytm SDK ---------------- */
+
   useEffect(() => {
     async function loadSDK() {
       try {
         const res = await fetch("/api/paytm/config");
+
         const data = await res.json();
 
         if (!data.mid) {
           toast.error("Paytm MID not configured.");
+
           setSdkLoading(false);
+
           return;
         }
 
@@ -93,28 +145,36 @@ export default function BookAppointmentForm() {
 
         if (document.querySelector(`script[src="${sdkUrl}"]`)) {
           setPaytmReady(Boolean(window.Paytm?.CheckoutJS));
+
           setSdkLoading(false);
+
           return;
         }
 
         const script = document.createElement("script");
+
         script.src = sdkUrl;
+
         script.async = true;
+
         script.crossOrigin = "anonymous";
 
         script.onload = () => {
           setPaytmReady(Boolean(window.Paytm?.CheckoutJS));
+
           setSdkLoading(false);
         };
 
         script.onerror = () => {
           toast.error("Failed to load Paytm SDK");
+
           setSdkLoading(false);
         };
 
         document.body.appendChild(script);
       } catch (err) {
         toast.error("Payment initialization failed");
+
         setSdkLoading(false);
       }
     }
@@ -123,72 +183,93 @@ export default function BookAppointmentForm() {
   }, []);
 
   /* ---------------- Generate next 7 available days (EXCLUDING SUNDAYS) ---------------- */
- 
-/* Generate next 7 available days, excluding today and Sundays */
-const dates = (() => {
-  const list = [];
-  let offset = 1; // Start from tomorrow
 
-  while (list.length < 7) {
-    const d = new Date();
-    d.setDate(d.getDate() + offset);
-    offset++;
+  /* Generate next 7 available days, excluding today and Sundays */
 
-    const dayOfWeek = getISTDayOfWeek(d);
+  const dates = (() => {
+    const list = [];
 
-    // Skip Sundays
-    if (dayOfWeek === 0) continue;
+    let offset = 1; // Start from tomorrow
 
-    list.push({
-      value: getISTDateString(d),
-      label: d.toDateString().slice(0, 10),
-      day: dayOfWeek,
-    });
-  }
+    while (list.length < 7) {
+      const d = new Date();
 
-  return list;
-})();
+      d.setDate(d.getDate() + offset);
+
+      offset++;
+
+      const dayOfWeek = getISTDayOfWeek(d);
+
+      // Skip Sundays
+
+      if (dayOfWeek === 0) continue;
+
+      list.push({
+        value: getISTDateString(d),
+
+        label: d.toDateString().slice(0, 10),
+
+        day: dayOfWeek,
+      });
+    }
+
+    return list;
+  })();
 
   const times = ["08:30-09:30", "10:30-11:30", "11:30-12:30", "12:30-01:30"];
+
   const disabledAll = sdkLoading || loading;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setForm((p) => ({ ...p, [name]: value }));
+
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
   /* ---------------- Load availability (debounced) ---------------- */
+
   useEffect(() => {
     if (!form.doctor) return;
+
     const t = setTimeout(loadAvailability, 450);
+
     return () => clearTimeout(t);
   }, [form.doctor]);
 
   async function loadAvailability() {
     const doctor = form.doctor;
+
     if (!doctor) return;
 
     if (availabilityCache.current[doctor]) {
       setAvailability(availabilityCache.current[doctor]);
+
       return;
     }
 
     setLoadingAvailability(true);
+
     try {
       const res = await fetch("/api/check-availability", {
         method: "POST",
+
         headers: { "Content-Type": "application/json" },
+
         body: JSON.stringify({ doctor, dates: dates.map((d) => d.value) }),
       });
 
       if (!res.ok) throw new Error("Availability API failed");
+
       const data = await res.json();
 
       availabilityCache.current[doctor] = data.availability || {};
+
       setAvailability(data.availability || {});
     } catch (err) {
       console.error(err);
+
       toast.error("Unable to load availability");
     } finally {
       setLoadingAvailability(false);
@@ -196,6 +277,7 @@ const dates = (() => {
   }
 
   /* ---------------- Submit Handler ---------------- */
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -203,48 +285,65 @@ const dates = (() => {
 
     const submitForm = {
       ...form,
+
       date: selectedDate || form.date,
+
       time: selectedTime || form.time,
     };
 
     // ✅ Front-end check to strictly block Sundays before submitting
+
     if (submitForm.date) {
       const parts = submitForm.date.split("-").map(Number);
+
       const chosenDate = new Date(parts[0], parts[1] - 1, parts[2]);
+
       if (chosenDate.getDay() === 0) {
         toast.error("Clinic is closed on Sundays. Please select another date.");
+
         return;
       }
     }
 
     // ✅ Zod Validate
+
     const result = FormSchema.safeParse(submitForm);
+
     if (!result.success) {
       const fieldErrors = result.error.flatten().fieldErrors;
+
       setErrors(fieldErrors);
 
       const shown = new Set();
+
       Object.values(fieldErrors).forEach((arr) => {
         if (Array.isArray(arr) && arr[0] && !shown.has(arr[0])) {
           toast.error(arr[0]);
+
           shown.add(arr[0]);
         }
       });
+
       return;
     }
 
     if (!paytmReady) {
       toast.error("Payment system not ready yet. Please wait.");
+
       return;
     }
 
     if (!submitForm.date || !submitForm.time) {
       toast.error("Please select both date and time.");
+
       setErrors((p) => ({
         ...p,
+
         date: submitForm.date ? undefined : ["Select a date"],
+
         time: submitForm.time ? undefined : ["Select a time"],
       }));
+
       return;
     }
 
@@ -252,25 +351,33 @@ const dates = (() => {
 
     try {
       // 🔹 STEP 1: Create booking
+
+      // Keep the existing backend payload unchanged; validate the acknowledgement on the client.
+      const { nonRefundable, ...bookingPayload } = submitForm;
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(submitForm),
+        body: JSON.stringify(bookingPayload),
       });
 
       if (!res.ok) throw new Error("Booking failed");
 
       const bookingData = await res.json();
+
       const booking = bookingData?.booking;
 
       if (!booking) throw new Error("Booking failed");
 
       // 🔹 STEP 2: Initiate Paytm
+
       const paytmRes = await fetch("/api/paytm/initiate", {
         method: "POST",
+
         headers: { "Content-Type": "application/json" },
+
         body: JSON.stringify({
           orderId: booking.orderId,
+
           amount: booking.amount,
         }),
       });
@@ -278,6 +385,7 @@ const dates = (() => {
       if (!paytmRes.ok) throw new Error("Payment initiation failed");
 
       const paytmData = await paytmRes.json();
+
       const { txnToken, orderId, amount } = paytmData;
 
       if (!txnToken || !orderId) {
@@ -285,20 +393,28 @@ const dates = (() => {
       }
 
       // 🔹 STEP 3: Check SDK
+
       const paytm = window.Paytm;
+
       if (!paytm?.CheckoutJS) {
         throw new Error("Payment SDK not available");
       }
 
       const config = {
         root: "",
+
         flow: "DEFAULT",
+
         data: {
           orderId,
+
           token: txnToken,
+
           tokenType: "TXN_TOKEN",
+
           amount,
         },
+
         handler: {
           notifyMerchant: (eventName, data) => {
             console.log("Paytm event:", eventName, data);
@@ -307,15 +423,19 @@ const dates = (() => {
       };
 
       // 🔹 STEP 4: Open Paytm safely
+
       try {
         await paytm.CheckoutJS.init(config);
+
         paytm.CheckoutJS.invoke();
       } catch (sdkErr) {
         console.error("Paytm SDK error:", sdkErr);
+
         toast.error("Failed to open payment gateway. Try again.");
       }
     } catch (err) {
       console.error("Submit error:", err);
+
       toast.error(err?.message || "Something went wrong during booking");
     } finally {
       setLoading(false);
@@ -323,12 +443,14 @@ const dates = (() => {
   };
 
   /* ---------------- UI ---------------- */
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--navbar-bg)] py-10 px-4">
       <div className="w-full max-w-3xl bg-[var(--bg)] rounded-2xl p-8 shadow-lg border border-gray-100">
         {sdkLoading && (
           <div className="mb-4 px-4 py-2 text-sm text-yellow-800 bg-yellow-50 rounded-md text-center">
-            Initializing secure payment... the form is disabled until the payment system loads.
+            Initializing secure payment... the form is disabled until the
+            payment system loads.
           </div>
         )}
 
@@ -338,64 +460,90 @@ const dates = (() => {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Name */}
+
           <div>
             <label className="text-sm font-medium text-gray-700">
               Name <span className="text-red-500">*</span>
             </label>
+
             <input
               name="name"
               value={form.name}
               onChange={handleChange}
               disabled={disabledAll}
-              className={`w-full mt-2 p-3 rounded-lg border focus:outline-none ${errors.name ? "border-red-400 ring-1 ring-red-100" : "border-gray-200"
-                }`}
+              className={`w-full mt-2 p-3 rounded-lg border focus:outline-none ${
+                errors.name
+                  ? "border-red-400 ring-1 ring-red-100"
+                  : "border-gray-200"
+              }`}
               placeholder="Your full name"
             />
-            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name[0]}</p>}
+
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name[0]}</p>
+            )}
           </div>
 
           {/* Email */}
+
           <div>
             <label className="text-sm font-medium text-gray-700">
               Email <span className="text-red-500">*</span>
             </label>
+
             <input
               name="email"
               value={form.email}
               onChange={handleChange}
               disabled={disabledAll}
-              className={`w-full mt-2 p-3 rounded-lg border focus:outline-none ${errors.email ? "border-red-400 ring-1 ring-red-100" : "border-gray-200"
-                }`}
+              className={`w-full mt-2 p-3 rounded-lg border focus:outline-none ${
+                errors.email
+                  ? "border-red-400 ring-1 ring-red-100"
+                  : "border-gray-200"
+              }`}
               placeholder="you@example.com"
             />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email[0]}</p>}
+
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email[0]}</p>
+            )}
           </div>
 
           {/* Phone */}
+
           <div>
             <label className="text-sm font-medium text-gray-700">
               Phone <span className="text-red-500">*</span>
             </label>
+
             <input
               name="phone"
               value={form.phone}
               onChange={(e) => {
                 const value = e.target.value;
+
                 if (/^\d*$/.test(value) && value.length <= 10) {
                   handleChange(e);
                 }
               }}
               disabled={disabledAll}
               inputMode="numeric"
-              className={`w-full mt-2 p-3 rounded-lg border focus:outline-none ${errors.phone ? "border-red-400 ring-1 ring-red-100" : "border-gray-200"
-                }`}
+              className={`w-full mt-2 p-3 rounded-lg border focus:outline-none ${
+                errors.phone
+                  ? "border-red-400 ring-1 ring-red-100"
+                  : "border-gray-200"
+              }`}
               placeholder="10 digit mobile number"
               type="text"
             />
-            {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>}
+
+            {errors.phone && (
+              <p className="text-red-500 text-xs mt-1">{errors.phone[0]}</p>
+            )}
           </div>
 
           {/* Doctor Selection */}
+
           <div>
             <label className="text-sm font-medium text-gray-700">
               Choose Doctor <span className="text-red-500">*</span>
@@ -405,14 +553,21 @@ const dates = (() => {
               {[
                 {
                   name: "Dr. B.K. Sharma",
+
                   value: "Dr. B.K. Sharma",
+
                   desc: "MBBS, MD (Skin & VD)",
+
                   fee: 600,
                 },
+
                 {
                   name: "Dr. Neha Rani",
+
                   value: "Dr. Neha Rani",
+
                   desc: "MBBS, Aesthetic Physician",
+
                   fee: 350,
                 },
               ].map((doc) => {
@@ -421,10 +576,11 @@ const dates = (() => {
                 return (
                   <label
                     key={doc.value}
-                    className={`flex items-center justify-between gap-3 p-3 rounded-xl border transition ${active
-                      ? "border-blue-400 bg-blue-50 shadow-sm ring-1 ring-blue-400"
-                      : "border-gray-100 bg-white"
-                      } ${disabledAll ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
+                    className={`flex items-center justify-between gap-3 p-3 rounded-xl border transition ${
+                      active
+                        ? "border-blue-400 bg-blue-50 shadow-sm ring-1 ring-blue-400"
+                        : "border-gray-100 bg-white"
+                    } ${disabledAll ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
                   >
                     <input
                       type="radio"
@@ -435,8 +591,12 @@ const dates = (() => {
                       disabled={disabledAll}
                       className="sr-only"
                     />
+
                     <div>
-                      <div className="font-medium text-gray-800">{doc.name}</div>
+                      <div className="font-medium text-gray-800">
+                        {doc.name}
+                      </div>
+
                       <div className="text-xs text-gray-500">{doc.desc}</div>
                     </div>
 
@@ -450,15 +610,20 @@ const dates = (() => {
                 );
               })}
             </div>
-            {errors.doctor && <p className="text-red-500 text-xs mt-2">{errors.doctor[0]}</p>}
+
+            {errors.doctor && (
+              <p className="text-red-500 text-xs mt-2">{errors.doctor[0]}</p>
+            )}
           </div>
 
           {/* Date & Time Selection */}
+
           {form.doctor && (
             <div className="mt-6 space-y-6">
               <hr className="border-gray-100" />
 
               {/* Date Selection */}
+
               <div className="flex flex-col">
                 <label className="text-sm font-medium text-gray-700">
                   Select Date <span className="text-red-500">*</span>
@@ -467,7 +632,10 @@ const dates = (() => {
                 <div className="flex gap-2 overflow-x-auto mt-3 pb-2 scrollbar-hide">
                   {dates.map((d) => {
                     const slotsLeft = availability[d.value]?.totalRemaining;
-                    const isLoading = loadingAvailability || slotsLeft === undefined;
+
+                    const isLoading =
+                      loadingAvailability || slotsLeft === undefined;
+
                     const selected = selectedDate === d.value;
 
                     return (
@@ -478,35 +646,40 @@ const dates = (() => {
                           if (isLoading || slotsLeft === 0) return;
 
                           setSelectedDate(d.value);
+
                           setForm((p) => ({ ...p, date: d.value }));
+
                           setErrors((prev) => ({
                             ...prev,
+
                             date: undefined,
                           }));
                         }}
-                        disabled={
-                          disabledAll ||
-                          isLoading ||
-                          slotsLeft === 0
-                        }
+                        disabled={disabledAll || isLoading || slotsLeft === 0}
                         className={`min-w-[110px] p-3 rounded-xl text-center border transition-all duration-200
-    ${selected
-                            ? "bg-blue-600 border-blue-600 text-white shadow-md scale-105"
-                            : "bg-white border-gray-200 text-gray-600"
-                          }
+
+    ${
+      selected
+        ? "bg-blue-600 border-blue-600 text-white shadow-md scale-105"
+        : "bg-white border-gray-200 text-gray-600"
+    }
+
     ${slotsLeft === 0 ? "opacity-50 bg-gray-50" : ""}
+
   `}
                       >
                         <div
-                          className={`text-sm font-bold ${selected ? "text-white" : "text-gray-800"
-                            }`}
+                          className={`text-sm font-bold ${
+                            selected ? "text-white" : "text-gray-800"
+                          }`}
                         >
                           {d.label}
                         </div>
 
                         <div
-                          className={`text-[10px] mt-1 ${selected ? "text-blue-100" : "text-gray-400"
-                            }`}
+                          className={`text-[10px] mt-1 ${
+                            selected ? "text-blue-100" : "text-gray-400"
+                          }`}
                         >
                           {isLoading ? "Loading..." : `${slotsLeft ?? 0} slots`}
                         </div>
@@ -514,10 +687,14 @@ const dates = (() => {
                     );
                   })}
                 </div>
-                {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date[0]}</p>}
+
+                {errors.date && (
+                  <p className="text-red-500 text-xs mt-1">{errors.date[0]}</p>
+                )}
               </div>
 
               {/* Time Selection */}
+
               <div className="flex flex-col">
                 <label className="text-sm font-medium text-gray-700">
                   Select Time <span className="text-red-500">*</span>
@@ -526,7 +703,9 @@ const dates = (() => {
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mt-3">
                   {times.map((t) => {
                     const timingData = availability[selectedDate]?.timings?.[t];
+
                     const isFull = timingData && !timingData.available;
+
                     const selected = selectedTime === t;
 
                     return (
@@ -535,34 +714,50 @@ const dates = (() => {
                         type="button"
                         onClick={() => {
                           if (isFull) return;
+
                           setSelectedTime(t);
+
                           setForm((p) => ({ ...p, time: t }));
+
                           setErrors((prev) => ({ ...prev, time: undefined }));
                         }}
                         disabled={disabledAll || !selectedDate || isFull}
                         className={`px-3 py-2 rounded-lg border text-xs font-medium transition-all
-                          ${selected
-                            ? "bg-blue-600 border-blue-600 text-white shadow-sm"
-                            : "bg-white border-gray-200 text-gray-600 hover:border-blue-300"
+
+                          ${
+                            selected
+                              ? "bg-blue-600 border-blue-600 text-white shadow-sm"
+                              : "bg-white border-gray-200 text-gray-600 hover:border-blue-300"
                           }
+
                           ${isFull ? "opacity-50 cursor-not-allowed bg-gray-100" : ""}
+
                         `}
                       >
                         {t}
-                        {isFull && <div className="text-[10px] text-red-500">Full</div>}
+
+                        {isFull && (
+                          <div className="text-[10px] text-red-500">Full</div>
+                        )}
                       </button>
                     );
                   })}
                 </div>
 
-                {errors.time && <p className="text-red-500 text-xs mt-1">{errors.time[0]}</p>}
+                {errors.time && (
+                  <p className="text-red-500 text-xs mt-1">{errors.time[0]}</p>
+                )}
               </div>
             </div>
           )}
 
           {/* Notes */}
+
           <div>
-            <label className="text-sm font-medium text-gray-700">Notes (optional)</label>
+            <label className="text-sm font-medium text-gray-700">
+              Notes (optional)
+            </label>
+
             <textarea
               name="notes"
               value={form.notes}
@@ -573,15 +768,43 @@ const dates = (() => {
               placeholder="Any info for the doctor..."
             />
           </div>
+          {/* Mandatory non-refundable booking fee acknowledgement */}
+          <div className="mt-4">
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="nonRefundable"
+                disabled={disabledAll}
+                checked={form.nonRefundable}
+                onChange={(e) => {
+                  setForm((p) => ({ ...p, nonRefundable: e.target.checked }));
+                  setErrors((prev) => ({ ...prev, nonRefundable: undefined }));
+                }}
+                className={`mt-1 w-4 h-4 rounded border-gray-300 text-gray-800 focus:ring-gray-500 ${errors.nonRefundable ? "border-red-400 ring-1 ring-red-100" : ""}`}
+              />
+              <label htmlFor="nonRefundable" className="text-sm text-gray-600">
+                I understand that the ₹50 online booking fee is non-refundable.
+                <span className="text-red-500"> *</span>
+              </label>
+            </div>
+            {errors.nonRefundable && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.nonRefundable[0]}
+              </p>
+            )}
+          </div>
 
           {/* Terms Checkbox */}
+
           <div className="flex items-start gap-3 mt-4">
             <input
               type="checkbox"
               id="terms"
               disabled={disabledAll}
               checked={form.terms || false}
-              onChange={(e) => setForm((p) => ({ ...p, terms: e.target.checked }))}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, terms: e.target.checked }))
+              }
               className="mt-1 w-4 h-4 rounded border-gray-300 text-gray-800 focus:ring-gray-500"
             />
 
@@ -614,23 +837,28 @@ const dates = (() => {
                 >
                   Refund & Cancellation Policy
                 </a>
-                . I understand that appointment time may vary depending on doctor availability.
+                . I understand that appointment time may vary depending on
+                doctor availability.
                 <span className="text-red-500"> *</span>
               </label>
             </div>
           </div>
 
-          {errors.terms && <p className="text-red-500 text-xs mt-1">{errors.terms[0]}</p>}
+          {errors.terms && (
+            <p className="text-red-500 text-xs mt-1">{errors.terms[0]}</p>
+          )}
 
           {/* Submit */}
+
           <div>
             <button
               type="submit"
               disabled={disabledAll || loading}
-              className={`w-full py-3 rounded-lg text-white font-medium transition ${disabledAll || loading
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-gray-800 hover:bg-[var(--primary-color)]"
-                }`}
+              className={`w-full py-3 rounded-lg text-white font-medium transition ${
+                disabledAll || loading
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-gray-800 hover:bg-[var(--primary-color)]"
+              }`}
             >
               {sdkLoading
                 ? "Initializing payment..."
@@ -638,9 +866,10 @@ const dates = (() => {
                   ? "Processing..."
                   : "Confirm Booking & Pay ₹50"}
             </button>
+
             <p className="text-xs text-gray-500 text-center mt-2">
-              * ₹50 is charged only as an online booking fee. Doctor consultation fees are payable
-              separately at the clinic.
+              * ₹50 is charged only as an online booking fee. Doctor
+              consultation fees are payable separately at the clinic.
             </p>
 
             {!paytmReady && !sdkLoading && (
@@ -651,6 +880,64 @@ const dates = (() => {
           </div>
         </form>
       </div>
+
+      {showPrescriptionNotice && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4 py-6"
+          role="presentation"
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="prescription-notice-title"
+            className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+          >
+            <button
+              type="button"
+              onClick={dismissPrescriptionNotice}
+              aria-label="Close prescription information"
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-2xl text-gray-500 transition hover:bg-gray-100 hover:text-gray-800"
+            >
+              ×
+            </button>
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-700">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="h-6 w-6"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 11v5m0-8h.01" strokeLinecap="round" />
+              </svg>
+            </div>
+            <h2
+              id="prescription-notice-title"
+              className="mb-3 text-xl font-semibold text-gray-900"
+            >
+              Prescription Validity Information
+            </h2>
+            <p className="mb-2 text-sm font-semibold text-gray-800">Note:</p>
+            <p className="text-sm leading-6 text-gray-600">
+              Online booking is only for new prescriptions. If your existing
+              prescription is still valid, you do not need a new booking.
+            </p>
+            <p className="mt-3 text-sm leading-6 text-gray-600">
+              To check validity, please refer to the top-right corner of your
+              prescription.
+            </p>
+            <button
+              type="button"
+              onClick={dismissPrescriptionNotice}
+              className="mt-6 w-full rounded-lg bg-gray-800 px-4 py-3 font-medium text-white transition hover:bg-[var(--primary-color)]"
+            >
+              I Understand
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
